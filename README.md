@@ -90,6 +90,18 @@ Ask can see your tasks, projects and inbox and replies with buttons you tap to m
 
 Add them in Cloudflare: **headspaceworld → Settings → Variables and Secrets → Add**, type **Secret**, named `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY`. Click Deploy. Add both to switch between them in Ask. Optional: `ANTHROPIC_MODEL` / `OPENAI_MODEL` to choose a specific model (defaults: `claude-sonnet-5-5`, `chat-latest`).
 
+## Sections
+
+Five sections: **Today** (focus, inbox, health, habits), **Ask** (AI), **Plan** (projects, all tasks, calendar), **Notes** (board, later, journal) and **Life** (time & energy, health). Connections live behind the ⚙ button. On iPhone the sections are a bottom tab bar.
+
+## Brain dump
+
+Inbox → 🧠 Brain dump: one thought per line. Headspace then suggests where each goes (task in a project, note, later, or let go) using Ask's AI if a key is set, or simple rules if not. Accept one by one or all at once.
+
+## Time & energy, Health
+
+Set your fixed week once (e.g. GoodLife 8h on 3 days, commute 2h on the same days). Log everything else in two taps or with a timer, tagged ⚡ / 😐 / 🪫. Google Calendar meetings and Apple Health sleep and workouts count automatically. Health tracks steps, food (kcal) and workouts, from Apple Health or entered by hand.
+
 ## Weekly backups
 
 Every Monday at 03:00 UTC the Worker saves a snapshot of everything to the `backups` table and keeps the last 12. Connections → Weekly backups shows them, with **Back up now** and **Restore**.
@@ -151,6 +163,8 @@ All routes need your Cloudflare Access login except `/api/health/ingest`.
 | Method | Route | What it does |
 |---|---|---|
 | POST | `/api/ai` | `{provider: claude|chatgpt, messages, context}`. Returns `{reply, actions, chips}` |
+| POST | `/api/ai/sort` | Suggests where brain-dump items go |
+| GET | `/api/ai/models` | Models available to your API keys |
 | GET/POST | `/api/backups` | List snapshots / make one now; `?id=` returns one to restore |
 | GET | `/api/me` | Who you are, plus Google and Health connection status |
 | POST | `/api/sync` | `{since, changes:[{collection,id,data|null}]}`. Saves your changes and returns everything changed since `since` |
@@ -162,7 +176,7 @@ All routes need your Cloudflare Access login except `/api/health/ingest`.
 | GET | `/api/google/token` | Short-lived token for the Drive picker |
 | POST | `/api/google/disconnect` | Revokes and forgets Google access |
 
-Collections: `tasks`, `notes`, `projects`, `habits`, `inbox`, `journal`, `meta`. If the same item is edited on two devices before they sync, the last change saved wins.
+Collections: `tasks`, `notes`, `projects`, `habits`, `inbox`, `chats`, `assistants`, `logs`, `journal`, `meta`. If the same item is edited on two devices before they sync, the last change saved wins.
 
 ## Security notes
 

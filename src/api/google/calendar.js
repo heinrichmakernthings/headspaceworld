@@ -11,8 +11,10 @@ export async function onRequestGet({ request, env }) {
   } catch (e) {
     return json({ error: e.message }, 409);
   }
-  const days = Math.max(1, Math.min(60, Number(new URL(request.url).searchParams.get('days')) || 14));
-  const start = new Date(Date.now() - 864e5);
+  const sp = new URL(request.url).searchParams;
+  const days = Math.max(1, Math.min(60, Number(sp.get('days')) || 14));
+  const back = Math.max(1, Math.min(14, Number(sp.get('back')) || 1));
+  const start = new Date(Date.now() - back * 864e5);
   start.setUTCHours(0, 0, 0, 0);
   const end = new Date(Date.now() + days * 864e5);
   const q = new URLSearchParams({ singleEvents: 'true', orderBy: 'startTime', maxResults: '250', timeMin: start.toISOString(), timeMax: end.toISOString(), timeZone: TZ });

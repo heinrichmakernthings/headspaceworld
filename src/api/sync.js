@@ -2,7 +2,7 @@ import { json } from '../../lib/util.js';
 
 // Two-way sync. The app sends what changed since it last synced and gets back
 // everything changed on the server since `since` (including edits from your other devices).
-const COLLECTIONS = new Set(['tasks', 'notes', 'projects', 'habits', 'inbox', 'chats', 'assistants', 'journal', 'meta']);
+const COLLECTIONS = new Set(['tasks', 'notes', 'projects', 'habits', 'inbox', 'chats', 'assistants', 'logs', 'journal', 'meta']);
 
 export async function onRequestPost({ request, env }) {
   let body;

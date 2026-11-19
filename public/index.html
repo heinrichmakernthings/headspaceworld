@@ -343,6 +343,46 @@ body.askfull .aimain{min-height:calc(100vh - 34px)}
 body.askfull .ailist{max-height:calc(100vh - 34px)}
 @media(max-width:900px){.aiapp{grid-template-columns:1fr}.listbtn{display:inline-block}.ailist{display:none;max-height:none}.ailist.open{display:block}.aihead .modelsel{max-width:140px}}
 @media(max-width:700px){.aimain{padding:14px;min-height:calc(100vh - 160px)}body.askfull main{padding:calc(8px + env(safe-area-inset-top)) 8px 8px}.msg{max-width:92%}}
+/* ---------- Sections, sub-tabs, Time & Health ---------- */
+.subtabs{display:inline-flex;gap:4px;background:rgba(255,255,255,.75);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:999px;padding:4px;margin-top:24px;box-shadow:0 8px 22px rgba(60,50,150,.12);flex-wrap:wrap}
+.subtabs button{border-radius:999px;padding:8px 16px;font-weight:800;font-size:13px;color:#6b6990}
+.subtabs button.on{background:linear-gradient(135deg,var(--lav),var(--pink));color:#fff}
+.subtabs+.eyebrow{margin-top:20px}
+.timerpill{background:linear-gradient(135deg,#ffe3cf,#fff2bf);border-radius:999px;padding:9px 14px;color:#9a5a12;font-weight:800}
+.suggest{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:linear-gradient(135deg,#f3f0ff,#ffeef8);border-radius:12px;padding:6px 6px 6px 12px;margin-top:8px;font-size:12px;font-weight:700;color:#4b3fb5}
+.weeknav{display:flex;align-items:center;gap:10px;margin:0 0 18px;color:var(--skyink)}.weeknav span{color:var(--skymuted);font-size:13px;font-weight:700}.weeknav .tiny{color:var(--skyink);background:rgba(255,255,255,.25)}
+.catgrid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.catbtn{border:1.5px solid #e4e0f7;background:rgba(255,255,255,.85);border-radius:999px;padding:8px 13px;font-size:13px;font-weight:700;color:#4b4880}
+.catbtn.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 22%,white);color:#2d2b52}
+.durs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px}.durs input{width:90px;padding:8px 10px}
+.chip2.on{background:linear-gradient(135deg,var(--lav),var(--pink));color:#fff;border-color:transparent}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;display:inline-block}
+.donutwrap{position:relative;width:200px;margin:4px auto 14px}.donut{width:200px;height:200px;display:block}
+.donutmid{position:absolute;inset:0;display:grid;place-content:center;text-align:center}.donutmid b{font:600 24px Fredoka,sans-serif;color:#4b3fb5}.donutmid small{font-size:11px;color:var(--muted);font-weight:700}
+.catrow{display:grid;grid-template-columns:12px minmax(90px,1.1fr) 2fr auto 22px;gap:10px;align-items:center;padding:7px 0;font-size:13px}
+.cname{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbar{position:relative;height:9px;background:#efedfa;border-radius:9px}.cbar i{display:block;height:100%;border-radius:9px}.cbar b{position:absolute;top:-4px;width:2px;height:17px;background:#2d2b52;opacity:.45;border-radius:2px}
+.chrs{font-weight:800;white-space:nowrap}.chrs small{font-weight:600;color:var(--muted)}
+.wkrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line)}.wkrow input{flex:1;min-width:110px}.wkrow select{width:auto}
+.days{display:inline-flex;gap:3px}.daybtn{width:30px;height:30px;padding:0;border-radius:50%;font-size:12px;font-weight:800;border:1.5px solid #e4e0f7;color:#7f7ca3}.daybtn.on{background:linear-gradient(135deg,var(--lav),var(--pink));color:#fff;border-color:transparent}
+details summary{cursor:pointer;padding:4px 0}details[open] summary{margin-bottom:8px}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}
+.stat{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:22px;padding:16px 18px;box-shadow:0 14px 34px rgba(60,50,150,.12);display:flex;flex-direction:column}
+body.night .stat,body.dusk .stat{background:rgba(255,255,255,.86)}
+.stat span{font-size:11px;font-weight:800;letter-spacing:1px;color:var(--muted)}.stat b{font:600 24px Fredoka,sans-serif;margin:4px 0 2px}.stat small{font-size:11px;color:var(--muted);font-weight:700}
+.bars{position:relative}.targetline{position:absolute;left:0;right:0;height:0;border-top:2px dashed rgba(45,43,82,.35)}
+@media(max-width:700px){
+ aside{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,255,255,.85);z-index:76}
+ aside nav{position:fixed;left:0;right:0;bottom:0;z-index:75;margin:0;display:flex;justify-content:space-around;gap:0;overflow:visible;background:rgba(255,255,255,.95);border-top:1px solid rgba(120,110,190,.15);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px rgba(60,50,150,.12)}
+ aside nav button{flex-direction:column;gap:2px;font-size:10px;padding:6px 4px;width:auto;flex:1;border-radius:14px;position:relative}
+ aside nav button .ic{font-size:20px;width:auto}
+ aside nav .navbadge{position:absolute;top:2px;right:18%;margin:0;font-size:9px;padding:0 6px}
+ main{padding-bottom:110px}
+ .fab{bottom:calc(84px + env(safe-area-inset-bottom))}
+ #toast{bottom:calc(90px + env(safe-area-inset-bottom))}
+ .catrow{grid-template-columns:12px 1fr 1fr auto 18px;gap:8px}
+ .subtabs{margin-top:16px}
+}
 </style>
 </head>
 <body class="night">
@@ -353,19 +393,16 @@ body.askfull .ailist{max-height:calc(100vh - 34px)}
   <a class="brand" href="#"><i class="logo"></i><span>headspace</span></a>
   <div class="workspace">SAM'S LITTLE UTOPIA</div>
   <nav>
-    <button data-view="today"><span class="ic">☀️</span><span>My day</span><b class="navbadge" id="navInbox" hidden></b></button>
-    <button data-view="ask"><span class="ic">✨</span><span>Ask</span></button>
-    <button data-view="tasks"><span class="ic">🫧</span><span>All tasks</span></button>
-    <button data-view="projects"><span class="ic">🚀</span><span>Projects</span></button>
-    <button data-view="notes"><span class="ic">📓</span><span>Notebook</span></button>
-    <button data-view="journal"><span class="ic">🌙</span><span>Daily journal</span></button>
-    <button data-view="later"><span class="ic">🎈</span><span>Ideas for later</span></button>
-    <button data-view="calendar"><span class="ic">🗓️</span><span>Calendar</span></button>
-    <button data-view="connections"><span class="ic">🔌</span><span>Connections</span></button>
+    <button data-group="today"><span class="ic">☀️</span><span>Today</span><b class="navbadge" id="navInbox" hidden></b></button>
+    <button data-group="ask"><span class="ic">✨</span><span>Ask</span></button>
+    <button data-group="plan"><span class="ic">🚀</span><span>Plan</span></button>
+    <button data-group="notes"><span class="ic">📓</span><span>Notes</span></button>
+    <button data-group="life"><span class="ic">⏳</span><span>Life</span></button>
   </nav>
   <div class="sidebar-note">Big ideas. Small steps.<span>You don't have to do it all today.</span></div>
   <div class="pops">🫧 <b id="popCount">0</b> bubbles popped · tap the sky, the clouds, the sun</div>
   <div class="bottom">
+    <button id="connBtn">🔌 Connections</button>
     <button id="backup">↥ Export backup</button>
     <button id="restore">↧ Restore backup</button>
     <input type="file" id="restoreFile" accept="application/json" hidden>
@@ -373,7 +410,7 @@ body.askfull .ailist{max-height:calc(100vh - 34px)}
   </div>
 </aside>
 
-<main><header><span id="dateLabel"></span><form id="captureForm" class="capture" autocomplete="off"><span class="capicon">✦</span><input name="cap" placeholder="Capture anything… press Enter" aria-label="Capture a thought into your inbox"><button type="button" class="inboxcount" id="inboxCount" title="Open your inbox" hidden>0</button></form><div class="hdrbtns"><button id="calmBtn" class="tiny calmbtn" title="Calm mode: still the bubbles and motion" aria-pressed="false">🍃 Calm</button><button id="addTask" class="dark">＋ New task</button></div></header><div id="content"></div></main>
+<main><header><span id="dateLabel"></span><form id="captureForm" class="capture" autocomplete="off"><span class="capicon">✦</span><input name="cap" placeholder="Capture anything… press Enter" aria-label="Capture a thought into your inbox"><button type="button" class="inboxcount" id="inboxCount" title="Open your inbox" hidden>0</button></form><div class="hdrbtns"><button id="timerPill" class="tiny timerpill" hidden></button><button id="calmBtn" class="tiny calmbtn" title="Calm mode: still the bubbles and motion" aria-pressed="false">🍃 Calm</button><button id="gearBtn" class="tiny calmbtn" title="Connections & settings" aria-label="Connections and settings">⚙</button><button id="addTask" class="dark">＋ New task</button></div></header><div id="content"></div></main>
 
 <canvas id="fx" aria-hidden="true"></canvas>
 
@@ -390,6 +427,7 @@ body.askfull .ailist{max-height:calc(100vh - 34px)}
 <dialog id="restoreDialog"><div class="modal-head"><h2>Restore a backup</h2><button type="button" data-close aria-label="Close">✕</button></div><p class="hint">Choose your backup .json file, or paste its contents below.</p><textarea id="restoreText" rows="7" placeholder='{"tasks": [...]}'></textarea><div class="btnrow" style="margin-top:12px"><button class="ghost" id="restoreChoose">Choose file…</button><button class="dark" id="restoreGo">Restore</button></div></dialog>
 
 <button class="fab" id="askFab" title="Ask" aria-label="Open Ask">✨</button>
+<dialog id="dumpDialog"><div class="modal-head"><h2>Brain dump 🧠</h2><button type="button" data-close aria-label="Close">✕</button></div><p class="hint">One thought per line. Don’t organise anything, just empty your head. Headspace will suggest where each one goes.</p><textarea id="dumpText" rows="12" placeholder="Call Laura about the site visit Friday&#10;Spanish 15 mins a day&#10;Idea: forest stage for Madruga&#10;Chase Reproduction invoice&#10;…"></textarea><div class="btnrow" style="margin-top:12px"><button class="ghost" data-close>Cancel</button><button class="dark" id="dumpGo">Add &amp; sort ✨</button></div></dialog>
 <div id="toast" role="status"></div>
 
 <script>
@@ -400,6 +438,8 @@ const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math
 const rand=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
 const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isCalm=()=>calm||document.body.classList.contains('calm');
+const DEFAULT_CATS=[{id:'goodlife',name:'GoodLife',emoji:'💼',color:'#8b7cf8'},{id:'commute',name:'Commute',emoji:'🚆',color:'#9aa0c4'},{id:'madruga',name:'Madruga',emoji:'☀️',color:'#ffb48f'},{id:'assembly',name:'Assembly',emoji:'🌐',color:'#7cc8ff'},{id:'juntada',name:'Juntada',emoji:'🫶',color:'#ff8ccf'},{id:'meetings',name:'Meetings',emoji:'📅',color:'#c3a6ff'},{id:'spanish',name:'Spanish',emoji:'🇪🇸',color:'#ffd86e',target:2},{id:'exercise',name:'Exercise',emoji:'🏃',color:'#5ed6b6',target:3},{id:'rest',name:'Rest & social',emoji:'🛋️',color:'#a8e6cf'},{id:'admin',name:'Admin',emoji:'🧾',color:'#d4cdee'},{id:'sleep',name:'Sleep',emoji:'😴',color:'#4a4690'}];
+const DEFAULT_WEEK=[{id:'wk-goodlife',label:'GoodLife office',cat:'goodlife',hours:8,days:[1,2,3]},{id:'wk-commute',label:'Commute (1h each way)',cat:'commute',hours:2,days:[1,2,3]}];
 const DEFAULT_ASSISTANTS=[
 {id:'headspace',name:'Headspace',emoji:'✨',instructions:'',starters:['Plan my day','What’s overdue?','Sort my inbox for me','What can I drop this week?']},
 {id:'madruga',name:'Madruga producer',emoji:'☀️',instructions:'You are a seasoned UK festival producer helping Sam run Madruga, a boutique multi-day electronic music festival at Baskerville Hall, Hay-on-Wye. Think practically about suppliers, licensing, site operations, artist liaison, ticketing, budgets, crew and timelines. Flag risks early and suggest next steps as tasks in the Madruga project.',starters:['What should I be doing this month for Madruga?','Draft a supplier check-in email','Build a production timeline','What are the biggest risks right now?']},
@@ -418,9 +458,9 @@ projects:[
  {id:'assembly',name:'Assembly',emoji:'🌐',blurb:'All-in-one events, ticketing & merch platform',color:'blue',notes:''}],
 habits:[{id:'move',title:'Move your body',minutes:30,repeat:'daily',days:[]},{id:'language',title:'Language practice',minutes:15,repeat:'daily',days:[]}],scratch:''};
 let state;try{state=JSON.parse(localStorage.getItem('headspace-v1'))||structuredClone(seed)}catch{state=structuredClone(seed)}
-function normalise(){state.journal=state.journal||{};state.pops=state.pops||0;state.projects=Array.isArray(state.projects)?state.projects:structuredClone(seed.projects);state.settings=Object.assign({stepGoal:8000,autoMove:true},state.settings||{});state.inbox=Array.isArray(state.inbox)?state.inbox:[];state.chats=Array.isArray(state.chats)?state.chats:[];state.assistants=Array.isArray(state.assistants)&&state.assistants.length?state.assistants:structuredClone(DEFAULT_ASSISTANTS);if(state.scratch&&state.scratch.trim()){state.inbox.unshift({id:uid(),text:state.scratch.trim(),created:Date.now()});state.scratch=''};if(!state.settings.iconsV2){state.projects.forEach(p=>{if(p.id==='madruga'&&p.emoji==='🌙')p.emoji='☀️';if(p.id==='assembly'&&p.emoji==='🧩')p.emoji='🌐';if(p.id==='juntada'&&!p.emoji)p.emoji='🫶'});state.settings.iconsV2=true}state.notes.forEach(n=>{n.type=n.type||'note';if(n.type==='list')n.items=n.items||[]})}
+function normalise(){state.journal=state.journal||{};state.pops=state.pops||0;state.projects=Array.isArray(state.projects)?state.projects:structuredClone(seed.projects);state.settings=Object.assign({stepGoal:8000,autoMove:true},state.settings||{});state.inbox=Array.isArray(state.inbox)?state.inbox:[];state.logs=Array.isArray(state.logs)?state.logs:[];if(!Array.isArray(state.settings.cats)||!state.settings.cats.length)state.settings.cats=structuredClone(DEFAULT_CATS);if(!Array.isArray(state.settings.week))state.settings.week=structuredClone(DEFAULT_WEEK);state.chats=Array.isArray(state.chats)?state.chats:[];state.assistants=Array.isArray(state.assistants)&&state.assistants.length?state.assistants:structuredClone(DEFAULT_ASSISTANTS);if(state.scratch&&state.scratch.trim()){state.inbox.unshift({id:uid(),text:state.scratch.trim(),created:Date.now()});state.scratch=''};if(!state.settings.iconsV2){state.projects.forEach(p=>{if(p.id==='madruga'&&p.emoji==='🌙')p.emoji='☀️';if(p.id==='assembly'&&p.emoji==='🧩')p.emoji='🌐';if(p.id==='juntada'&&!p.emoji)p.emoji='🫶'});state.settings.iconsV2=true}state.notes.forEach(n=>{n.type=n.type||'note';if(n.type==='list')n.items=n.items||[]})}
 normalise();
-const VIEWS=['today','ask','tasks','projects','notes','journal','later','calendar','connections'];
+const VIEWS=['today','ask','tasks','projects','notes','journal','later','calendar','connections','time','health'];
 let journalDate=today(),view=VIEWS.includes(location.hash.slice(1))?location.hash.slice(1):'today',editing=null,fromCard=null,search='',project='All projects',sort='smart',boardScroll={l:0,t:0};
 
 const affirmations=['You are allowed to go slowly','Small steps still move you','Today is a fresh page','Breathe. You’re right on time','Your ideas matter','Rest is productive too','One thing at a time','You’ve handled hard days before','Make room for joy','Progress, not perfection','Good things are growing','Be kind to future you','Curiosity over pressure','Let it be light','You’re building something real','Done is a lovely word','The sky is not the limit','Plant it. Water it. Wait.','Choose calm on purpose','Your pace is the right pace'];
@@ -449,17 +489,187 @@ function parseQuick(raw){let due='',p=2,minutes=25,d=new Date();if(/\btomorrow\b
 function taskRow(t){let due=t.due?(t.due<today()&&!t.done?'Overdue · ':'')+new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'No date';return `<div class="row ${t.done?'done':''}"><button class="tick ${t.done?'checked':''}" aria-label="${t.done?'Reopen':'Complete'} ${esc(t.title)}" data-check="${t.id}">${t.done?'✓':''}</button><div class="taskbody"><button class="tasktitle" data-edit="${t.id}">${esc(t.title)}</button><div class="meta"><span class="tag">${esc(t.project)}</span>${esc(due)} · ${Number(t.minutes)} min ${t.priority==3?'· High priority':''}${t.repeat?` · 🔁 ${REPEAT_LABEL[t.repeat]||t.repeat}`:''}</div></div>${window.HS?HS.gcalBtn(t):''}<button class="tiny ${t.focusDate===today()?'star':''}" title="Toggle today’s focus" aria-label="Toggle today’s focus" data-focus="${t.id}">${t.focusDate===today()?'★':'☆'}</button><button class="tiny" aria-label="Delete task" data-delete="${t.id}">×</button></div>`}
 const head=(ey,title,sub)=>`<div class="eyebrow">${ey}</div><h1>${title}</h1><p class="sub">${sub}</p>`;
 
+/* ---------- Navigation: five sections ---------- */
+const GROUPS=[
+ {id:'today',views:['today'],labels:{}},
+ {id:'ask',views:['ask'],labels:{}},
+ {id:'plan',views:['projects','tasks','calendar'],labels:{projects:'🚀 Projects',tasks:'☑ All tasks',calendar:'🗓️ Calendar'}},
+ {id:'notes',views:['notes','later','journal'],labels:{notes:'🧠 Board',later:'🎈 Later',journal:'📖 Journal'}},
+ {id:'life',views:['time','health'],labels:{time:'⏳ Time & energy',health:'💚 Health'}},
+ {id:'settings',views:['connections'],labels:{}}];
+const groupOf=v=>GROUPS.find(g=>g.views.includes(v));
+const lastSub={};
+function subtabsHTML(){const g=groupOf(view);if(!g||g.views.length<2)return '';return `<div class="subtabs" role="tablist">${g.views.map(v=>`<button role="tab" data-sub="${v}" class="${v===view?'on':''}" aria-selected="${v===view}">${g.labels[v]}</button>`).join('')}</div>`}
+function goView(v){view=v;const g=groupOf(v);if(g)lastSub[g.id]=v;try{history.replaceState(null,'','#'+v)}catch{}render();scrollTo({top:0})}
+
+/* ---------- Dates & helpers ---------- */
+const addDays=(d,n)=>{const x=new Date(d+'T12:00:00Z');x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10)};
+const weekStart=(d=today())=>{const x=new Date(d+'T12:00:00Z');x.setUTCDate(x.getUTCDate()-((x.getUTCDay()+6)%7));return x.toISOString().slice(0,10)};
+let weekOffset=0;
+const weekDaysFor=(off=0)=>{const s=addDays(weekStart(),off*7);return [...Array(7)].map((_,i)=>addDays(s,i))};
+const appleDay=d=>((window.HS&&HS.health&&HS.health.days)||[]).find(x=>x.date===d)||{};
+const catById=id=>state.settings.cats.find(c=>c.id===id)||{id,name:id,emoji:'•',color:'#ccc'};
+const fmtH=h=>{const m=Math.round(h*60);if(m<60)return m+'m';return Math.floor(m/60)+'h'+(m%60?' '+(m%60)+'m':'')};
+const fmtSl=h=>h?`${Math.floor(h)}h ${String(Math.round((h%1)*60)).padStart(2,'0')}m`:'–';
+const shortDate=d=>new Date(d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+const WORKOUTS=['Run','Walk','Gym','Cycle','Swim','Yoga','Football','Climbing','Other'];
+
+/* ---------- Logs (time, steps, food, workouts) ---------- */
+function addLog(l){const entry={id:uid(),created:Date.now(),date:today(),energy:0,...l};state.logs.push(entry);
+ if(entry.kind==='time'&&entry.date===today()){const h=entry.cat==='exercise'?state.habits.find(x=>x.id==='move'||/move|exercise|gym|walk|run/i.test(x.title)):entry.cat==='spanish'?state.habits.find(x=>x.id==='language'||/spanish|language/i.test(x.title)):null;if(h&&!h.days.includes(today())){h.days.push(today());setTimeout(()=>toast(`“${h.title}” ticked for today 🌿`),900)}}
+ save();return entry}
+function dayHealth(d){const a=appleDay(d),logs=state.logs.filter(l=>l.date===d);
+ const manualSteps=logs.filter(l=>l.kind==='steps').reduce((s,l)=>s+(+l.value||0),0);
+ const meals=logs.filter(l=>l.kind==='calories');
+ const workouts=[...(a.workouts||[]).map(w=>({name:w.name,minutes:w.minutes||0,apple:true})),...logs.filter(l=>l.kind==='time'&&l.cat==='exercise').map(l=>({name:l.note||'Exercise',minutes:l.minutes||0,id:l.id}))];
+ return {steps:Math.max(Math.round(a.steps||0),manualSteps),manualSteps,eaten:Math.round(meals.reduce((s,l)=>s+(+l.value||0),0)+(a.eaten||0)),active:Math.round(a.energy||0),sleep:a.sleep||0,workouts,exMin:workouts.reduce((s,w)=>s+(+w.minutes||0),0),meals,stepLogs:logs.filter(l=>l.kind==='steps')}}
+function weekBreakdown(days){const by={};const add=(cat,h,src,energy)=>{if(!(h>0))return;const b=by[cat]||(by[cat]={h:0,fixed:0,logged:0,auto:0,energy:[]});b.h+=h;b[src]+=h;if(src==='logged'&&energy!==undefined)b.energy.push(+energy||0)};
+ for(const d of days){const wd=new Date(d+'T12:00:00Z').getUTCDay();for(const w of state.settings.week||[])if((w.days||[]).includes(wd))add(w.cat,+w.hours||0,'fixed');const a=appleDay(d);if(a.sleep)add('sleep',a.sleep,'auto');for(const w of a.workouts||[])add('exercise',(w.minutes||0)/60,'auto')}
+ for(const l of state.logs)if(l.kind==='time'&&days.includes(l.date))add(l.cat,(l.minutes||0)/60,'logged',l.energy);
+ for(const e of (window.HS&&HS.events)||[]){if(e.allDay)continue;const d=day(new Date(e.start));if(!days.includes(d))continue;const h=(new Date(e.end)-new Date(e.start))/36e5;if(!(h>0&&h<12))continue;const c=state.settings.cats.find(x=>!['meetings','sleep'].includes(x.id)&&e.title.toLowerCase().includes(x.name.toLowerCase()));add(c?c.id:'meetings',h,'auto')}
+ return by}
+function donut(parts,total){const R=60,C=2*Math.PI*R;let off=0;return `<svg viewBox="0 0 160 160" class="donut" aria-hidden="true"><g transform="rotate(-90 80 80)"><circle r="${R}" cx="80" cy="80" fill="none" stroke="#efedfa" stroke-width="24"/>${parts.map(p=>{const len=Math.max(0,C*Math.min(p.h,total)/total);const s=`<circle r="${R}" cx="80" cy="80" fill="none" stroke="${p.color}" stroke-width="24" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}"><title>${esc(p.name)}: ${fmtH(p.h)}</title></circle>`;off+=len;return s}).join('')}</g></svg>`}
+function barsHTML(vals,labels,max,target){max=Math.max(max,...vals,1);return `<div class="bars">${vals.map((v,i)=>`<i class="${i===vals.length-1?'today':''}" style="height:${Math.max(3,v/max*100)}%" title="${labels[i]}: ${Math.round(v).toLocaleString('en-GB')}"></i>`).join('')}${target?`<b class="targetline" style="bottom:${Math.min(100,target/max*100)}%"></b>`:''}</div><div class="barlabels">${labels.map(l=>`<span>${l}</span>`).join('')}</div>`}
+
+/* ---------- Timer ---------- */
+const getTimer=()=>{try{return JSON.parse(localStorage.getItem('hs-timer')||'null')}catch{return null}};
+function setTimer(t){try{t?localStorage.setItem('hs-timer',JSON.stringify(t)):localStorage.removeItem('hs-timer')}catch{}updateTimerPill()}
+function updateTimerPill(){const t=getTimer(),el=document.getElementById('timerPill');if(!el)return;if(!t){el.hidden=true;return}el.hidden=false;const s=Math.floor((Date.now()-t.start)/1000);el.textContent=`⏱ ${catById(t.cat).emoji} ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')} · Stop`}
+function stopTimer(){const t=getTimer();if(!t)return;const m=Math.max(1,Math.round((Date.now()-t.start)/60000));setTimer(null);addLog({kind:'time',cat:t.cat,minutes:m,energy:0,note:'Timer'});toast(`Logged ${fmtH(m/60)} of ${catById(t.cat).name} ⏱`);render()}
+setInterval(updateTimerPill,1000);
+
+/* ---------- Time & energy ---------- */
+let logForm={cat:'spanish',minutes:30,energy:0,note:'',date:''};
+function timeHTML(){const days=weekDaysFor(weekOffset),by=weekBreakdown(days),cats=state.settings.cats;
+ const rows=Object.entries(by).map(([id,b])=>({...catById(id),...b,id})).sort((a,b)=>b.h-a.h);
+ cats.filter(c=>c.target&&!by[c.id]).forEach(c=>rows.push({...c,h:0,fixed:0,logged:0,auto:0,energy:[]}));
+ const total=rows.reduce((s,r)=>s+r.h,0),free=Math.max(0,168-total),maxH=Math.max(1,...rows.map(r=>Math.max(r.h,r.target||0)));
+ const parts=rows.filter(r=>r.h>0).concat(free>0?[{name:'Unlogged',h:free,color:'#ebe8f7'}]:[]);
+ const avg=a=>a.reduce((s,x)=>s+x,0)/a.length;
+ const emo=v=>v>0.3?'⚡':v<-0.3?'🪫':'😐';
+ const energised=rows.filter(r=>r.energy.length&&avg(r.energy)>0.3).map(r=>r.emoji+' '+r.name),drained=rows.filter(r=>r.energy.length&&avg(r.energy)<-0.3).map(r=>r.emoji+' '+r.name);
+ const label=weekOffset===0?'This week':weekOffset===-1?'Last week':`${-weekOffset} weeks ago`;
+ const logs=state.logs.filter(l=>l.kind==='time'&&days.includes(l.date)).sort((a,b)=>(b.date+b.created).localeCompare(a.date+a.created));
+ const timer=getTimer(),fixedTotal=(state.settings.week||[]).reduce((s,w)=>s+(+w.hours||0)*(w.days||[]).length,0);
+ const sources=[`your fixed week (${fmtH(fixedTotal)})`];if(window.HS&&HS.me&&HS.me.google&&HS.me.google.connected)sources.push('meetings from Google Calendar');if(window.HS&&HS.health&&HS.health.last)sources.push('sleep and workouts from Apple Health');
+ const DUR=[15,30,45,60,90,120];
+ return head('WHERE YOUR TIME AND ENERGY GO','Time & energy.','Your fixed week counts itself. Log the rest in two taps.')+
+ `<div class="weeknav"><button class="tiny" data-week="-1" aria-label="Previous week">←</button><b>${label}</b><span>${shortDate(days[0])} – ${shortDate(days[6])}</span><button class="tiny" data-week="1" ${weekOffset>=0?'disabled':''} aria-label="Next week">→</button></div>
+ <div class="layout"><div>
+  <section class="panel"><div class="section-head"><h2>Log time</h2>${timer?`<span class="pill ok">⏱ ${catById(timer.cat).name} running</span>`:''}</div>
+   <div class="catgrid">${cats.filter(c=>c.id!=='sleep').map(c=>`<button class="catbtn ${logForm.cat===c.id?'on':''}" data-logcat="${c.id}" style="--c:${c.color}">${c.emoji} ${esc(c.name)}</button>`).join('')}</div>
+   <div class="durs">${DUR.map(m=>`<button class="chip2 ${logForm.minutes===m?'on':''}" data-logmin="${m}">${fmtH(m/60)}</button>`).join('')}<input type="number" min="1" max="1440" id="logCustom" placeholder="mins" aria-label="Custom minutes" value="${DUR.includes(logForm.minutes)?'':logForm.minutes}"></div>
+   <div class="durs"><span class="hint">How did it leave you?</span>${[[-1,'🪫 Drained'],[0,'😐 Neutral'],[1,'⚡ Energised']].map(([v,l])=>`<button class="chip2 ${logForm.energy===v?'on':''}" data-logen="${v}">${l}</button>`).join('')}</div>
+   <div class="quick"><input id="logNote" placeholder="Note (optional)" value="${esc(logForm.note)}" aria-label="Note"><input type="date" id="logDate" value="${logForm.date||today()}" aria-label="Date" style="max-width:165px"></div>
+   <div class="btns"><button class="dark" id="logGo">Log ${fmtH(logForm.minutes/60)} of ${esc(catById(logForm.cat).name)}</button><button class="tiny" id="timerBtn">${timer?'⏹ Stop timer':'⏱ Start a timer instead'}</button></div>
+  </section>
+  <section class="panel"><div class="section-head"><h2>Logged</h2><span class="count">${logs.length}</span></div>
+   ${logs.map(l=>{const c=catById(l.cat);return `<div class="row"><span class="dot" style="background:${c.color}"></span><div class="taskbody"><b>${c.emoji} ${esc(c.name)}</b> · ${fmtH((l.minutes||0)/60)} ${l.energy>0?'⚡':l.energy<0?'🪫':''}<div class="meta">${shortDate(l.date)}${l.note?' · '+esc(l.note):''}</div></div><button class="tiny" data-dellog="${l.id}" aria-label="Delete entry">×</button></div>`}).join('')||'<div class="empty">Nothing logged yet. Pick a category above and tap Log.</div>'}
+  </section>
+ </div><div>
+  <section class="panel"><div class="section-head"><h2>Your week</h2><span class="hint">${fmtH(total)} of 168h accounted for</span></div>
+   <div class="donutwrap">${donut(parts,168)}<div class="donutmid"><b>${fmtH(free)}</b><small>unaccounted</small></div></div>
+   ${rows.map(r=>`<div class="catrow"><span class="dot" style="background:${r.color}"></span><span class="cname">${r.emoji} ${esc(r.name)}</span><span class="cbar"><i style="width:${Math.min(100,r.h/maxH*100)}%;background:${r.color}"></i>${r.target?`<b style="left:${Math.min(100,r.target/maxH*100)}%" title="Target ${r.target}h"></b>`:''}</span><span class="chrs">${fmtH(r.h)}${r.target?`<small> / ${r.target}h</small>`:''}</span><span class="cen" title="Average energy">${r.energy.length?emo(avg(r.energy)):''}</span></div>`).join('')||'<div class="empty">Nothing yet this week.</div>'}
+   <p class="hint" style="margin-top:12px">Counts ${sources.join(', ')} and what you log.</p>
+  </section>
+  ${energised.length||drained.length?`<section class="panel"><h2>Energy</h2>${energised.length?`<p class="hint"><b>⚡ Gives you energy:</b> ${energised.map(esc).join(', ')}</p>`:''}${drained.length?`<p class="hint"><b>🪫 Takes it out of you:</b> ${drained.map(esc).join(', ')}</p>`:''}<p class="hint">Worth protecting the first and trimming the second.</p></section>`:''}
+  <section class="panel"><details ${state.settings.weekSetup?'':'open'}><summary><b>⚙ Your fixed week</b> <span class="hint">· things that happen every week and count themselves</span></summary>
+   ${(state.settings.week||[]).map(w=>`<div class="wkrow"><input data-wk="${w.id}|label" value="${esc(w.label||'')}" placeholder="What" aria-label="What"><select data-wk="${w.id}|cat" aria-label="Category">${cats.map(c=>`<option value="${c.id}" ${c.id===w.cat?'selected':''}>${c.emoji} ${esc(c.name)}</option>`).join('')}</select><input type="number" step="0.25" min="0" max="24" data-wk="${w.id}|hours" value="${w.hours}" aria-label="Hours per day" style="max-width:80px"><span class="hint">h a day on</span><span class="days">${['M','T','W','T','F','S','S'].map((d,i)=>{const wd=(i+1)%7;return `<button class="daybtn ${(w.days||[]).includes(wd)?'on':''}" data-wkday="${w.id}|${wd}" aria-label="Toggle day">${d}</button>`}).join('')}</span><button class="tiny" data-wkdel="${w.id}" aria-label="Remove">×</button></div>`).join('')}
+   <div class="btns"><button class="tiny" id="wkAdd">＋ Add something fixed</button><button class="tiny" id="wkDone">✓ Looks right</button></div>
+   <p class="hint">Fixed total: <b>${fmtH(fixedTotal)}</b> a week.</p>
+  </details>
+  <details><summary><b>🎨 Categories & targets</b></summary>
+   ${cats.map(c=>`<div class="wkrow"><input class="emojiin" data-cat="${c.id}|emoji" value="${esc(c.emoji)}" maxlength="4" aria-label="Emoji"><input data-cat="${c.id}|name" value="${esc(c.name)}" aria-label="Name"><input type="number" min="0" step="0.5" data-cat="${c.id}|target" value="${c.target||''}" placeholder="target h/wk" aria-label="Weekly target hours" style="max-width:120px"><input type="color" data-cat="${c.id}|color" value="${c.color}" aria-label="Colour" style="max-width:52px;padding:4px">${['sleep','exercise','meetings'].includes(c.id)?'':`<button class="tiny" data-catdel="${c.id}" aria-label="Remove">×</button>`}</div>`).join('')}
+   <button class="tiny" id="catAdd">＋ Add a category</button></details></section>
+ </div></div>`}
+
+/* ---------- Health ---------- */
+function healthHTML(){const d=today(),t=dayHealth(d),days=[...Array(7)].map((_,i)=>addDays(d,i-6)),hs=days.map(x=>dayHealth(x));
+ const goal=state.settings.stepGoal||8000,cal=+state.settings.calTarget||0,apple=!!(window.HS&&HS.health&&HS.health.last);
+ const lab=days.map(x=>new Date(x+'T12:00:00').toLocaleDateString('en-GB',{weekday:'narrow'}));
+ const stat=(ic,l,v,sub)=>`<div class="stat"><span>${ic} ${l}</span><b>${v}</b><small>${sub||''}</small></div>`;
+ return head('LOOK AFTER THE ENGINE','Health.','Steps, food and movement. From Apple Health, or add it yourself.')+
+ `<div class="statgrid">${stat('👟','Steps',t.steps.toLocaleString('en-GB'),`goal ${goal.toLocaleString('en-GB')}`)}${stat('🍽️','Eaten',t.eaten?t.eaten.toLocaleString('en-GB')+' kcal':'–',cal?`target ${cal.toLocaleString('en-GB')}`:'')}${stat('🏃','Exercise',t.exMin?fmtH(t.exMin/60):'–',t.workouts.length?t.workouts.length+(t.workouts.length===1?' workout':' workouts'):'')}${stat('🔥','Active',t.active?t.active+' kcal':'–',apple?'Apple Health':'needs Apple Health')}${stat('😴','Sleep',fmtSl(t.sleep),apple?'last night':'needs Apple Health')}</div>
+ <div class="layout"><div>
+  <section class="panel"><h2>Add</h2>
+   <form class="quick" id="hsMeal"><input name="n" placeholder="Meal or snack (optional)" aria-label="Meal"><input type="number" name="v" min="1" max="5000" placeholder="kcal" aria-label="Calories" required style="max-width:110px"><button class="dark">＋ Food</button></form>
+   <form class="quick" id="hsWork"><select name="t" aria-label="Workout type">${WORKOUTS.map(w=>`<option>${w}</option>`).join('')}</select><input type="number" name="m" min="1" max="600" placeholder="mins" aria-label="Minutes" required style="max-width:100px"><button class="dark">＋ Workout</button></form>
+   <form class="quick" id="hsSteps"><input type="number" name="v" min="1" max="100000" placeholder="Steps today (e.g. 6500)" aria-label="Steps" required><button class="dark">Set steps</button></form>
+   <p class="hint">${apple?'Apple Health is connected. Anything you add here sits alongside it.':'Not linked to Apple Health yet, so add things by hand. You can connect it any time in ⚙ Connections.'} Workouts also count towards Exercise in Time & energy.</p>
+  </section>
+  <section class="panel"><div class="section-head"><h2>Today</h2></div>
+   ${t.meals.map(m=>`<div class="row"><div class="taskbody"><b>🍽️ ${esc(m.note||'Food')}</b><div class="meta">${m.value} kcal</div></div><button class="tiny" data-dellog="${m.id}" aria-label="Delete">×</button></div>`).join('')}
+   ${t.workouts.map(w=>`<div class="row"><div class="taskbody"><b>🏃 ${esc(w.name)}</b><div class="meta">${fmtH(w.minutes/60)}${w.apple?' · Apple Health':''}</div></div>${w.id?`<button class="tiny" data-dellog="${w.id}" aria-label="Delete">×</button>`:''}</div>`).join('')}
+   ${t.stepLogs.map(s=>`<div class="row"><div class="taskbody"><b>👟 ${(+s.value).toLocaleString('en-GB')} steps</b><div class="meta">added by hand</div></div><button class="tiny" data-dellog="${s.id}" aria-label="Delete">×</button></div>`).join('')}
+   ${!t.meals.length&&!t.workouts.length&&!t.stepLogs.length?'<div class="empty">Nothing yet today.</div>':''}
+  </section>
+ </div><div>
+  <section class="panel"><div class="section-head"><h2>Steps</h2><span class="hint">last 7 days</span></div>${barsHTML(hs.map(x=>x.steps),lab,goal,goal)}</section>
+  <section class="panel"><div class="section-head"><h2>Food</h2><span class="hint">last 7 days, kcal</span></div>${barsHTML(hs.map(x=>x.eaten),lab,cal,cal)}</section>
+  <section class="panel"><div class="section-head"><h2>Movement</h2><span class="hint">last 7 days, minutes</span></div>${barsHTML(hs.map(x=>x.exMin),lab,30,0)}</section>
+  <section class="panel"><details><summary><b>⚙ Goals</b></summary><div class="settingsrow"><label>Daily step goal<input type="number" min="1000" max="50000" step="500" id="hGoal" value="${goal}"></label><label>Daily calorie target (optional)<input type="number" min="0" max="6000" step="50" id="hCal" value="${cal||''}" placeholder="leave blank for none"></label></div></details></section>
+ </div></div>`}
+
+function todayHealthCard(){const t=dayHealth(today()),goal=state.settings.stepGoal||8000,pct=Math.min(1,t.steps/goal),C=2*Math.PI*40;
+ return `<section class="panel health"><div class="section-head"><h2>Your body today</h2><button class="tiny" data-goview="health">Health ↗</button></div>
+ <div class="hgrid"><div class="ring"><svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="none" stroke="#efedfa" stroke-width="9"/><circle cx="48" cy="48" r="40" fill="none" stroke="url(#hsg2)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/><defs><linearGradient id="hsg2"><stop offset="0" stop-color="#ff9ecf"/><stop offset="1" stop-color="#8fd3ff"/></linearGradient></defs></svg><b>${t.steps.toLocaleString('en-GB')}<small>of ${goal.toLocaleString('en-GB')} steps</small></b></div>
+ <div class="hstats"><div><span>EATEN</span>${t.eaten?t.eaten.toLocaleString('en-GB')+' kcal':'–'}</div><div><span>EXERCISE</span>${t.exMin?fmtH(t.exMin/60):'–'}</div><div><span>SLEEP</span>${fmtSl(t.sleep)}</div><div><span>ACTIVE</span>${t.active?t.active+' kcal':'–'}</div></div></div>
+ <div class="btns"><button class="tiny" data-goview="health">＋ Food or workout</button><button class="tiny" data-goview="time">⏳ Log time</button></div></section>`}
+
+function bindLife(){
+ document.querySelectorAll('[data-sub]').forEach(b=>b.onclick=()=>goView(b.dataset.sub));
+ document.querySelectorAll('[data-dellog]').forEach(b=>b.onclick=()=>{state.logs=state.logs.filter(l=>l.id!==b.dataset.dellog);save();render()});
+ if(view==='time'){
+  document.querySelectorAll('[data-week]').forEach(b=>b.onclick=()=>{weekOffset=Math.min(0,weekOffset+(+b.dataset.week));render()});
+  document.querySelectorAll('[data-logcat]').forEach(b=>b.onclick=()=>{logForm.cat=b.dataset.logcat;render()});
+  document.querySelectorAll('[data-logmin]').forEach(b=>b.onclick=()=>{logForm.minutes=+b.dataset.logmin;render()});
+  document.querySelectorAll('[data-logen]').forEach(b=>b.onclick=()=>{logForm.energy=+b.dataset.logen;render()});
+  $('#logCustom').onchange=e=>{const v=Math.round(+e.target.value);if(v>0){logForm.minutes=Math.min(1440,v);render()}};
+  $('#logNote').oninput=e=>{logForm.note=e.target.value};
+  $('#logDate').onchange=e=>{logForm.date=e.target.value};
+  $('#logGo').onclick=e=>{const c=catById(logForm.cat);addLog({kind:'time',cat:logForm.cat,minutes:logForm.minutes,energy:logForm.energy,note:logForm.note.trim(),date:logForm.date||today()});const [x,y]=center(e.target);sparkle(x,y,14);toast(`Logged ${fmtH(logForm.minutes/60)} of ${c.name} ${c.emoji}`);logForm.note='';render()};
+  $('#timerBtn').onclick=()=>{if(getTimer())return stopTimer();setTimer({cat:logForm.cat,start:Date.now()});toast(`Timer started for ${catById(logForm.cat).name}. Stop it from the top bar.`);render()};
+  document.querySelectorAll('[data-wk]').forEach(el=>{const [id,k]=el.dataset.wk.split('|');el.onchange=()=>{const w=state.settings.week.find(x=>x.id===id);if(!w)return;w[k]=k==='hours'?Math.max(0,Math.min(24,+el.value||0)):el.value;save();render()}});
+  document.querySelectorAll('[data-wkday]').forEach(b=>b.onclick=()=>{const [id,wd]=b.dataset.wkday.split('|');const w=state.settings.week.find(x=>x.id===id);const n=+wd;w.days=w.days.includes(n)?w.days.filter(x=>x!==n):[...w.days,n];save();render()});
+  document.querySelectorAll('[data-wkdel]').forEach(b=>b.onclick=()=>{state.settings.week=state.settings.week.filter(x=>x.id!==b.dataset.wkdel);save();render()});
+  $('#wkAdd').onclick=()=>{state.settings.week.push({id:uid(),label:'',cat:'rest',hours:1,days:[1,2,3,4,5]});save();render()};
+  $('#wkDone').onclick=()=>{state.settings.weekSetup=true;save();render();toast('Your fixed week is set ✓')};
+  document.querySelectorAll('[data-cat]').forEach(el=>{const [id,k]=el.dataset.cat.split('|');el.onchange=()=>{const c=state.settings.cats.find(x=>x.id===id);if(!c)return;c[k]=k==='target'?(+el.value||0):el.value;save();render()}});
+  document.querySelectorAll('[data-catdel]').forEach(b=>b.onclick=async()=>{if(!(await ask('Remove this category? Entries already logged keep their time.','Remove')))return;state.settings.cats=state.settings.cats.filter(x=>x.id!==b.dataset.catdel);save();render()});
+  $('#catAdd').onclick=()=>{state.settings.cats.push({id:uid(),name:'New category',emoji:'✨',color:'#c3a6ff'});save();render()};
+ }
+ if(view==='health'){
+  $('#hsMeal').onsubmit=e=>{e.preventDefault();const v=+e.target.v.value;if(!(v>0))return;addLog({kind:'calories',value:Math.round(v),note:e.target.n.value.trim()});toast('Food logged 🍽️');render()};
+  $('#hsWork').onsubmit=e=>{e.preventDefault();const m=+e.target.m.value;if(!(m>0))return;addLog({kind:'time',cat:'exercise',minutes:Math.round(m),note:e.target.t.value,energy:0});const [x,y]=center(e.submitter||e.target);confetti(x,y,24);toast(`${e.target.t.value} logged 🏃`);render()};
+  $('#hsSteps').onsubmit=e=>{e.preventDefault();const v=Math.round(+e.target.v.value);if(!(v>0))return;state.logs=state.logs.filter(l=>!(l.kind==='steps'&&l.date===today()));addLog({kind:'steps',value:v});toast('Steps updated 👟');render()};
+  $('#hGoal').onchange=e=>{state.settings.stepGoal=Math.max(1000,+e.target.value||8000);save();render()};
+  $('#hCal').onchange=e=>{state.settings.calTarget=Math.max(0,+e.target.value||0);save();render()};
+ }
+}
+
+/* ---------- Brain dump + smart sort ---------- */
+function guessSort(it){const t=it.text,low=t.toLowerCase(),first=t.split('\n')[0];const proj=state.projects.find(p=>low.includes(p.name.toLowerCase()));const q=parseQuick(first);
+ if(/\b(idea|maybe|one day|someday|what if|could we|might be fun)\b/.test(low)&&!q.due)return {kind:'idea',title:first.slice(0,60)};
+ if(t.length>180&&!q.due)return {kind:'note',title:first.slice(0,60)};
+ return {kind:'task',project:proj?proj.name:'Personal',title:(q.title||first).slice(0,120),due:q.due||''}}
+async function sortSuggest(btn){const items=state.inbox||[];if(!items.length)return;const me=window.HS&&HS.me,ai=window.HS&&HS.on&&me&&me.ai&&(me.ai.claude||me.ai.chatgpt);if(btn){btn.disabled=true;btn.textContent='✨ Sorting…'}
+ let sugg=null;if(ai){try{let pref='';try{pref=localStorage.getItem('hs-ai')||''}catch{}const provider=pref==='chatgpt'&&me.ai.chatgpt?'chatgpt':me.ai.claude?'claude':'chatgpt';const r=await HS.api('/api/ai/sort',{method:'POST',body:{provider,today:today(),weekday:new Date().toLocaleDateString('en-GB',{timeZone:TZ,weekday:'long'}),projects:projList(),items:items.map(i=>({id:i.id,text:i.text}))}});sugg=r.suggestions}catch(e){toast('AI sorting isn’t available right now, so I used quick rules')}}
+ for(const it of items){it.suggest=(sugg&&sugg.find(x=>x.id===it.id))||guessSort(it)}save();render();toast('Suggestions ready ✨ Accept the ones you like, or change them')}
+function acceptSuggestion(id,el,quiet){const it=state.inbox.find(x=>x.id===id);if(!it||!it.suggest)return;const s=it.suggest;const over={title:s.title,due:s.due};
+ if(s.kind==='task')sortInbox(s.project&&s.project!=='Personal'?'project':'task',id,s.project,el,over,quiet);else sortInbox(s.kind==='note'?'note':s.kind==='idea'?'idea':'drop',id,null,el,over,quiet)}
+const KIND_LABEL={task:'☑ Task',note:'📓 Note',idea:'🎈 Later',drop:'☁️ Let go'};
+
 /* ---------- Inbox: one place for every loose thought ---------- */
 function addInbox(text){text=String(text||'').trim();if(!text)return false;state.inbox.unshift({id:uid(),text:text.slice(0,2000),created:Date.now()});save();updateInboxCount();return true}
 function updateInboxCount(){const n=(state.inbox||[]).length,b=$('#inboxCount'),nb=$('#navInbox');if(b){b.hidden=!n;b.textContent=n}if(nb){nb.hidden=!n;nb.textContent=n}}
-function sortInbox(act,id,projectName,el){const it=state.inbox.find(x=>x.id===id);if(!it)return;const firstLine=it.text.split('\n')[0].slice(0,140),rest=it.text.includes('\n')?it.text:'';let msg='';
- if(act==='task'||act==='project'){const q=parseQuick(firstLine);state.tasks.push({id:uid(),...q,title:q.title||firstLine,project:act==='project'?projectName:'Personal',done:false,focusDate:'',time:'',detail:rest});msg=act==='project'?`Task added to ${projectName}`:'Added to your tasks'}
- else if(act==='note'){state.notes.unshift({id:uid(),type:'note',title:firstLine.slice(0,60),body:it.text,later:false,color:'white',z:++zTop});msg='Pinned to your Notebook 📓'}
- else if(act==='idea'){state.notes.unshift({id:uid(),type:'note',title:firstLine.slice(0,60),body:it.text,later:true,color:'white'});msg='Floated to Ideas for later 🎈'}
+function sortInbox(act,id,projectName,el,over,quiet){const it=state.inbox.find(x=>x.id===id);if(!it)return;over=over||{};const firstLine=it.text.split('\n')[0].slice(0,140),rest=it.text.includes('\n')||(over.title&&over.title!==firstLine)?it.text:'';let msg='';
+ if(act==='task'||act==='project'){const q=parseQuick(firstLine);state.tasks.push({id:uid(),...q,title:over.title||q.title||firstLine,due:over.due||q.due||'',project:act==='project'?projectName:'Personal',done:false,focusDate:'',time:'',detail:rest});msg=act==='project'?`Task added to ${projectName}`:'Added to your tasks'}
+ else if(act==='note'){state.notes.unshift({id:uid(),type:'note',title:(over.title||firstLine).slice(0,60),body:it.text,later:false,color:'white',z:++zTop});msg='Pinned to your Notes board 📓'}
+ else if(act==='idea'){state.notes.unshift({id:uid(),type:'note',title:(over.title||firstLine).slice(0,60),body:it.text,later:true,color:'white'});msg='Saved for later 🎈'}
  else if(act==='drop'){msg='Let go ☁️'}
- state.inbox=state.inbox.filter(x=>x!==it);if(el){const [x,y]=center(el);sparkle(x,y,act==='drop'?6:14)}save();render();toast(msg+(state.inbox.length?'':'. Inbox zero ✨'))}
-function inboxPanel(){const items=state.inbox||[];return `<section class="panel cream" id="inboxPanel"><div class="section-head"><h2>Inbox</h2><span class="count">${items.length?items.length+' to sort':'All clear'}</span></div>
-${items.map(it=>`<div class="inboxrow"><div class="inboxtext">${esc(it.text).replace(/\n/g,'<br>')}</div><div class="inboxacts"><button class="tiny" data-inbox="task|${it.id}" title="Make it a task">☑ Task</button><button class="tiny" data-inbox="note|${it.id}" title="Pin to Notebook">📓 Note</button><button class="tiny" data-inbox="idea|${it.id}" title="Save for later">🎈 Later</button><select class="tiny projsel" data-inboxproj="${it.id}" aria-label="Add as a task to a project"><option value="">🚀 Project…</option>${state.projects.map(p=>`<option value="${esc(p.name)}">${esc(p.emoji||'')} ${esc(p.name)}</option>`).join('')}</select><button class="tiny" data-inbox="drop|${it.id}" title="Let it go" aria-label="Let it go">×</button></div></div>`).join('')||'<div class="empty" style="padding:6px 0 12px">Inbox zero. Anything you capture at the top lands here, ready to sort.</div>'}
+ state.inbox=state.inbox.filter(x=>x!==it);if(el){const [x,y]=center(el);sparkle(x,y,act==='drop'?6:14)}if(quiet)return;save();render();toast(msg+(state.inbox.length?'':'. Inbox zero ✨'))}
+function inboxPanel(){const items=state.inbox||[];return `<section class="panel cream" id="inboxPanel"><div class="section-head"><h2>Inbox${items.length?` <span class="count">${items.length}</span>`:''}</h2><div><button class="tiny" id="dumpBtn">🧠 Brain dump</button>${items.length?'<button class="tiny" id="sortBtn">✨ Sort for me</button>':''}</div></div>${items.some(i=>i.suggest)?`<div class="btns" style="margin:-6px 0 6px"><button class="dark" id="acceptAll">✓ Accept all ${items.filter(i=>i.suggest).length} suggestions</button></div>`:''}
+${items.map(it=>`<div class="inboxrow"><div class="inboxtext">${esc(it.text).replace(/\n/g,'<br>')}</div>${it.suggest?`<div class="suggest"><span>→ ${KIND_LABEL[it.suggest.kind]||''}${it.suggest.kind==='task'?` · ${esc((state.projects.find(p=>p.name===it.suggest.project)||{}).emoji||'')} ${esc(it.suggest.project||'Personal')}${it.suggest.due?' · '+shortDate(it.suggest.due):''}`:''}${it.suggest.title&&it.suggest.title!==it.text?` · “${esc(it.suggest.title)}”`:''}</span><button class="tiny" data-accept="${it.id}">✓ Accept</button></div>`:''}<div class="inboxacts"><button class="tiny" data-inbox="task|${it.id}" title="Make it a task">☑ Task</button><button class="tiny" data-inbox="note|${it.id}" title="Pin to Notebook">📓 Note</button><button class="tiny" data-inbox="idea|${it.id}" title="Save for later">🎈 Later</button><select class="tiny projsel" data-inboxproj="${it.id}" aria-label="Add as a task to a project"><option value="">🚀 Project…</option>${state.projects.map(p=>`<option value="${esc(p.name)}">${esc(p.emoji||'')} ${esc(p.name)}</option>`).join('')}</select><button class="tiny" data-inbox="drop|${it.id}" title="Let it go" aria-label="Let it go">×</button></div></div>`).join('')||'<div class="empty" style="padding:6px 0 12px">Inbox zero. Anything you capture at the top lands here, ready to sort.</div>'}
 <form class="quick" id="inboxAdd"><input name="t" placeholder="Empty your head here…" aria-label="Add to inbox" required><button class="dark">＋</button></form></section>`}
 
 /* ---------- Notebook cards ---------- */
@@ -479,12 +689,12 @@ return `<article class="card ${t} c-${n.color||'white'}" data-card="${n.id}" sty
 function laterCard(n){const body=n.type==='list'?`<div class="hint" style="font-size:14px;min-height:120px">${n.items.map(i=>(i.done?'✓ ':'○ ')+esc(i.text)).join('<br>')||'Empty list'}</div>`:`<textarea aria-label="Note content" data-notebody="${n.id}">${esc(n.body)}</textarea>`;return `<article class="note"><input aria-label="Note title" data-notetitle="${n.id}" value="${esc(n.title)}" placeholder="Untitled">${body}<div class="notefoot"><button class="tiny" data-movenote="${n.id}">Move to notebook</button>${n.type!=='list'?`<button class="tiny" data-cardtask="${n.id}">Make a task</button>`:''}<button class="tiny" data-deletenote="${n.id}" aria-label="Delete note">×</button></div></article>`}
 
 function render(){
-document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));document.body.classList.toggle('view-ask',view==='ask');
+const _g=groupOf(view);if(_g)lastSub[_g.id]=view;document.querySelectorAll('[data-group]').forEach(b=>b.classList.toggle('active',_g&&_g.id===b.dataset.group));document.body.classList.toggle('view-ask',view==='ask');
 $('#dateLabel').textContent=new Date().toLocaleDateString('en-GB',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});
 $('#popCount').textContent=state.pops;updateInboxCount();
 let c=$('#content');
 if(view==='today'){let hs=activeHabits(),done=hs.filter(h=>h.days.includes(today())).length,focus=sorted(state.tasks.filter(t=>t.focusDate===today())),next=sorted(state.tasks.filter(t=>!t.done&&t.focusDate!==today())).slice(0,3);
-c.innerHTML=head('MAKE ROOM FOR WHAT MATTERS',greet()+', Sam.','A few good moves. A whole sky to think in.')+`<div class="hero"><div><div class="label">TODAY’S INTENTION</div><h2>Less noise. More forward.</h2><p>Choose up to three priorities. Let everything else float by.</p><form class="wish" id="wishForm"><input name="wish" maxlength="60" aria-label="Intention" placeholder="Blow a bubble with an intention…" required><button class="dark">🫧 Release</button></form></div><button class="breath" id="breath" aria-label="Start a breathing exercise"><span id="breathText">Breathe</span></button></div><div class="layout"><div><section class="panel"><div class="section-head"><h2>Your focus</h2><button id="plan" class="tiny">✧ Suggest my top 3</button></div>${focus.map(taskRow).join('')||'<div class="empty">A clear sky starts here.<br>Add a task, or let your priorities suggest the next move.</div>'}<form class="quick" id="quickForm"><input name="quick" aria-label="Quick task" placeholder="Add a next move…" required><button class="dark">＋</button></form><p class="hint">Try “Book climbing tomorrow 30m” or “Invoice Friday !high”.</p></section><section class="panel"><div class="section-head"><h2>Up next</h2><span class="count">Smart order</span></div>${next.map(taskRow).join('')||'<div class="empty">Nothing waiting in the wings.</div>'}<p class="hint">Overdue, then due today, then priority. Shorter tasks break ties.</p></section></div><div>${inboxPanel()}${window.HS?HS.todayExtras():''}<section class="panel"><div class="section-head"><h2>Your daily rhythm</h2><button id="addHabit" class="tiny">＋ Habit</button></div><div class="hint">${done} of ${hs.length} done${hs.length&&done===hs.length?' · rainbow day 🌈':''}</div><div class="progress"><span style="width:${hs.length?done/hs.length*100:0}%"></span></div>${hs.map(h=>`<div class="row"><button class="tick ${h.days.includes(today())?'checked':''}" data-habit="${h.id}" aria-label="Toggle ${esc(h.title)}">${h.days.includes(today())?'✓':''}</button><div class="taskbody"><b>${esc(h.title)}</b><div class="meta">${h.minutes} min · ${esc(h.repeat)}</div></div><button class="tiny" data-removehabit="${h.id}" aria-label="Remove habit">×</button></div>`).join('')}</section></div></div>`}
+c.innerHTML=head('MAKE ROOM FOR WHAT MATTERS',greet()+', Sam.','A few good moves. A whole sky to think in.')+`<div class="hero"><div><div class="label">TODAY’S INTENTION</div><h2>Less noise. More forward.</h2><p>Choose up to three priorities. Let everything else float by.</p><form class="wish" id="wishForm"><input name="wish" maxlength="60" aria-label="Intention" placeholder="Blow a bubble with an intention…" required><button class="dark">🫧 Release</button></form></div><button class="breath" id="breath" aria-label="Start a breathing exercise"><span id="breathText">Breathe</span></button></div><div class="layout"><div><section class="panel"><div class="section-head"><h2>Your focus</h2><button id="plan" class="tiny">✧ Suggest my top 3</button></div>${focus.map(taskRow).join('')||'<div class="empty">A clear sky starts here.<br>Add a task, or let your priorities suggest the next move.</div>'}<form class="quick" id="quickForm"><input name="quick" aria-label="Quick task" placeholder="Add a next move…" required><button class="dark">＋</button></form><p class="hint">Try “Book climbing tomorrow 30m” or “Invoice Friday !high”.</p></section><section class="panel"><div class="section-head"><h2>Up next</h2><span class="count">Smart order</span></div>${next.map(taskRow).join('')||'<div class="empty">Nothing waiting in the wings.</div>'}<p class="hint">Overdue, then due today, then priority. Shorter tasks break ties.</p></section></div><div>${inboxPanel()}${todayHealthCard()}${window.HS?HS.todayExtras():''}<section class="panel"><div class="section-head"><h2>Your daily rhythm</h2><button id="addHabit" class="tiny">＋ Habit</button></div><div class="hint">${done} of ${hs.length} done${hs.length&&done===hs.length?' · rainbow day 🌈':''}</div><div class="progress"><span style="width:${hs.length?done/hs.length*100:0}%"></span></div>${hs.map(h=>`<div class="row"><button class="tick ${h.days.includes(today())?'checked':''}" data-habit="${h.id}" aria-label="Toggle ${esc(h.title)}">${h.days.includes(today())?'✓':''}</button><div class="taskbody"><b>${esc(h.title)}</b><div class="meta">${h.minutes} min · ${esc(h.repeat)}</div></div><button class="tiny" data-removehabit="${h.id}" aria-label="Remove habit">×</button></div>`).join('')}</section></div></div>`}
 if(view==='tasks'){c.innerHTML=head('ONE PLACE FOR EVERY NEXT MOVE','The to-do list.','Keep it clear. Give each task a realistic next step.')+`<div class="filters"><input id="search" value="${esc(search)}" placeholder="Search tasks…" aria-label="Search tasks"><select id="projectFilter" aria-label="Filter project">${['All projects',...projList()].map(p=>`<option ${p===project?'selected':''}>${esc(p)}</option>`).join('')}</select><select id="sort" aria-label="Sort tasks"><option value="smart" ${sort==='smart'?'selected':''}>Smart priority</option><option value="quick" ${sort==='quick'?'selected':''}>Quick wins first</option></select></div><div class="panel">${sorted(state.tasks.filter(t=>(project==='All projects'||t.project===project)&&t.title.toLowerCase().includes(search.toLowerCase()))).map(taskRow).join('')||'<div class="empty">No tasks here yet. Add your first next move.</div>'}</div>`}
 if(view==='projects'){c.innerHTML=head('WHERE THE BIG STUFF LIVES','Your projects.','Each one gets its own little world. Drop next moves straight in.')+`<div class="section-head"><span>${state.projects.length} projects</span><button id="newProject" class="dark">＋ New project</button></div><div class="projgrid">${state.projects.map(p=>{const ts=state.tasks.filter(t=>t.project===p.name),d=ts.filter(t=>t.done).length,open=sorted(ts.filter(t=>!t.done)),pct=ts.length?Math.round(d/ts.length*100):0;return `<section class="panel proj"><div class="projhead" style="--pg:${projGrad[p.color]||projGrad.lilac}"><button class="tiny projdel" data-projdel="${p.id}" aria-label="Delete project ${esc(p.name)}">×</button><button class="emo emobtn" data-projemo="${p.id}" title="Change icon" aria-label="Change icon for ${esc(p.name)}">${esc(p.emoji||'✨')}</button><div class="emopick" data-emopick="${p.id}" hidden>${PROJECT_ICONS.map(e=>`<button type="button" data-setemo="${p.id}|${e}" aria-label="Use ${e}">${e}</button>`).join('')}<input maxlength="8" placeholder="Or type / paste any emoji" aria-label="Custom icon" data-emoinput="${p.id}"></div><input class="pname" data-projname="${p.id}" value="${esc(p.name)}" aria-label="Project name"><textarea class="blurb" rows="2" data-projblurb="${p.id}" placeholder="Add a one-line description…" aria-label="Project description">${esc(p.blurb)}</textarea><div class="projstats"><span>${open.length} open · ${d} done</span><span>${pct}%</span></div><div class="progress"><span style="width:${pct}%"></span></div></div><div class="projbody">${open.slice(0,5).map(taskRow).join('')||'<div class="empty">No open tasks. Clear skies.</div>'}<form class="quick" data-projadd="${p.id}"><input name="q" placeholder="Add a next move to ${esc(p.name)}…" required aria-label="Add a task to ${esc(p.name)}"><button class="dark">＋</button></form>${window.HS?HS.projExtras(p):''}<label style="margin-top:16px">Project notes<textarea rows="3" data-projnotes="${p.id}" placeholder="Vision, contacts, loose ends…">${esc(p.notes)}</textarea></label><div style="margin-top:6px"><button class="tiny" data-projall="${esc(p.name)}">${open.length>5?`See all ${open.length} open tasks ↗`:`All ${esc(p.name)} tasks ↗`}</button></div></div></section>`}).join('')}</div>`}
 if(view==='notes'){const ns=state.notes.filter(n=>!n.later);layoutNotes(ns);c.innerHTML=head('THOUGHTS, PLANS & EVERYTHING BETWEEN','Your notebook.','A board for loose thoughts. Drag things around. Turn anything into a task.')+`<div class="boardbar"><button data-addcard="note">📝 Note</button><button data-addcard="list">☑️ Checklist</button><button data-addcard="sticky">🟨 Sticky</button><button data-addcard="heading">🔤 Heading</button><span class="hint">Drag cards anywhere · hover a line to send it to tasks</span></div><div class="board" id="board"><div class="canvas">${ns.map(cardHTML).join('')}</div></div>`;const bd=$('#board');bd.scrollLeft=boardScroll.l;bd.scrollTop=boardScroll.t}
@@ -494,8 +704,10 @@ if(view==='calendar'){let tasks=state.tasks.filter(t=>t.due&&!t.done).sort((a,b)
 if(view==='calendar'&&window.HS?.on)c.innerHTML=HS.calendarHTML();
 if(view==='connections')c.innerHTML=window.HS?HS.connectionsHTML():'';
 if(view==='ask')c.innerHTML=window.HS?HS.askHTML():'';
+if(view==='time')c.innerHTML=timeHTML();
+if(view==='health')c.innerHTML=healthHTML();
 if(view==='today'||view==='journal'){c.insertAdjacentHTML('afterbegin','<section id="quoteCard" class="quote-card" aria-label="Rotating quote"></section>');paintQuote()}
-bind();window.HS?.bindExtras();document.querySelectorAll('.card textarea').forEach(autosize)}
+c.insertAdjacentHTML('afterbegin',subtabsHTML());bind();bindLife();window.HS?.bindExtras();document.querySelectorAll('.card textarea').forEach(autosize)}
 
 function autosize(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
 function openTask(t=null,pre=null,link=null){editing=t?.id||null;fromCard=link;let f=$('#taskForm');f.elements.project.innerHTML=projList().map(p=>`<option>${esc(p)}</option>`).join('');f.reset();if(t){if(!projList().includes(t.project))f.elements.project.insertAdjacentHTML('beforeend',`<option>${esc(t.project)}</option>`);for(let k of ['title','project','priority','due','minutes','time','detail','repeat'])f.elements[k].value=t[k]||'';f.elements.focus.checked=t.focusDate===today()}if(pre)for(const k in pre)if(f.elements[k])f.elements[k].value=pre[k];$('#taskDialog').showModal();f.elements.title.focus()}
@@ -522,6 +734,10 @@ if($('#wishForm'))$('#wishForm').onsubmit=e=>{e.preventDefault();const v=e.targe
 if($('#quickForm'))$('#quickForm').onsubmit=e=>{e.preventDefault();const q=parseQuick(e.target.quick.value);if(!q.title)return toast('Add a task name');state.tasks.push({id:uid(),...q,project:'Personal',done:false,focusDate:today(),time:'',detail:''});save();render()};
 document.querySelectorAll('[data-inbox]').forEach(b=>b.onclick=()=>{const [act,id]=b.dataset.inbox.split('|');sortInbox(act,id,null,b)});
 document.querySelectorAll('[data-inboxproj]').forEach(s=>s.onchange=()=>{if(s.value)sortInbox('project',s.dataset.inboxproj,s.value,s)});
+document.querySelectorAll('[data-accept]').forEach(b=>b.onclick=()=>acceptSuggestion(b.dataset.accept,b));
+if($('#acceptAll'))$('#acceptAll').onclick=e=>{const ids=state.inbox.filter(i=>i.suggest).map(i=>i.id);ids.forEach(id=>acceptSuggestion(id,null,true));const [x,y]=center(e.target);confetti(x,y,40);save();render();toast(`Sorted ${ids.length} ${ids.length===1?'thing':'things'} ✨${state.inbox.length?'':' Inbox zero.'}`)};
+if($('#sortBtn'))$('#sortBtn').onclick=e=>sortSuggest(e.target);
+if($('#dumpBtn'))$('#dumpBtn').onclick=()=>{$('#dumpText').value='';$('#dumpDialog').showModal();setTimeout(()=>$('#dumpText').focus(),50)};
 if($('#inboxAdd'))$('#inboxAdd').onsubmit=e=>{e.preventDefault();addInbox(e.target.t.value);e.target.reset();render();document.querySelector('#inboxAdd input')?.focus()};
 if($('#newNote'))$('#newNote').onclick=()=>{state.notes.unshift({id:uid(),type:'note',title:'',body:'',later:true,color:'white'});save();render();document.querySelector('[data-notetitle]')?.focus()};
 for(let [attr,key] of [['notetitle','title'],['notebody','body']])document.querySelectorAll('[data-'+attr+']').forEach(el=>el.oninput=()=>{noteById(el.dataset[attr])[key]=el.value;if(el.tagName==='TEXTAREA'&&el.closest('.card'))autosize(el);save()});
@@ -644,7 +860,10 @@ try{applyCalm(localStorage.getItem('hs-calm')==='1')}catch{applyCalm(false)}
 $('#calmBtn').onclick=()=>{const on=!document.body.classList.contains('calm');try{localStorage.setItem('hs-calm',on?'1':'0')}catch{}applyCalm(on);toast(on?'Calm mode on. Everything’s gone still 🍃':'Calm mode off. Bubbles are back 🫧')};
 $('#askFab').onclick=()=>{view='ask';try{history.replaceState(null,'','#ask')}catch{}render();scrollTo({top:0})};
 $('#addTask').onclick=()=>openTask(null,view==='projects'||!projList().includes(project)?null:{project});
-document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;try{history.replaceState(null,'','#'+view)}catch{}render();scrollTo({top:0,behavior:'smooth'})});
+document.querySelectorAll('[data-group]').forEach(b=>b.onclick=()=>{const g=GROUPS.find(x=>x.id===b.dataset.group);goView(lastSub[g.id]||g.views[0])});
+$('#gearBtn').onclick=()=>goView('connections');$('#connBtn').onclick=()=>goView('connections');
+$('#timerPill').onclick=()=>stopTimer();
+$('#dumpGo').onclick=()=>{const lines=$('#dumpText').value.split(/\n+/).map(s=>s.replace(/^\s*([-*•]|\d+[.)])\s*/,'').trim()).filter(Boolean);if(!lines.length)return toast('Write a thought or two first');lines.slice().reverse().forEach(l=>addInbox(l));$('#dumpDialog').close();view='today';render();toast(`${lines.length} ${lines.length===1?'thought':'thoughts'} in your inbox. Sorting…`);setTimeout(()=>sortSuggest(document.getElementById('sortBtn')),300)};
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 $('#taskForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),t={id:editing||uid(),title:f.get('title').trim(),project:f.get('project'),priority:+f.get('priority'),due:f.get('due'),minutes:+f.get('minutes'),time:f.get('time'),detail:f.get('detail'),repeat:f.get('repeat')||'',focusDate:f.get('focus')?today():'',done:false};if(t.repeat&&!t.due)t.due=today();if(!t.title)return;if(t.time&&!t.due)return toast('Add a date for your start time');if(editing){let i=state.tasks.findIndex(t=>t.id===editing);state.tasks[i]={...state.tasks[i],...t,done:state.tasks[i].done}}else{state.tasks.push(t);spawn({text:t.title.slice(0,40),x:rand(W*.3,W*.8),y:H+80});if(fromCard){const n=noteById(fromCard.note);if(n){if(fromCard.item){const it=n.items?.find(x=>x.id===fromCard.item);if(it)it.task=true}else n.task=true}toast('Sent to tasks 🫧')}}fromCard=null;save();$('#taskDialog').close();render()};
 $('#taskDialog').addEventListener('close',()=>{fromCard=null});
@@ -665,7 +884,7 @@ render();save();
    the app quietly stays in local mode. */
 (function () {
   const HS = (window.HS = { on: false, me: null, health: null, events: null, eventsAt: 0, status: 'local' });
-  const COLLS = ['tasks', 'notes', 'projects', 'habits', 'inbox', 'chats', 'assistants'];
+  const COLLS = ['tasks', 'notes', 'projects', 'habits', 'inbox', 'chats', 'assistants', 'logs'];
   const METAS = ['scratch', 'pops', 'quoteFavourites', 'settings'];
   const SEP = '|';
   let synced = {}, syncSince = 0, syncTimer = null, syncing = false, again = false, pendingRender = false;
@@ -844,7 +1063,7 @@ render();save();
           await sync();
         } else {
           // this device is new: take what's in the cloud
-          state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], chats: [], assistants: [], journal: {}, scratch: '', pops: 0 };
+          state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], chats: [], assistants: [], logs: [], journal: {}, scratch: '', pops: 0 };
           for (const ch of res.changes) applyChange(ch.collection, ch.id, ch.data);
           normalise();
           synced = snap();
@@ -878,7 +1097,7 @@ render();save();
     try {
       HS.health = await api('/api/health/summary?days=7');
       autoMove();
-      if (view === 'today' || view === 'connections') softRender();
+      if (['today', 'connections', 'health', 'time'].includes(view)) softRender();
     } catch {}
   }
   function autoMove() {
@@ -916,9 +1135,9 @@ render();save();
   async function loadEvents() {
     if (!HS.on || !HS.me?.google?.connected) return;
     try {
-      HS.events = (await api('/api/google/calendar?days=21')).events;
+      HS.events = (await api('/api/google/calendar?days=21&back=8')).events;
       HS.eventsAt = Date.now();
-      if (view === 'today' || view === 'calendar') softRender();
+      if (['today', 'calendar', 'time'].includes(view)) softRender();
     } catch (e) {
       if (/not_connected|refresh_failed/.test(e.message)) { HS.me.google.connected = false; softRender(); }
     }
@@ -932,7 +1151,8 @@ render();save();
     const todays = HS.events.filter((e) => dayOf(e.start) === today() || (e.allDay && e.start <= today() && e.end > today()));
     return `<section class="panel"><div class="section-head"><h2>Today’s schedule</h2><button class="tiny" data-goview="calendar">Calendar ↗</button></div>${todays.map(evRow).join('') || '<div class="empty" style="padding:8px 0">Nothing in your calendar today. Open sky.</div>'}</section>`;
   }
-  HS.todayExtras = () => healthCard() + scheduleCard();
+  HS.todayExtras = () => scheduleCard();
+  HS.api = api;
   HS.gcalBtn = (t) => {
     if (!HS.on || !HS.me?.google?.connected || !t.due || t.done) return '';
     return t.gcal
@@ -1463,7 +1683,7 @@ render();save();
     try {
       const snap = await api('/api/backups?id=' + id);
       await api('/api/backups', { method: 'POST' }).catch(() => {}); // safety copy of the current state first
-      state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], chats: state.chats || [], assistants: state.assistants || [], journal: {}, scratch: '', pops: state.pops || 0 };
+      state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], chats: state.chats || [], assistants: state.assistants || [], logs: [], journal: {}, scratch: '', pops: state.pops || 0 };
       for (const it of snap.items || []) applyChange(it.collection, it.id, it.data);
       normalise(); save(); render(); confetti(W / 2, H / 3, 60);
       toast('Backup restored ✨ (your previous state was saved as a backup too)');
@@ -1476,7 +1696,7 @@ render();save();
     bindAsk();
     if ($('#backupNow')) $('#backupNow').onclick = async (e) => { e.target.disabled = true; try { await api('/api/backups', { method: 'POST' }); toast('Backed up 🛟'); } catch (er) { toast('Backup failed: ' + er.message); } loadBackups(); };
     document.querySelectorAll('[data-restorebk]').forEach((b) => (b.onclick = () => restoreBackup(b.dataset.restorebk)));
-    document.querySelectorAll('[data-goview]').forEach((b) => (b.onclick = () => { view = b.dataset.goview; try { history.replaceState(null, '', '#' + view); } catch {} render(); scrollTo({ top: 0 }); }));
+    document.querySelectorAll('[data-goview]').forEach((b) => (b.onclick = () => goView(b.dataset.goview)));
     document.querySelectorAll('[data-copy]').forEach((b) => (b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.copy); toast('Copied ✨'); } catch { toast('Press and hold to copy'); } }));
     if ($('#addPhone')) $('#addPhone').onclick = async () => {
       const box = $('#phoneBox'); box.hidden = !box.hidden; if (box.hidden) return;

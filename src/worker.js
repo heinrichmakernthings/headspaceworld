@@ -13,6 +13,7 @@ import * as gDisconnect from './api/google/disconnect.js';
 import * as backups from './api/backups.js';
 import * as ai from './api/ai.js';
 import * as aiModels from './api/ai-models.js';
+import * as aiSort from './api/ai-sort.js';
 import { makeBackup } from '../lib/backup.js';
 
 const routes = {
@@ -28,6 +29,7 @@ const routes = {
   '/api/backups': backups,
   '/api/ai': ai,
   '/api/ai/models': aiModels,
+  '/api/ai/sort': aiSort,
 };
 
 export default {
