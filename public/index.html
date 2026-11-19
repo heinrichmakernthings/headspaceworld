@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2a2366">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Headspace">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>Headspace · Utopia</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--ink:#2d2b52;--muted:#7a7899;--lav:#8b7cf8;--pink:#ff8ccf;--mint:#5ed6b6;--peach:#ffb48f;--sun:#ffd86e;--glass:rgba(255,255,255,.7);--line:rgba(120,110,190,.15);--skyink:#2d2b52;--skymuted:#5d5b85;--sky:linear-gradient(180deg,#8fc8ff,#f3e6ff)}
+body.dawn{--sky:linear-gradient(180deg,#ffc9db 0%,#ffe6cf 45%,#cfe6ff 100%)}
+body.day{--sky:linear-gradient(180deg,#86c3ff 0%,#bfe0ff 45%,#f3e6ff 100%)}
+body.dusk{--sky:linear-gradient(180deg,#4f4196 0%,#b8669f 50%,#ffb48f 100%);--skyink:#fff;--skymuted:rgba(255,255,255,.82)}
+body.night{--sky:linear-gradient(180deg,#12123a 0%,#2a2366 55%,#5b3d8c 100%);--skyink:#fff;--skymuted:rgba(255,255,255,.78)}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:#2a2366;color:var(--ink);font:15px/1.5 Nunito,system-ui,sans-serif;overflow-x:hidden}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0;background:transparent;color:inherit;border-radius:14px;padding:10px 13px;transition:background .2s,transform .15s}
+button:hover{background:rgba(139,124,248,.12)}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(139,124,248,.6);outline-offset:2px}
+
+/* ---------- Sky world ---------- */
+#sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--sky);transition:background 1.5s}
+.sun{position:absolute;top:70px;right:9vw;width:118px;height:118px;border-radius:50%;pointer-events:auto;cursor:pointer;background:radial-gradient(circle at 40% 38%,#fffbe0,#ffe08a 55%,#ffbe5c);box-shadow:0 0 70px 24px rgba(255,214,110,.5),0 0 180px 70px rgba(255,190,120,.22);animation:glow 7s ease-in-out infinite;transition:background 1.5s,box-shadow 1.5s,top 1.5s}
+body.dawn .sun{top:46vh;background:radial-gradient(circle at 40% 38%,#fff3ea,#ffc7a8 55%,#ff9f8a)}
+body.dusk .sun{top:52vh;width:150px;height:150px;background:radial-gradient(circle at 40% 38%,#fff0c9,#ffb36b 55%,#ff7a6b);box-shadow:0 0 90px 30px rgba(255,140,100,.5)}
+body.night .sun{background:radial-gradient(circle at 34% 34%,#fffef6,#ecebff 58%,#c9c3f2);box-shadow:0 0 60px 14px rgba(215,210,255,.45),0 0 160px 60px rgba(160,150,255,.15)}
+body.night .sun::before,body.night .sun::after{content:'';position:absolute;border-radius:50%;background:rgba(170,160,220,.35)}
+body.night .sun::before{width:22px;height:22px;top:30px;left:58px}
+body.night .sun::after{width:14px;height:14px;top:70px;left:34px}
+@keyframes glow{50%{transform:scale(1.06)}}
+.stars{position:absolute;inset:0;opacity:0;transition:opacity 2s}
+body.night .stars{opacity:1}body.dusk .stars{opacity:.35}
+.skystar{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:twinkle 3s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:1}}
+.shoot{position:absolute;width:140px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff);transform:rotate(18deg);animation:shoot 1.3s ease-out forwards}
+@keyframes shoot{from{opacity:0;translate:0 0}15%{opacity:1}to{opacity:0;translate:420px 140px}}
+.track{position:absolute;left:0;animation:drift linear infinite}
+@keyframes drift{from{transform:translateX(-340px)}to{transform:translateX(calc(100vw + 60px))}}
+.cloud{position:relative;width:190px;height:58px;border-radius:58px;background:#fff;opacity:.92;pointer-events:auto;cursor:pointer;filter:drop-shadow(0 12px 20px rgba(110,110,200,.18));transition:transform .9s ease,opacity .9s ease,filter .9s ease}
+.cloud::before{content:'';position:absolute;width:84px;height:84px;border-radius:50%;background:inherit;top:-42px;left:30px}
+.cloud::after{content:'';position:absolute;width:110px;height:110px;border-radius:50%;background:inherit;top:-60px;right:22px}
+.cloud.poof{opacity:0;transform:scale(1.6);filter:blur(14px)}
+body.dusk .cloud{background:#ffe0ec;opacity:.72}
+body.night .cloud{background:#b8aff0;opacity:.22}
+#bubbles{position:fixed;inset:0;z-index:1;pointer-events:none}
+#fx{position:fixed;inset:0;z-index:80;pointer-events:none}
+.floatword{position:fixed;z-index:81;pointer-events:none;transform:translate(-50%,-50%);background:rgba(255,255,255,.9);color:#5a4fc0;font:600 16px Fredoka,sans-serif;padding:8px 16px;border-radius:999px;box-shadow:0 10px 30px rgba(90,70,200,.25);white-space:nowrap;animation:rise 2.8s ease-out forwards}
+@keyframes rise{0%{opacity:0;margin-top:10px;scale:.8}15%{opacity:1;scale:1}80%{opacity:1}100%{opacity:0;margin-top:-70px}}
+
+/* ---------- Sidebar ---------- */
+aside{position:fixed;top:16px;left:16px;bottom:16px;width:238px;z-index:5;background:rgba(255,255,255,.62);backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);border:1px solid rgba(255,255,255,.8);border-radius:32px;padding:26px 16px;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(50,40,140,.18);overflow:auto}
+body.night aside{background:rgba(255,255,255,.8)}
+.brand{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--ink);padding:0 8px}
+.logo{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff 0 12%,transparent 30%),conic-gradient(#ffc6e8,#c9b8ff,#a8e8ff,#b8ffd9,#fff0b3,#ffc6e8);box-shadow:inset 0 0 10px rgba(255,255,255,.9),0 6px 16px rgba(139,124,248,.4);animation:bob 5s ease-in-out infinite}
+.brand span{font:600 25px Fredoka,sans-serif;letter-spacing:-.5px}
+.workspace{font-size:10px;letter-spacing:2px;color:var(--muted);margin:30px 12px 12px;font-weight:800}
+nav button{width:100%;text-align:left;display:flex;gap:12px;align-items:center;padding:11px 14px;margin-bottom:3px;color:#5c5a80;font-weight:600;border-radius:18px}
+nav button .ic{font-size:17px;width:22px;text-align:center}
+nav button.active{background:linear-gradient(135deg,#efeaff,#ffe6f4);color:#4b3fb5;font-weight:800;box-shadow:inset 0 0 0 1px rgba(139,124,248,.22),0 6px 16px rgba(139,124,248,.15)}
+.sidebar-note{margin:22px 10px 0;padding:16px;border-radius:20px;background:linear-gradient(135deg,rgba(255,240,250,.9),rgba(230,240,255,.9));color:#5a4fc0;font:500 15px/1.5 Fredoka,sans-serif}
+.sidebar-note span{display:block;font:600 12px Nunito,sans-serif;color:var(--muted);margin-top:4px}
+.pops{margin:14px 12px 0;font-size:12px;color:var(--muted)}
+.pops b{color:#5a4fc0;font-size:14px}
+.bottom{margin-top:auto;padding-top:14px;display:grid;gap:2px}
+.bottom button{text-align:left;font-size:12px;font-weight:700;color:#6b6990}
+.bottom small{font-size:10px;color:var(--muted);margin:10px 12px 0}
+
+/* ---------- Main ---------- */
+main{margin-left:272px;padding:26px 44px 70px;position:relative;z-index:5;max-width:1520px}
+header{display:flex;align-items:center;justify-content:space-between;color:var(--skymuted);font-weight:700;font-size:13px}
+.dark{background:linear-gradient(135deg,var(--lav),var(--pink));color:#fff;border-radius:999px;padding:11px 18px;font-weight:800;box-shadow:0 10px 26px rgba(139,124,248,.38)}
+.dark:hover{background:linear-gradient(135deg,#7a6af0,#ff7cc6);transform:translateY(-2px)}
+.eyebrow{font-size:11px;letter-spacing:3px;color:var(--skymuted);font-weight:800;margin-top:34px}
+h1{font:600 54px/1.05 Fredoka,sans-serif;letter-spacing:-1.5px;margin:10px 0;color:var(--skyink)}
+body.night h1,body.dusk h1{text-shadow:0 4px 30px rgba(180,150,255,.45)}
+h2{font:600 19px Fredoka,sans-serif;margin:0;letter-spacing:-.2px}
+p.sub{color:var(--skymuted);margin:10px 0 28px;font-size:16px;font-weight:600}
+.hero{background:linear-gradient(120deg,rgba(255,255,255,.82),rgba(255,234,247,.78),rgba(224,240,255,.78));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.85);border-radius:32px;padding:28px 34px;display:flex;align-items:center;justify-content:space-between;gap:24px;margin:24px 0 28px;box-shadow:0 24px 60px rgba(60,50,150,.16)}
+.hero .label{font-size:10px;letter-spacing:2px;font-weight:800;color:#8a7fd8}
+.hero h2{font-size:26px;margin:6px 0 8px}
+.hero p{color:#6d6a92;margin:0 0 16px}
+.wish{display:flex;gap:8px;max-width:460px}
+.wish input{flex:1}
+.breath{flex-shrink:0;width:136px;height:136px;border-radius:50%;margin:10px 30px;padding:0;color:#4b3fb5;font:600 15px Fredoka,sans-serif;background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.95) 0 9%,rgba(255,255,255,.25) 22%,transparent 42%),conic-gradient(from 20deg,#ffc6e8,#c9b8ff,#a8e8ff,#b8ffd9,#fff0b3,#ffc6e8);box-shadow:inset 0 0 34px rgba(255,255,255,.85),0 0 0 10px rgba(255,255,255,.35),0 18px 50px rgba(139,124,248,.4);animation:spin 18s linear infinite}
+.breath:hover{background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.95) 0 9%,rgba(255,255,255,.25) 22%,transparent 42%),conic-gradient(from 20deg,#ffc6e8,#c9b8ff,#a8e8ff,#b8ffd9,#fff0b3,#ffc6e8)}
+.breath span{display:inline-block;animation:spin 18s linear infinite reverse}
+@keyframes spin{to{rotate:360deg}}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(290px,1fr);gap:24px}
+.panel{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.85);border-radius:28px;padding:24px;margin-bottom:24px;box-shadow:0 20px 50px rgba(60,50,150,.13)}
+.panel.cream{background:rgba(255,252,242,.82)}
+body.night .panel,body.dusk .panel{background:rgba(255,255,255,.86)}body.night .panel.cream,body.dusk .panel.cream{background:rgba(255,252,242,.9)}body.night .hero{background:linear-gradient(120deg,rgba(255,255,255,.9),rgba(255,234,247,.86),rgba(224,240,255,.86))}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+main > .section-head span,#content > .section-head span{color:var(--skymuted);font-weight:700}
+.row{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding:15px 0}
+.tick{width:26px;height:26px;padding:0;flex-shrink:0;border:2px solid #cdc5f7;border-radius:50%;background:rgba(255,255,255,.8);font-size:13px;font-weight:800}
+.tick:hover{border-color:var(--lav);background:#f3f0ff;transform:scale(1.1)}
+.tick.checked{background:linear-gradient(135deg,var(--mint),#7cc8ff);border-color:transparent;color:#fff}
+.taskbody{flex:1;min-width:0}
+.tasktitle{display:block;text-align:left;padding:0;font-weight:700;line-height:1.45}
+.tasktitle:hover{background:transparent;color:#6d5ff0}
+.meta{font-size:11px;color:var(--muted);margin-top:4px;font-weight:600}
+.tag{background:linear-gradient(135deg,#efeaff,#e2f4ff);border-radius:999px;padding:3px 9px;margin-right:6px;color:#5a4fc0}
+.done .tasktitle{text-decoration:line-through;color:#a3a1bd}
+.tiny{font-size:12px;padding:6px 9px;color:#7f7ca3;font-weight:700}
+.star{color:#f4b02e;font-size:15px}
+.empty{padding:22px 0;color:#9896b5;font-size:14px;line-height:1.8}
+.quick{display:flex;gap:8px;margin-top:8px}
+input,select,textarea{background:rgba(255,255,255,.85);border:1.5px solid #e4e0f7;border-radius:14px;padding:11px 13px;width:100%;color:var(--ink)}
+input:focus,textarea:focus,select:focus{border-color:#b7acfa}
+textarea{resize:vertical;line-height:1.7}
+.quick input{flex:1;min-width:0}
+.hint{font-size:12px;color:var(--muted);line-height:1.6}
+.progress{height:8px;background:rgba(239,237,250,.9);border-radius:8px;margin:12px 0;overflow:hidden}
+.progress span{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#ff9ecf,#c3a6ff,#8fd3ff,#7ee8c4);transition:width .6s}
+.count{font-size:11px;padding:5px 11px;background:#f1eeff;border-radius:20px;color:#6d61d8;font-weight:800}
+.notegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.note{background:rgba(255,252,242,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.9);border-radius:26px;padding:22px;min-height:220px;box-shadow:0 18px 44px rgba(60,50,150,.13)}
+.floaty .note{animation:bob 6s ease-in-out infinite}
+.floaty .note:nth-child(2n){animation-delay:-2s}.floaty .note:nth-child(3n){animation-delay:-4s}
+.note input{font:600 19px Fredoka,sans-serif;background:transparent;border:0;padding:0;margin-bottom:12px}
+.note textarea{background:transparent;border:0;padding:0;min-height:140px}
+.notefoot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+.filters input{max-width:300px}.filters select{width:auto}
+.calendarrow{display:flex;gap:18px;padding:16px 0;border-top:1px solid var(--line)}
+.calendarrow .day{width:90px;color:#6d61d8;font-weight:800}
+.notice{background:rgba(255,255,255,.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:22px;padding:18px 20px;line-height:1.8;font-size:13px;color:#5d5a85;border:1px solid rgba(255,255,255,.85)}
+.moods{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.moods button{border:1.5px solid #e4e0f7;font-size:13px;padding:8px 13px;border-radius:999px;font-weight:700;background:rgba(255,255,255,.7)}
+.moods .selected{background:linear-gradient(135deg,#efeaff,#ffe6f4);border-color:#b7acfa;color:#4b3fb5}
+.journal-entry{display:flex;justify-content:space-between;width:100%;font-size:13px;border-bottom:1px solid var(--line);border-radius:0;padding:12px 2px;font-weight:700}
+label{font-size:12px;display:grid;gap:7px;color:#6d6a92;font-weight:700}
+
+/* Quote (compact) */
+.quote-card{position:relative;overflow:hidden;margin:22px 0 24px;padding:18px 24px 14px;border-radius:24px;background:linear-gradient(135deg,rgba(66,52,150,.88),rgba(150,82,170,.84));color:#fff;box-shadow:0 18px 44px rgba(50,30,120,.26)}
+.quote-card::before,.quote-card::after{content:'';position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.45),rgba(255,255,255,.04) 60%);border:1px solid rgba(255,255,255,.22);animation:bob 7s ease-in-out infinite;pointer-events:none}
+.quote-card::before{width:80px;height:80px;right:-14px;top:-22px}
+.quote-card::after{width:38px;height:38px;right:80px;bottom:-10px;animation-delay:-3s}
+.quote-card blockquote{font:500 20px/1.4 Fredoka,sans-serif;margin:0 0 10px;max-width:880px;position:relative;z-index:1}
+.quote-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.quote-by{font-size:12px;font-weight:700;line-height:1.6}.quote-by span{color:#d9ceff;font-weight:600}
+.quote-by a{font-size:11px;color:#d9ceff;text-decoration:none;font-weight:600}
+.qctl{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.qctl button{font-size:12px;color:#fff;padding:5px 8px;font-weight:700}
+.quote-card button:hover{background:rgba(255,255,255,.15)}
+.qctl small{font-size:11px;color:#d9ceff;margin-left:4px}
+
+/* ---------- Notebook board ---------- */
+.boardbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 14px}
+.boardbar button{background:rgba(255,255,255,.88);border-radius:999px;padding:9px 15px;font-weight:800;color:#4b3fb5;box-shadow:0 6px 16px rgba(60,50,150,.12)}
+.boardbar button:hover{background:#fff;transform:translateY(-2px)}
+.boardbar .hint{color:var(--skymuted);margin-left:6px;font-weight:700}
+.board{position:relative;height:calc(100vh - 270px);min-height:520px;overflow:auto;border-radius:28px;background:rgba(250,249,255,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.9);box-shadow:0 20px 50px rgba(60,50,150,.15)}
+.canvas{position:relative;width:2600px;height:1800px;background-image:radial-gradient(rgba(110,100,180,.2) 1.2px,transparent 1.3px);background-size:22px 22px}
+.card{position:absolute;width:260px;background:#fff;border-radius:16px;box-shadow:0 1px 0 rgba(60,50,150,.05),0 10px 26px rgba(60,50,150,.12);padding:8px 14px 14px;touch-action:none;cursor:grab;border:1px solid rgba(120,110,190,.12);transition:box-shadow .2s,transform .15s}
+.card:hover{box-shadow:0 14px 34px rgba(60,50,150,.18)}
+.card.dragging{cursor:grabbing;box-shadow:0 26px 54px rgba(60,50,150,.28);transform:rotate(-1.5deg) scale(1.02);transition:none}
+.grip{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:1.5px;font-weight:800;color:#a19fc0;min-height:28px;user-select:none}
+.cardtools{margin-left:auto;display:flex;gap:1px;white-space:nowrap;opacity:.3;transition:opacity .2s}
+.card:hover .cardtools,.card:focus-within .cardtools{opacity:1}
+.cardtools button{padding:3px 7px;font-size:12px;border-radius:8px;letter-spacing:0;color:#6d61d8;font-weight:800}
+.card input,.card textarea{background:transparent;border:0;padding:0;border-radius:0;cursor:text;outline-offset:3px}
+.card .ctitle{font:600 18px Fredoka,sans-serif;margin-bottom:4px}
+.card textarea{resize:none;overflow:hidden;min-height:56px;font-size:14px;line-height:1.6;display:block}
+.c-yellow{background:#fff6c4}.c-pink{background:#ffe1f0}.c-blue{background:#dcefff}.c-green{background:#daf6e8}.c-lilac{background:#ebe5ff}
+.card.sticky{width:210px;min-height:190px;border-radius:4px 4px 20px 4px;box-shadow:0 14px 28px rgba(60,50,150,.16)}
+.card.sticky textarea{font:500 18px/1.45 Fredoka,sans-serif;min-height:140px}
+.card.heading{background:transparent;box-shadow:none;border:1.5px dashed transparent;width:460px}
+.card.heading:hover{border-color:rgba(120,110,190,.3);box-shadow:none}
+.card.heading input{font:600 34px Fredoka,sans-serif;color:#3d3480;letter-spacing:-.5px}
+.badge{font-size:9px;background:linear-gradient(135deg,var(--mint),#7cc8ff);color:#fff;border-radius:999px;padding:2px 8px;letter-spacing:.5px}
+.li{display:flex;align-items:center;gap:8px;padding:3px 0}
+.li .tick{width:18px;height:18px;font-size:10px;border-width:1.5px}
+.li input{flex:1;font-size:14px;min-width:0}
+.li.done input{text-decoration:line-through;color:#a3a1bd}
+.totask{font-size:11px;padding:2px 7px;opacity:0;color:#6d61d8;font-weight:800;white-space:nowrap}
+.li:hover .totask,.totask:focus{opacity:1}
+.sent{font-size:10px;color:#2fa584;font-weight:800;white-space:nowrap}
+.card .additem{margin-top:6px;font-size:13px;color:#7a7899}
+
+/* ---------- Projects ---------- */
+.projgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:22px;align-items:start}
+.proj{padding:0;overflow:hidden;background:rgba(255,255,255,.9)}
+.projhead{padding:22px 24px 6px;background:var(--pg);position:relative}
+.projdel{position:absolute;top:12px;right:12px}
+.emo{font-size:28px;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 28%,#fff 0 14%,rgba(255,255,255,.55) 40%,rgba(255,255,255,.35));box-shadow:inset 0 0 14px #fff,0 8px 20px rgba(90,70,180,.18);margin-bottom:10px;animation:bob 6s ease-in-out infinite}
+.pname{font:600 26px Fredoka,sans-serif;background:transparent;border:0;padding:0;letter-spacing:-.4px;color:var(--ink)}
+.blurb{background:transparent;border:0;padding:2px 0;color:#5d5a85;font-weight:600;font-size:13px;resize:none;line-height:1.5;display:block}
+.projstats{display:flex;justify-content:space-between;font-size:12px;color:#6d6a92;font-weight:800;margin-top:12px}
+.projbody{padding:4px 24px 20px}
+
+/* Dialogs */
+dialog{border:1px solid rgba(255,255,255,.9);border-radius:30px;padding:28px;width:min(500px,92vw);background:rgba(255,255,255,.95);color:var(--ink);box-shadow:0 30px 100px rgba(40,30,120,.35)}
+dialog::backdrop{background:rgba(40,30,110,.35);backdrop-filter:blur(5px)}
+form{display:grid;gap:14px}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.modal-head{display:flex;align-items:center;justify-content:space-between}
+.checklabel{display:flex;align-items:center;gap:8px}.checklabel input{width:auto}
+.btnrow{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.ghost{border:1.5px solid #e4e0f7;border-radius:999px;font-weight:700;padding:10px 16px}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,#5b4bd6,#c45fb0);color:#fff;border-radius:999px;padding:13px 24px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:90;box-shadow:0 14px 40px rgba(80,50,180,.35)}
+#toast.on{opacity:1;transform:translateX(-50%)}
+
+@media(max-width:1000px){aside{width:200px}main{margin-left:232px;padding:24px}.layout{grid-template-columns:1fr}.breath{width:110px;height:110px;margin:0 10px}h1{font-size:42px}}
+@media(max-width:700px){aside{position:relative;inset:auto;margin:12px;width:auto;padding:14px;border-radius:24px}.workspace,.sidebar-note,.bottom,.pops{display:none}nav{display:flex;margin-top:12px;overflow:auto;gap:4px}nav button{white-space:nowrap;width:auto;font-size:12px;padding:9px 11px;margin:0}main{margin:0;padding:12px 16px 60px}.hero{flex-direction:column-reverse;align-items:flex-start;padding:22px}.breath{margin:0 auto}h1{font-size:36px}.panel{padding:18px}.formgrid{grid-template-columns:1fr}.quote-card blockquote{font-size:18px}.quote-footer{flex-direction:column;align-items:flex-start}.sun{width:80px;height:80px;right:20px;top:20px}.board{height:70vh}}
+@media(prefers-reduced-motion:reduce){.logo,.breath,.breath span,.floaty .note,.quote-card::before,.quote-card::after,.sun,.skystar,.emo{animation:none!important}}
+
+/* ---------- Connections, health, calendar, links ---------- */
+.conngrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;align-items:start}
+.conn h2{display:flex;align-items:center;gap:10px}.conn h2 .emo{width:44px;height:44px;font-size:22px;margin:0;animation:none}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;background:#f1eeff;color:#6d61d8;margin:10px 0}
+.pill.ok{background:#dff7ee;color:#1f9a76}.pill.warn{background:#fff1dc;color:#b86e10}
+.steps{margin:10px 0 0 18px;padding:0;color:#5d5a85;font-size:13px;line-height:1.8}
+.steps code,.codebox{font:600 12px ui-monospace,Menlo,monospace;background:#f3f1ff;border-radius:8px;padding:2px 6px;color:#4b3fb5;word-break:break-all}
+.codebox button{white-space:nowrap}.steps code{white-space:nowrap}.codebox{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;margin:8px 0}
+.health .hgrid{display:flex;gap:18px;align-items:center}
+.ring{position:relative;width:96px;height:96px;flex-shrink:0}
+.ring svg{transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:600 18px Fredoka,sans-serif;color:#4b3fb5;text-align:center;line-height:1.1}
+.ring b small{display:block;font:700 9px Nunito,sans-serif;color:var(--muted);max-width:60px;margin:2px auto 0}
+.hstats{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;flex:1}
+.hstats div{font:600 17px Fredoka,sans-serif}.hstats span{display:block;font:700 10px Nunito,sans-serif;letter-spacing:1px;color:var(--muted)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:56px;margin-top:16px}
+.bars i{flex:1;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,#c3a6ff,#8fd3ff);min-height:3px;position:relative}
+.bars i.today{background:linear-gradient(180deg,#ff9ecf,#c3a6ff)}
+.barlabels{display:flex;gap:6px;font-size:10px;font-weight:800;color:var(--muted)}.barlabels span{flex:1;text-align:center}
+.ev{display:flex;gap:12px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.ev time{width:62px;flex-shrink:0;font-weight:800;color:#6d61d8;font-size:12px}
+.ev a{color:inherit;text-decoration:none;font-weight:700}.ev a:hover{color:#6d5ff0}
+.ev .loc{display:block;font-size:11px;color:var(--muted);font-weight:600}
+.dayhead{font:600 15px Fredoka,sans-serif;margin:18px 0 4px;color:#4b3fb5}.dayhead:first-child{margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#f3f1ff;border-radius:999px;padding:5px 6px 5px 11px;font-size:12px;font-weight:700;color:#4b3fb5;text-decoration:none;max-width:100%}
+.chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.chip button{padding:0 6px;font-size:12px;border-radius:999px;color:#8f8cb3}
+#saveStatus.click{cursor:pointer;text-decoration:underline}
+@media(max-width:700px){aside{margin-top:calc(12px + env(safe-area-inset-top))}.health .hgrid{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body class="night">
+<div id="sky" aria-hidden="true"><div class="stars" id="stars"></div><div class="sun" title="Click to change the sky"></div><div id="clouds"></div></div>
+<canvas id="bubbles" aria-hidden="true"></canvas>
+
+<aside>
+  <a class="brand" href="#"><i class="logo"></i><span>headspace</span></a>
+  <div class="workspace">SAM'S LITTLE UTOPIA</div>
+  <nav>
+    <button data-view="today"><span class="ic">☀️</span><span>My day</span></button>
+    <button data-view="tasks"><span class="ic">🫧</span><span>All tasks</span></button>
+    <button data-view="projects"><span class="ic">🚀</span><span>Projects</span></button>
+    <button data-view="notes"><span class="ic">📓</span><span>Notebook</span></button>
+    <button data-view="journal"><span class="ic">🌙</span><span>Daily journal</span></button>
+    <button data-view="later"><span class="ic">🎈</span><span>Ideas for later</span></button>
+    <button data-view="calendar"><span class="ic">🗓️</span><span>Calendar</span></button>
+    <button data-view="connections"><span class="ic">🔌</span><span>Connections</span></button>
+  </nav>
+  <div class="sidebar-note">Big ideas. Small steps.<span>You don't have to do it all today.</span></div>
+  <div class="pops">🫧 <b id="popCount">0</b> bubbles popped · tap the sky, the clouds, the sun</div>
+  <div class="bottom">
+    <button id="backup">↥ Export backup</button>
+    <button id="restore">↧ Restore backup</button>
+    <input type="file" id="restoreFile" accept="application/json" hidden>
+    <small id="saveStatus">● Saved in this browser · no cloud sync</small>
+  </div>
+</aside>
+
+<main><header><span id="dateLabel"></span><button id="addTask" class="dark">＋ New task</button></header><div id="content"></div></main>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<dialog id="taskDialog"><form id="taskForm"><div class="modal-head"><h2>A next move ✨</h2><button type="button" data-close aria-label="Close">✕</button></div><input name="title" placeholder="What needs doing?" required maxlength="250"><div class="formgrid"><label>Project<select name="project"></select></label><label>Priority<select name="priority"><option value="2">Normal</option><option value="3">High</option><option value="1">Low</option></select></label><label>Due date<input name="due" type="date"></label><label>Minutes<input name="minutes" type="number" min="5" max="480" value="25"></label><label>Start time (optional)<input name="time" type="time"></label></div><label>Notes<textarea name="detail" rows="3" placeholder="A little context…"></textarea></label><label class="checklabel"><input name="focus" type="checkbox"> Put in today's focus</label><button class="dark" type="submit">Save task ↗</button></form></dialog>
+
+<dialog id="habitDialog"><form id="habitForm"><h2>Build a small habit 🌱</h2><input name="title" required placeholder="e.g. Spanish practice"><label>Minutes<input name="minutes" type="number" min="1" max="240" value="15"></label><label>Repeat<select name="repeat"><option value="daily">Every day</option><option value="weekdays">Weekdays</option><option value="weekends">Weekends</option></select></label><div class="btnrow"><button type="button" class="ghost" data-close>Cancel</button><button class="dark">Add habit</button></div></form></dialog>
+
+<dialog id="projectDialog"><form id="projectForm"><div class="modal-head"><h2>A new project 🚀</h2><button type="button" data-close aria-label="Close">✕</button></div><div class="formgrid"><label>Name<input name="name" required maxlength="40" placeholder="e.g. Cosies"></label><label>Emoji<input name="emoji" maxlength="4" value="✨"></label></div><label>One-line description<input name="blurb" maxlength="120" placeholder="What is it, in a sentence?"></label><label>Colour<select name="color"><option value="lilac">Lilac sky</option><option value="pink">Candy pink</option><option value="blue">Sea breeze</option><option value="peach">Sunrise peach</option><option value="green">Fresh mint</option></select></label><button class="dark">Create project</button></form></dialog>
+
+<dialog id="askDialog"><h2 id="askText">Are you sure?</h2><p class="hint">This can't be undone.</p><div class="btnrow"><button class="ghost" id="askNo">Keep it</button><button class="dark" id="askYes">Yes, delete</button></div></dialog>
+
+<dialog id="exportDialog"><div class="modal-head"><h2 id="exportName">Export</h2><button type="button" data-close aria-label="Close">✕</button></div><p class="hint">If a download didn't start, copy this and save it as a file with the name above.</p><textarea id="exportText" rows="9" readonly></textarea><div class="btnrow" style="margin-top:12px"><button class="dark" id="exportCopy">Copy to clipboard</button></div></dialog>
+
+<dialog id="restoreDialog"><div class="modal-head"><h2>Restore a backup</h2><button type="button" data-close aria-label="Close">✕</button></div><p class="hint">Choose your backup .json file, or paste its contents below.</p><textarea id="restoreText" rows="7" placeholder='{"tasks": [...]}'></textarea><div class="btnrow" style="margin-top:12px"><button class="ghost" id="restoreChoose">Choose file…</button><button class="dark" id="restoreGo">Restore</button></div></dialog>
+
+<div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const TZ='Europe/London';
+const day=(d=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'}).format(d), today=()=>day();
+const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
+const rand=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const seed={tasks:[],
+notes:[
+ {id:'h1',type:'heading',title:'Brain dump',body:'',later:false,x:40,y:30},
+ {id:'welcome',type:'note',title:'A little more clarity',body:'A board for your next moves, loose thoughts and big ideas.\n\nDrag cards anywhere. Hover a card and hit → Task to send it to your list.',later:false,color:'white',x:40,y:110},
+ {id:'s1',type:'sticky',title:'',body:'Keep today small.\nLet the rest float.',later:false,color:'yellow',x:340,y:110},
+ {id:'l1',type:'list',title:'Quick checklist',body:'',later:false,color:'white',x:590,y:110,items:[{id:'i1',text:'Hover a line, press → task',done:false},{id:'i2',text:'Tick things off here too',done:true}]},
+ {id:'mission',type:'note',title:'The bigger idea',body:'Build useful businesses that create good jobs and stronger communities.\n\nPay fairly. Buy locally where practical. Reinvest in people.\n\nAn idea to come back to, not another thing to do today.',later:true}],
+projects:[
+ {id:'madruga',name:'Madruga',emoji:'🌙',blurb:'Boutique electronic music festival · Baskerville Hall, Hay-on-Wye',color:'pink',notes:''},
+ {id:'juntada',name:'Juntada',emoji:'🫶',blurb:'',color:'peach',notes:''},
+ {id:'assembly',name:'Assembly',emoji:'🧩',blurb:'All-in-one events, ticketing & merch platform',color:'blue',notes:''}],
+habits:[{id:'move',title:'Move your body',minutes:30,repeat:'daily',days:[]},{id:'language',title:'Language practice',minutes:15,repeat:'daily',days:[]}],scratch:''};
+let state;try{state=JSON.parse(localStorage.getItem('headspace-v1'))||structuredClone(seed)}catch{state=structuredClone(seed)}
+function normalise(){state.journal=state.journal||{};state.pops=state.pops||0;state.projects=Array.isArray(state.projects)?state.projects:structuredClone(seed.projects);state.settings=Object.assign({stepGoal:8000,autoMove:true},state.settings||{});state.notes.forEach(n=>{n.type=n.type||'note';if(n.type==='list')n.items=n.items||[]})}
+normalise();
+const VIEWS=['today','tasks','projects','notes','journal','later','calendar','connections'];
+let journalDate=today(),view=VIEWS.includes(location.hash.slice(1))?location.hash.slice(1):'today',editing=null,fromCard=null,search='',project='All projects',sort='smart',boardScroll={l:0,t:0};
+
+const affirmations=['You are allowed to go slowly','Small steps still move you','Today is a fresh page','Breathe. You’re right on time','Your ideas matter','Rest is productive too','One thing at a time','You’ve handled hard days before','Make room for joy','Progress, not perfection','Good things are growing','Be kind to future you','Curiosity over pressure','Let it be light','You’re building something real','Done is a lovely word','The sky is not the limit','Plant it. Water it. Wait.','Choose calm on purpose','Your pace is the right pace'];
+const doneWords=['Lovely! ✨','Done & dusted 🌈','Look at you go 🎈','One less cloud ☁️','Beautiful work 💫','Floating lighter 🫧'];
+const sparks=['Room to breathe','Clear skies ahead','Keep floating','Light as air','Dream a little bigger','Slow is smooth','You’re doing fine','Tiny steps count','Make it playful','Let it drift'];
+const projGrad={pink:'linear-gradient(135deg,#ffd6ec,#e5dcff)',blue:'linear-gradient(135deg,#d3eaff,#d8fbef)',peach:'linear-gradient(135deg,#ffe0cc,#fff2bf)',lilac:'linear-gradient(135deg,#e6ddff,#d9f0ff)',green:'linear-gradient(135deg,#d6f7e6,#f0ffd2)'};
+const cardColors=['white','yellow','pink','blue','green','lilac'];
+const projList=()=>[...new Set(['Personal','Work & income',...state.projects.map(p=>p.name),'Home'])];
+
+function save(){try{localStorage.setItem('headspace-v1',JSON.stringify(state));if(!window.HS?.on)$('#saveStatus').textContent='● Saved in this browser · no cloud sync'}catch{if(!window.HS?.on)$('#saveStatus').textContent='Not saved here, so export a backup'}window.HS?.queueSync()}
+let toastT;function toast(s){const t=$('#toast');t.textContent=s;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),3200)}
+function ask(msg,yes='Yes, delete'){return new Promise(res=>{const d=$('#askDialog');$('#askText').textContent=msg;$('#askYes').textContent=yes;let settled=false;const done=v=>{if(settled)return;settled=true;d.close();res(v)};$('#askYes').onclick=()=>done(true);$('#askNo').onclick=()=>done(false);d.oncancel=()=>done(false);d.showModal()})}
+function score(t){return (t.due&&t.due<today()?100:0)+(t.due===today()?50:0)+Number(t.priority)*10-(Number(t.minutes)||25)/60}
+function sorted(a){return [...a].sort((a,b)=>Number(a.done)-Number(b.done)||(sort==='quick'?a.minutes-b.minutes:score(b)-score(a)))}
+function activeHabits(){let w=new Date().toLocaleDateString('en-GB',{timeZone:TZ,weekday:'short'}),weekend=['Sat','Sun'].includes(w);return state.habits.filter(h=>h.repeat==='daily'||(h.repeat==='weekdays'&&!weekend)||(h.repeat==='weekends'&&weekend))}
+const londonHour=()=>+new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit',hourCycle:'h23'}).format(new Date());
+const greet=()=>{const h=londonHour();return h<5?'Hello, night owl':h<12?'Good morning':h<17?'Good afternoon':'Good evening'};
+const noteById=id=>state.notes.find(n=>n.id===id);
+
+function parseQuick(raw){let due='',p=2,minutes=25,d=new Date();if(/\btomorrow\b/i.test(raw)){d.setDate(d.getDate()+1);due=day(d);raw=raw.replace(/\btomorrow\b/i,'')}else if(/\btoday\b/i.test(raw)){due=today();raw=raw.replace(/\btoday\b/i,'')}else{const names=['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];for(let i=0;i<7;i++)if(new RegExp('\\b'+names[i]+'\\b','i').test(raw)){let current=new Date(today()+'T12:00:00').getDay();d=new Date(today()+'T12:00:00');d.setDate(d.getDate()+((i-current+7)%7||7));due=day(d);raw=raw.replace(new RegExp('\\b'+names[i]+'\\b','i'),'');break}}let m=raw.match(/\b(\d+)m\b/);if(m){minutes=Math.max(5,Math.min(480,+m[1]));raw=raw.replace(m[0],'')}if(/!high/i.test(raw)){p=3;raw=raw.replace(/!high/i,'')}return {title:raw.trim().replace(/\s{2,}/g,' '),due,priority:p,minutes}}
+
+function taskRow(t){let due=t.due?(t.due<today()&&!t.done?'Overdue · ':'')+new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'No date';return `<div class="row ${t.done?'done':''}"><button class="tick ${t.done?'checked':''}" aria-label="${t.done?'Reopen':'Complete'} ${esc(t.title)}" data-check="${t.id}">${t.done?'✓':''}</button><div class="taskbody"><button class="tasktitle" data-edit="${t.id}">${esc(t.title)}</button><div class="meta"><span class="tag">${esc(t.project)}</span>${esc(due)} · ${Number(t.minutes)} min ${t.priority==3?'· High priority':''}</div></div>${window.HS?HS.gcalBtn(t):''}<button class="tiny ${t.focusDate===today()?'star':''}" title="Toggle today’s focus" aria-label="Toggle today’s focus" data-focus="${t.id}">${t.focusDate===today()?'★':'☆'}</button><button class="tiny" aria-label="Delete task" data-delete="${t.id}">×</button></div>`}
+const head=(ey,title,sub)=>`<div class="eyebrow">${ey}</div><h1>${title}</h1><p class="sub">${sub}</p>`;
+
+/* ---------- Notebook cards ---------- */
+function freeSpot(bd,t){const w=t==='heading'?460:t==='sticky'?210:260,h=t==='heading'?70:t==='sticky'?200:230,rs=[...bd.querySelectorAll('.card')].map(c=>({x:c.offsetLeft,y:c.offsetTop,w:c.offsetWidth,h:c.offsetHeight}));const x0=bd.scrollLeft+30,y0=bd.scrollTop+30,xMax=Math.min(2600-w,bd.scrollLeft+bd.clientWidth-w-20);for(let y=y0;y<1800-h;y+=30)for(let x=x0;x<=Math.max(x0,xMax);x+=30){if(!rs.some(r=>x<r.x+r.w+20&&x+w+20>r.x&&y<r.y+r.h+20&&y+h+20>r.y))return {x,y}}return {x:x0+rand(0,60),y:y0+rand(0,60)}}
+function layoutNotes(ns){const placed=ns.filter(n=>Number.isFinite(n.x));let base=placed.length?Math.max(...placed.map(n=>n.y))+300:40,i=0;ns.forEach(n=>{if(!Number.isFinite(n.x)){n.x=40+(i%4)*290;n.y=base+Math.floor(i/4)*290;i++}})}
+let zTop=1;
+function cardHTML(n){const t=n.type||'note';zTop=Math.max(zTop,n.z||1);
+const tools=`<div class="cardtools">${t!=='heading'?`<button data-color="${n.id}" title="Change colour" aria-label="Change colour">🎨</button>`:''}${t==='note'||t==='sticky'?`<button data-cardtask="${n.id}" title="Make this a task">→ Task</button>`:''}${t==='list'?`<button data-alltasks="${n.id}" title="Send every open line to tasks">→ Tasks</button>`:''}<button data-movenote="${n.id}" title="Save for later" aria-label="Save for later">🎈</button><button data-deletenote="${n.id}" aria-label="Delete card">×</button></div>`;
+const label={note:'NOTE',list:'CHECKLIST',sticky:'',heading:''}[t]||'';
+const grip=`<div class="grip">⠿ ${label}${n.task?' <span class="badge">IN TASKS</span>':''}${tools}</div>`;
+let inner;
+if(t==='heading')inner=`<input aria-label="Heading" data-notetitle="${n.id}" value="${esc(n.title)}" placeholder="Heading">`;
+else if(t==='sticky')inner=`<textarea aria-label="Sticky note" data-notebody="${n.id}" placeholder="Jot it down…">${esc(n.body)}</textarea>`;
+else if(t==='list')inner=`<input class="ctitle" aria-label="List title" data-notetitle="${n.id}" value="${esc(n.title)}" placeholder="List title">${n.items.map(it=>`<div class="li ${it.done?'done':''}"><button class="tick ${it.done?'checked':''}" data-itemcheck="${n.id}|${it.id}" aria-label="Toggle item">${it.done?'✓':''}</button><input data-itemtext="${n.id}|${it.id}" value="${esc(it.text)}" aria-label="List item">${it.task?'<span class="sent">✓ in tasks</span>':`<button class="totask" data-itemtask="${n.id}|${it.id}" title="Make this line a task">→ task</button>`}</div>`).join('')}<input class="additem" data-additem="${n.id}" placeholder="+ Add an item, press Enter" aria-label="Add list item">`;
+else inner=`<input class="ctitle" aria-label="Note title" data-notetitle="${n.id}" value="${esc(n.title)}" placeholder="Title"><textarea aria-label="Note content" data-notebody="${n.id}" placeholder="Write anything…">${esc(n.body)}</textarea>`;
+return `<article class="card ${t} c-${n.color||'white'}" data-card="${n.id}" style="left:${n.x}px;top:${n.y}px;z-index:${n.z||1}">${grip}${inner}</article>`}
+function laterCard(n){const body=n.type==='list'?`<div class="hint" style="font-size:14px;min-height:120px">${n.items.map(i=>(i.done?'✓ ':'○ ')+esc(i.text)).join('<br>')||'Empty list'}</div>`:`<textarea aria-label="Note content" data-notebody="${n.id}">${esc(n.body)}</textarea>`;return `<article class="note"><input aria-label="Note title" data-notetitle="${n.id}" value="${esc(n.title)}" placeholder="Untitled">${body}<div class="notefoot"><button class="tiny" data-movenote="${n.id}">Move to notebook</button>${n.type!=='list'?`<button class="tiny" data-cardtask="${n.id}">Make a task</button>`:''}<button class="tiny" data-deletenote="${n.id}" aria-label="Delete note">×</button></div></article>`}
+
+function render(){
+document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+$('#dateLabel').textContent=new Date().toLocaleDateString('en-GB',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});
+$('#popCount').textContent=state.pops;
+let c=$('#content');
+if(view==='today'){let hs=activeHabits(),done=hs.filter(h=>h.days.includes(today())).length,focus=sorted(state.tasks.filter(t=>t.focusDate===today())),next=sorted(state.tasks.filter(t=>!t.done&&t.focusDate!==today())).slice(0,3);
+c.innerHTML=head('MAKE ROOM FOR WHAT MATTERS',greet()+', Sam.','A few good moves. A whole sky to think in.')+`<div class="hero"><div><div class="label">TODAY’S INTENTION</div><h2>Less noise. More forward.</h2><p>Choose up to three priorities. Let everything else float by.</p><form class="wish" id="wishForm"><input name="wish" maxlength="60" aria-label="Intention" placeholder="Blow a bubble with an intention…" required><button class="dark">🫧 Release</button></form></div><button class="breath" id="breath" aria-label="Start a breathing exercise"><span id="breathText">Breathe</span></button></div><div class="layout"><div><section class="panel"><div class="section-head"><h2>Your focus</h2><button id="plan" class="tiny">✧ Suggest my top 3</button></div>${focus.map(taskRow).join('')||'<div class="empty">A clear sky starts here.<br>Add a task, or let your priorities suggest the next move.</div>'}<form class="quick" id="quickForm"><input name="quick" aria-label="Quick task" placeholder="Add a next move…" required><button class="dark">＋</button></form><p class="hint">Try “Book climbing tomorrow 30m” or “Invoice Friday !high”.</p></section><section class="panel"><div class="section-head"><h2>Up next</h2><span class="count">Smart order</span></div>${next.map(taskRow).join('')||'<div class="empty">Nothing waiting in the wings.</div>'}<p class="hint">Overdue, then due today, then priority. Shorter tasks break ties.</p></section></div><div>${window.HS?HS.todayExtras():''}<section class="panel"><div class="section-head"><h2>Your daily rhythm</h2><button id="addHabit" class="tiny">＋ Habit</button></div><div class="hint">${done} of ${hs.length} done${hs.length&&done===hs.length?' · rainbow day 🌈':''}</div><div class="progress"><span style="width:${hs.length?done/hs.length*100:0}%"></span></div>${hs.map(h=>`<div class="row"><button class="tick ${h.days.includes(today())?'checked':''}" data-habit="${h.id}" aria-label="Toggle ${esc(h.title)}">${h.days.includes(today())?'✓':''}</button><div class="taskbody"><b>${esc(h.title)}</b><div class="meta">${h.minutes} min · ${esc(h.repeat)}</div></div><button class="tiny" data-removehabit="${h.id}" aria-label="Remove habit">×</button></div>`).join('')}</section><section class="panel cream"><div class="section-head"><h2>On your mind?</h2><span>☁️</span></div><textarea id="scratch" rows="5" placeholder="Empty your head here. No need to organise it yet.">${esc(state.scratch)}</textarea><button id="saveNote" class="tiny">Move to notebook ↗</button></section></div></div>`}
+if(view==='tasks'){c.innerHTML=head('ONE PLACE FOR EVERY NEXT MOVE','The to-do list.','Keep it clear. Give each task a realistic next step.')+`<div class="filters"><input id="search" value="${esc(search)}" placeholder="Search tasks…" aria-label="Search tasks"><select id="projectFilter" aria-label="Filter project">${['All projects',...projList()].map(p=>`<option ${p===project?'selected':''}>${esc(p)}</option>`).join('')}</select><select id="sort" aria-label="Sort tasks"><option value="smart" ${sort==='smart'?'selected':''}>Smart priority</option><option value="quick" ${sort==='quick'?'selected':''}>Quick wins first</option></select></div><div class="panel">${sorted(state.tasks.filter(t=>(project==='All projects'||t.project===project)&&t.title.toLowerCase().includes(search.toLowerCase()))).map(taskRow).join('')||'<div class="empty">No tasks here yet. Add your first next move.</div>'}</div>`}
+if(view==='projects'){c.innerHTML=head('WHERE THE BIG STUFF LIVES','Your projects.','Each one gets its own little world. Drop next moves straight in.')+`<div class="section-head"><span>${state.projects.length} projects</span><button id="newProject" class="dark">＋ New project</button></div><div class="projgrid">${state.projects.map(p=>{const ts=state.tasks.filter(t=>t.project===p.name),d=ts.filter(t=>t.done).length,open=sorted(ts.filter(t=>!t.done)),pct=ts.length?Math.round(d/ts.length*100):0;return `<section class="panel proj"><div class="projhead" style="--pg:${projGrad[p.color]||projGrad.lilac}"><button class="tiny projdel" data-projdel="${p.id}" aria-label="Delete project ${esc(p.name)}">×</button><div class="emo">${esc(p.emoji||'✨')}</div><input class="pname" data-projname="${p.id}" value="${esc(p.name)}" aria-label="Project name"><textarea class="blurb" rows="2" data-projblurb="${p.id}" placeholder="Add a one-line description…" aria-label="Project description">${esc(p.blurb)}</textarea><div class="projstats"><span>${open.length} open · ${d} done</span><span>${pct}%</span></div><div class="progress"><span style="width:${pct}%"></span></div></div><div class="projbody">${open.slice(0,5).map(taskRow).join('')||'<div class="empty">No open tasks. Clear skies.</div>'}<form class="quick" data-projadd="${p.id}"><input name="q" placeholder="Add a next move to ${esc(p.name)}…" required aria-label="Add a task to ${esc(p.name)}"><button class="dark">＋</button></form>${window.HS?HS.projExtras(p):''}<label style="margin-top:16px">Project notes<textarea rows="3" data-projnotes="${p.id}" placeholder="Vision, contacts, loose ends…">${esc(p.notes)}</textarea></label><div style="margin-top:6px"><button class="tiny" data-projall="${esc(p.name)}">${open.length>5?`See all ${open.length} open tasks ↗`:`All ${esc(p.name)} tasks ↗`}</button></div></div></section>`}).join('')}</div>`}
+if(view==='notes'){const ns=state.notes.filter(n=>!n.later);layoutNotes(ns);c.innerHTML=head('THOUGHTS, PLANS & EVERYTHING BETWEEN','Your notebook.','A board for loose thoughts. Drag things around. Turn anything into a task.')+`<div class="boardbar"><button data-addcard="note">📝 Note</button><button data-addcard="list">☑️ Checklist</button><button data-addcard="sticky">🟨 Sticky</button><button data-addcard="heading">🔤 Heading</button><span class="hint">Drag cards anywhere · hover a line to send it to tasks</span></div><div class="board" id="board"><div class="canvas">${ns.map(cardHTML).join('')}</div></div>`;const bd=$('#board');bd.scrollLeft=boardScroll.l;bd.scrollTop=boardScroll.t}
+if(view==='later'){const ns=state.notes.filter(n=>n.later);c.innerHTML=head('KEEP THE IDEA. RELEASE THE PRESSURE.','Good ideas can wait.','Let them float here. Possibilities, not obligations.')+`<div class="section-head"><span>${ns.length} ideas</span><button id="newNote" class="dark">＋ New idea</button></div><div class="notegrid floaty">${ns.map(laterCard).join('')||'<div class="empty" style="color:var(--skymuted)">Room for your next big idea.</div>'}</div>`}
+if(view==='journal'){let j=state.journal[journalDate]||{mood:'',thoughts:'',good:'',tomorrow:''};c.innerHTML=head('A MOMENT TO CHECK IN','How are you, really?','No performance. No perfect sentences. Just a little space for you.')+`<div class="section-head"><input id="journalDate" type="date" value="${journalDate}" aria-label="Journal date" style="max-width:190px"><span class="hint" style="color:var(--skymuted)">Autosaved as you write · private to this browser</span></div><div class="layout"><div class="panel cream"><div class="section-head"><h2>What's on your mind?</h2><span>✎</span></div><textarea aria-label="Daily thoughts" data-journal="thoughts" rows="15" placeholder="Start anywhere. What happened today? What are you feeling? What keeps coming back to you?">${esc(j.thoughts)}</textarea><p class="hint">${j.thoughts.trim()?j.thoughts.trim().split(/\s+/).length:0} words · You don't have to solve anything here.</p></div><div><section class="panel"><h2>Your weather today</h2><p class="hint">A feeling, not a judgement. Optional.</p><div class="moods">${[['Heavy','🌧️'],['Low','☁️'],['Okay','⛅'],['Good','🌤️'],['Bright','☀️']].map(([m,i])=>`<button data-mood="${m}" class="${j.mood===m?'selected':''}">${i} ${m}</button>`).join('')}</div><label style="margin-top:22px">One thing that went well<textarea rows="3" data-journal="good" placeholder="Even something small counts.">${esc(j.good)}</textarea></label><label style="margin-top:18px">What do you need tomorrow?<textarea rows="3" data-journal="tomorrow" placeholder="Rest, a conversation, a clear next step…">${esc(j.tomorrow)}</textarea></label></section><section class="panel"><h2>Previous pages</h2><div style="margin-top:12px">${Object.keys(state.journal).sort().reverse().map(d=>`<button class="journal-entry" data-journalday="${d}"><span>${esc(d)}</span><span class="hint">${esc(state.journal[d].mood||'Open page')} ↗</span></button>`).join('')||'<p class="empty">Your story starts on this page.</p>'}</div><button id="journalExport" class="tiny">↓ Export this entry</button></section></div></div>`}
+if(view==='calendar'){let tasks=state.tasks.filter(t=>t.due&&!t.done).sort((a,b)=>(a.due+(a.time||'')).localeCompare(b.due+(b.time||'')));c.innerHTML=head('YOUR TIME, WITH A LITTLE MORE INTENTION','Make space.','Dated tasks and a simple bridge to your calendar.')+`<div class="notice"><strong>Live calendar sync isn’t connected.</strong><br>This view shows your dated tasks, not external calendar events. Export a calendar file to import into Google, Apple or Outlook Calendar. It's a one-time export; later changes won’t sync automatically.</div><div class="section-head" style="margin-top:24px"><h2 style="color:var(--skyink)">Upcoming & overdue</h2><button id="exportCalendar" class="dark">↓ Export calendar (.ics)</button></div><div class="panel">${tasks.map(t=>`<div class="calendarrow"><div class="day">${esc(t.due)}<div class="meta">${esc(t.time||'All day')}</div></div><div class="taskbody"><button class="tasktitle" data-edit="${t.id}">${esc(t.title)}</button><div class="meta">${esc(t.project)} · ${t.minutes} min</div></div></div>`).join('')||'<div class="empty">Add a due date to a task to see it here.</div>'}</div>`}
+if(view==='calendar'&&window.HS?.on)c.innerHTML=HS.calendarHTML();
+if(view==='connections')c.innerHTML=window.HS?HS.connectionsHTML():'';
+if(view==='today'||view==='journal'){c.insertAdjacentHTML('afterbegin','<section id="quoteCard" class="quote-card" aria-label="Rotating quote"></section>');paintQuote()}
+bind();window.HS?.bindExtras();document.querySelectorAll('.card textarea').forEach(autosize)}
+
+function autosize(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
+function openTask(t=null,pre=null,link=null){editing=t?.id||null;fromCard=link;let f=$('#taskForm');f.elements.project.innerHTML=projList().map(p=>`<option>${esc(p)}</option>`).join('');f.reset();if(t){if(!projList().includes(t.project))f.elements.project.insertAdjacentHTML('beforeend',`<option>${esc(t.project)}</option>`);for(let k of ['title','project','priority','due','minutes','time','detail'])f.elements[k].value=t[k]||'';f.elements.focus.checked=t.focusDate===today()}if(pre)for(const k in pre)if(f.elements[k])f.elements[k].value=pre[k];$('#taskDialog').showModal();f.elements.title.focus()}
+const center=el=>{const r=el.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]};
+const splitId=s=>{const [n,i]=s.split('|');const note=noteById(n);return [note,note?.items?.find(x=>x.id===i)]};
+
+function bind(){
+if($('#journalDate'))$('#journalDate').onchange=e=>{if(e.target.value){journalDate=e.target.value;render()}};
+const jget=()=>state.journal[journalDate]||(state.journal[journalDate]={mood:'',thoughts:'',good:'',tomorrow:''});
+document.querySelectorAll('[data-journal]').forEach(el=>el.oninput=()=>{jget()[el.dataset.journal]=el.value;save()});
+document.querySelectorAll('[data-mood]').forEach(b=>b.onclick=()=>{let j=jget();j.mood=j.mood===b.dataset.mood?'':b.dataset.mood;if(j.mood){const [x,y]=center(b);sparkle(x,y,14)}save();render()});
+document.querySelectorAll('[data-journalday]').forEach(b=>b.onclick=()=>{journalDate=b.dataset.journalday;render()});
+if($('#journalExport'))$('#journalExport').onclick=()=>{let j=state.journal[journalDate]||{thoughts:'',good:'',tomorrow:'',mood:''};download('journal-'+journalDate+'.txt',[journalDate,'Mood: '+j.mood,'',j.thoughts,'','What went well',j.good,'','What I need tomorrow',j.tomorrow].join('\n'),'text/plain')};
+document.querySelectorAll('[data-check]').forEach(b=>b.onclick=()=>{let t=state.tasks.find(t=>t.id===b.dataset.check);t.done=!t.done;if(t.done){const [x,y]=center(b);confetti(x,y,30);floatWord(x+60,y-16,pick(doneWords));const f=state.tasks.filter(x=>x.focusDate===today());if(f.length>1&&f.every(x=>x.done))setTimeout(()=>{confetti(W/2,H/3,140);toast('Today’s focus complete. Beautiful work 🌈')},400)}save();render()});
+document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openTask(state.tasks.find(t=>t.id===b.dataset.edit)));
+document.querySelectorAll('[data-focus]').forEach(b=>b.onclick=()=>{let t=state.tasks.find(t=>t.id===b.dataset.focus);t.focusDate=t.focusDate===today()?'':today();if(t.focusDate){const [x,y]=center(b);sparkle(x,y,10)}save();render()});
+document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=async()=>{if(await ask('Delete this task?')){state.tasks=state.tasks.filter(t=>t.id!==b.dataset.delete);save();render()}});
+document.querySelectorAll('[data-habit]').forEach(b=>b.onclick=()=>{let h=state.habits.find(h=>h.id===b.dataset.habit),on=!h.days.includes(today());h.days=on?[...h.days,today()]:h.days.filter(d=>d!==today());if(on){const [x,y]=center(b);sparkle(x,y,18);if(activeHabits().every(h=>h.days.includes(today())))setTimeout(()=>{confetti(W/2,H/3,110);toast('Every habit done. Rainbow day 🌈')},300)}save();render()});
+document.querySelectorAll('[data-removehabit]').forEach(b=>b.onclick=async()=>{if(await ask('Remove this recurring habit?','Yes, remove')){state.habits=state.habits.filter(h=>h.id!==b.dataset.removehabit);save();render()}});
+if($('#addHabit'))$('#addHabit').onclick=()=>$('#habitDialog').showModal();
+if($('#plan'))$('#plan').onclick=()=>{state.tasks.forEach(t=>{if(t.focusDate===today()&&!t.done)t.focusDate=''});const picks=sorted(state.tasks.filter(t=>!t.done)).slice(0,3);picks.forEach(t=>t.focusDate=today());save();render();toast(picks.length?'Focus chosen by due date and priority ✧':'Add a few tasks first')};
+if($('#breath'))$('#breath').onclick=breathe;
+if($('#wishForm'))$('#wishForm').onsubmit=e=>{e.preventDefault();const v=e.target.wish.value.trim();if(!v)return;spawn({text:v,x:W/2+rand(-120,120),y:H+90});e.target.reset();toast('Your intention is floating up. Pop it when you’re ready 🫧')};
+if($('#quickForm'))$('#quickForm').onsubmit=e=>{e.preventDefault();const q=parseQuick(e.target.quick.value);if(!q.title)return toast('Add a task name');state.tasks.push({id:uid(),...q,project:'Personal',done:false,focusDate:today(),time:'',detail:''});save();render()};
+if($('#scratch'))$('#scratch').oninput=e=>{state.scratch=e.target.value;save()};
+if($('#saveNote'))$('#saveNote').onclick=()=>{if(!state.scratch.trim())return toast('Write a thought first');state.notes.unshift({id:uid(),type:'note',title:'A thought worth keeping',body:state.scratch,later:false,color:'white',z:++zTop});state.scratch='';save();view='notes';render()};
+if($('#newNote'))$('#newNote').onclick=()=>{state.notes.unshift({id:uid(),type:'note',title:'',body:'',later:true,color:'white'});save();render();document.querySelector('[data-notetitle]')?.focus()};
+for(let [attr,key] of [['notetitle','title'],['notebody','body']])document.querySelectorAll('[data-'+attr+']').forEach(el=>el.oninput=()=>{noteById(el.dataset[attr])[key]=el.value;if(el.tagName==='TEXTAREA'&&el.closest('.card'))autosize(el);save()});
+document.querySelectorAll('[data-movenote]').forEach(b=>b.onclick=()=>{let n=noteById(b.dataset.movenote);n.later=!n.later;if(!n.later){delete n.x;delete n.y}const [x,y]=center(b);sparkle(x,y,12);save();render();toast(n.later?'Floated to Ideas for later 🎈':'Back on your notebook board 📓')});
+document.querySelectorAll('[data-cardtask]').forEach(b=>b.onclick=()=>{let n=noteById(b.dataset.cardtask);const first=(n.title||n.body.split('\n')[0]||'').slice(0,120);openTask(null,{title:first,detail:n.body},{note:n.id})});
+document.querySelectorAll('[data-deletenote]').forEach(b=>b.onclick=async()=>{if(await ask('Delete this card?')){state.notes=state.notes.filter(n=>n.id!==b.dataset.deletenote);save();render()}});
+if($('#search'))$('#search').oninput=e=>{let pos=e.target.selectionStart;search=e.target.value;render();$('#search').focus();$('#search').setSelectionRange(pos,pos)};
+if($('#projectFilter'))$('#projectFilter').onchange=e=>{project=e.target.value;render()};
+if($('#sort'))$('#sort').onchange=e=>{sort=e.target.value;render()};
+if($('#exportCalendar'))$('#exportCalendar').onclick=exportCalendar;
+
+/* projects */
+if($('#newProject'))$('#newProject').onclick=()=>{$('#projectForm').reset();$('#projectDialog').showModal()};
+document.querySelectorAll('[data-projadd]').forEach(f=>f.onsubmit=e=>{e.preventDefault();const p=state.projects.find(p=>p.id===f.dataset.projadd),q=parseQuick(f.q.value);if(!q.title)return toast('Add a task name');state.tasks.push({id:uid(),...q,project:p.name,done:false,focusDate:'',time:'',detail:''});const [x,y]=center(f);sparkle(x,y,14);save();render();document.querySelector(`[data-projadd="${p.id}"] input`)?.focus()});
+document.querySelectorAll('[data-projblurb]').forEach(el=>el.oninput=()=>{state.projects.find(p=>p.id===el.dataset.projblurb).blurb=el.value;save()});
+document.querySelectorAll('[data-projnotes]').forEach(el=>el.oninput=()=>{state.projects.find(p=>p.id===el.dataset.projnotes).notes=el.value;save()});
+document.querySelectorAll('[data-projname]').forEach(el=>el.onchange=()=>{const p=state.projects.find(p=>p.id===el.dataset.projname),nv=el.value.trim();if(!nv||nv===p.name||projList().includes(nv)){el.value=p.name;if(nv&&nv!==p.name)toast('That name is already in use');return}state.tasks.forEach(t=>{if(t.project===p.name)t.project=nv});if(project===p.name)project=nv;p.name=nv;save();render();toast('Project renamed ✨')});
+document.querySelectorAll('[data-projall]').forEach(b=>b.onclick=()=>{project=b.dataset.projall;search='';view='tasks';render();scrollTo({top:0})});
+document.querySelectorAll('[data-projdel]').forEach(b=>b.onclick=async()=>{const p=state.projects.find(p=>p.id===b.dataset.projdel);if(await ask(`Remove ${p.name}? Its tasks stay in All tasks.`,'Yes, remove')){state.projects=state.projects.filter(x=>x!==p);save();render()}});
+
+/* board */
+const bd=$('#board');if(!bd)return;
+bd.onscroll=()=>{boardScroll={l:bd.scrollLeft,t:bd.scrollTop}};
+document.querySelectorAll('[data-addcard]').forEach(b=>b.onclick=()=>{const t=b.dataset.addcard,n={id:uid(),type:t,title:t==='heading'?'New section':t==='list'?'Checklist':'',body:'',later:false,color:t==='sticky'?pick(['yellow','pink','blue','green']):'white',...freeSpot(bd,t),z:++zTop};if(t==='list')n.items=[];state.notes.unshift(n);save();render();const card=document.querySelector(`[data-card="${n.id}"]`);const [x,y]=center(card);sparkle(x,y,12);card.querySelector(t==='list'?'.additem':'input,textarea')?.focus()});
+document.querySelectorAll('[data-color]').forEach(b=>b.onclick=()=>{const n=noteById(b.dataset.color);n.color=cardColors[(cardColors.indexOf(n.color||'white')+1)%cardColors.length];const card=b.closest('.card');cardColors.forEach(c=>card.classList.remove('c-'+c));card.classList.add('c-'+n.color);save()});
+document.querySelectorAll('[data-itemcheck]').forEach(b=>b.onclick=()=>{const [n,it]=splitId(b.dataset.itemcheck);it.done=!it.done;if(it.done){const [x,y]=center(b);sparkle(x,y,10)}save();render()});
+document.querySelectorAll('[data-itemtext]').forEach(el=>{el.oninput=()=>{splitId(el.dataset.itemtext)[1].text=el.value;save()};el.onchange=()=>{if(!el.value.trim()){const [n,it]=splitId(el.dataset.itemtext);n.items=n.items.filter(x=>x!==it);save();render()}};el.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();el.closest('.card').querySelector('.additem').focus()}}});
+document.querySelectorAll('[data-additem]').forEach(el=>el.onkeydown=e=>{if(e.key!=='Enter'||!el.value.trim())return;e.preventDefault();const n=noteById(el.dataset.additem);n.items.push({id:uid(),text:el.value.trim(),done:false});save();render();document.querySelector(`[data-additem="${n.id}"]`)?.focus()});
+document.querySelectorAll('[data-itemtask]').forEach(b=>b.onclick=()=>{const [n,it]=splitId(b.dataset.itemtask);openTask(null,{title:it.text,detail:n.title?'From “'+n.title+'”':''},{note:n.id,item:it.id})});
+document.querySelectorAll('[data-alltasks]').forEach(b=>b.onclick=()=>{const n=noteById(b.dataset.alltasks),open=n.items.filter(i=>!i.done&&!i.task&&i.text.trim());if(!open.length)return toast('No open lines to send');open.forEach(i=>{state.tasks.push({id:uid(),title:i.text.trim(),due:'',priority:2,minutes:25,project:'Personal',done:false,focusDate:'',time:'',detail:n.title?'From “'+n.title+'”':''});i.task=true});const [x,y]=center(b);confetti(x,y,30);save();render();toast(`${open.length} ${open.length===1?'line':'lines'} sent to All tasks 🫧`)});
+bd.onpointerdown=e=>{const card=e.target.closest('.card');if(!card||e.target.closest('input,textarea,button'))return;e.preventDefault();const n=noteById(card.dataset.card),sx=e.clientX,sy=e.clientY,ox=n.x,oy=n.y;n.z=++zTop;card.style.zIndex=n.z;card.classList.add('dragging');card.setPointerCapture(e.pointerId);const mv=ev=>{n.x=Math.max(0,Math.min(2600-120,ox+ev.clientX-sx));n.y=Math.max(0,Math.min(1800-60,oy+ev.clientY-sy));card.style.left=n.x+'px';card.style.top=n.y+'px'};const up=()=>{card.classList.remove('dragging');card.removeEventListener('pointermove',mv);card.removeEventListener('pointerup',up);card.removeEventListener('pointercancel',up);save()};card.addEventListener('pointermove',mv);card.addEventListener('pointerup',up);card.addEventListener('pointercancel',up)}}
+
+function download(name,data,type){try{let u=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}catch{}$('#exportName').textContent=name;$('#exportText').value=data;$('#exportDialog').showModal()}
+$('#exportCopy').onclick=async()=>{try{await navigator.clipboard.writeText($('#exportText').value);toast('Copied ✨')}catch{$('#exportText').select();toast('Press Ctrl/⌘+C to copy')}};
+function exportCalendar(){const tasks=state.tasks.filter(t=>t.due&&!t.done);if(!tasks.length)return toast('Add a dated task first');let ie=s=>String(s||'').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');let out=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Headspace//Tasks//EN','CALSCALE:GREGORIAN'];for(let t of tasks){let date=t.due.replaceAll('-','');out.push('BEGIN:VEVENT','UID:'+t.id+'@headspace','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''),'SUMMARY:'+ie(t.title),'DESCRIPTION:'+ie(t.detail));if(t.time){out.push('DTSTART;TZID=Europe/London:'+date+'T'+t.time.replace(':','')+'00','DURATION:PT'+t.minutes+'M')}else{let end=new Date(t.due+'T12:00:00Z');end.setUTCDate(end.getUTCDate()+1);out.push('DTSTART;VALUE=DATE:'+date,'DTEND;VALUE=DATE:'+end.toISOString().slice(0,10).replaceAll('-',''))}out.push('END:VEVENT')}out.push('END:VCALENDAR');download('headspace-tasks.ics',out.join('\r\n')+'\r\n','text/calendar')}
+
+function restoreFrom(text){let s;try{s=JSON.parse(text);if(!Array.isArray(s.tasks)||!Array.isArray(s.notes)||!Array.isArray(s.habits)||typeof s.scratch!=='string'||!s.tasks.every(t=>typeof t.id==='string'&&typeof t.title==='string'&&Number.isFinite(t.minutes))||!s.notes.every(n=>typeof n.id==='string'&&typeof n.body==='string'&&typeof n.title==='string')||!s.habits.every(h=>typeof h.id==='string'&&typeof h.title==='string'&&Array.isArray(h.days)))throw Error()}catch{return toast('That is not a valid Headspace backup')}
+ask('Replace current notes and tasks with this backup?','Yes, replace').then(ok=>{if(!ok)return;state=s;normalise();save();$('#restoreDialog').close();render();confetti(W/2,H/3,80);toast('Backup restored ✨')})}
+
+/* ---------- Quotes ---------- */
+const quotes=[
+{text:'It means saying no to the hundred other good ideas that there are. You have to pick carefully.',author:'Steve Jobs',era:'2008 · Entrepreneur',source:'Fortune interview, 2008 (excerpt)',url:'https://allaboutstevejobs.com/verbatim/interviews/fortune_2008'},
+{text:'He will win who knows when to fight and when not to fight.',author:'Sun Tzu',era:'Ancient China · Military strategist',source:'The Art of War, III.17 · Lionel Giles translation',url:'https://www.gutenberg.org/cache/epub/17405/pg17405-images.html'},
+{text:'First say to yourself what you would be; and then do what you have to do.',author:'Epictetus',era:'Roman era · Philosopher',source:'Discourses III.23 · Elizabeth Carter translation',url:'https://oll-resources.s3.us-east-2.amazonaws.com/oll3/store/titles/1477/Epictetus_0755_EBk_v6.0.pdf'},
+{text:'Price is what you pay; value is what you get.',author:'Benjamin Graham, quoted by Warren Buffett',era:'2008 letter · Investors',source:'Berkshire Hathaway 2008 shareholder letter',url:'https://www.berkshirehathaway.com/letters/2008ltr.pdf'},
+{text:'Well done is better than well said.',author:'Benjamin Franklin',era:'1737 · Printer, entrepreneur & statesman',source:'Poor Richard’s Almanack (collected edition)',url:'https://hamilton.gilderlehrman.org/media/981/download'},
+{text:'No longer talk at all about the kind of man that a good man ought to be, but be such.',author:'Marcus Aurelius',era:'2nd century CE · Emperor & philosopher',source:'Meditations X.16 · George Long translation',url:'https://texts.stoameditation.com/read/meditations/10/16'},
+{text:'It is not that we have a short space of time, but that we waste much of it.',author:'Seneca',era:'1st century CE · Philosopher',source:'On the Shortness of Life, chapter 1',url:'https://philpapers.org/archive/senots-2.pdf'}];
+let quoteIndex=0,quotePaused=calm;
+function paintQuote(){const host=document.getElementById('quoteCard');if(!host)return;let q=quotes[quoteIndex];state.quoteFavourites=state.quoteFavourites||[];const fav=state.quoteFavourites.includes(quoteIndex);
+host.innerHTML=`<blockquote>“${esc(q.text)}”</blockquote><div class="quote-footer"><div class="quote-by">${esc(q.author)} <span>· ${esc(q.era)}</span><br><a href="${q.url}" target="_blank" rel="noopener noreferrer">${esc(q.source)} ↗</a></div><div class="qctl"><button id="quotePrev" aria-label="Previous quote">←</button><button id="quotePause" aria-label="${quotePaused?'Resume':'Pause'} quote rotation">${quotePaused?'▶':'❚❚'}</button><button id="quoteNext" aria-label="Next quote">→</button><button id="quoteFav" aria-label="${fav?'Unsave':'Save'} quote">${fav?'★':'☆'}</button><small>${quoteIndex+1}/${quotes.length}</small></div></div>`;
+$('#quotePrev').onclick=()=>{quoteIndex=(quoteIndex+quotes.length-1)%quotes.length;paintQuote()};$('#quoteNext').onclick=()=>{quoteIndex=(quoteIndex+1)%quotes.length;paintQuote()};$('#quotePause').onclick=()=>{quotePaused=!quotePaused;paintQuote()};
+$('#quoteFav').onclick=e=>{const on=!state.quoteFavourites.includes(quoteIndex);state.quoteFavourites=on?[...state.quoteFavourites,quoteIndex]:state.quoteFavourites.filter(i=>i!==quoteIndex);if(on){const [x,y]=center(e.currentTarget);sparkle(x,y,14)}save();paintQuote()}}
+setInterval(()=>{let host=document.getElementById('quoteCard');if(!quotePaused&&!document.hidden&&host&&!host.matches(':hover')&&!host.contains(document.activeElement)){quoteIndex=(quoteIndex+1)%quotes.length;paintQuote()}},20000);
+
+/* ---------- Breathing bubble ---------- */
+let breathTimer=null;
+function breathe(){const b=$('#breath'),t=$('#breathText');if(breathTimer){clearTimeout(breathTimer);breathTimer=null;b.style.transition='transform .8s';b.style.transform='';t.textContent='Breathe';return}
+const steps=[['Breathe in',4000,1.28],['Hold',4000,1.28],['Breathe out',6000,.86]];let i=0,rounds=0;
+const go=()=>{const b=$('#breath'),t=$('#breathText');if(!b){breathTimer=null;return}const [l,ms,s]=steps[i];t.textContent=l;b.style.transition=`transform ${ms}ms ease-in-out`;b.style.transform=`scale(${s})`;i=(i+1)%3;if(i===0)rounds++;breathTimer=setTimeout(()=>{if(rounds>=4&&i===0){breathTimer=null;const b=$('#breath');if(b){b.style.transform='';$('#breathText').textContent='Lovely ✦';const [x,y]=center(b);sparkle(x,y,30)}return}go()},ms)};go()}
+
+/* ---------- Bubbles & particles ---------- */
+const BC=$('#bubbles'),bx=BC.getContext('2d'),FC=$('#fx'),fx=FC.getContext('2d');let W,H;
+function size(){const D=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;for(const c of [BC,FC]){c.width=W*D;c.height=H*D;c.style.width=W+'px';c.style.height=H+'px'}bx.setTransform(D,0,0,D,0,0);fx.setTransform(D,0,0,D,0,0)}
+size();addEventListener('resize',()=>{size();makeClouds()});
+let bubbles=[],parts=[];
+const target=()=>calm?5:(W<700?8:15);
+function spawn(o={}){const r=o.text?Math.min(84,46+o.text.length*.7):rand(12,42);bubbles.push({x:o.x??rand(r,W-r),y:o.y??H+r+rand(0,H*.25),r,vy:(o.text?.5:rand(.25,.75))*(calm?.4:1),ph:rand(0,7),amp:rand(.2,.9),hue:rand(0,360),text:o.text||''})}
+for(let i=0;i<target();i++)spawn({y:rand(H*.1,H)});
+function wrap(s,n){const out=[];let line='';for(const w of s.split(/\s+/)){if((line+' '+w).trim().length>n&&line){out.push(line);line=w}else line=(line+' '+w).trim()}if(line)out.push(line);return out.slice(0,5)}
+function drawBubble(b,t,light){const {x,y,r}=b,h=(b.hue+t*.02)%360;const g=bx.createRadialGradient(x-r*.35,y-r*.35,r*.05,x,y,r);g.addColorStop(0,'rgba(255,255,255,.32)');g.addColorStop(.55,`hsla(${h},100%,85%,.07)`);g.addColorStop(.86,`hsla(${h+70},100%,78%,.3)`);g.addColorStop(1,`hsla(${h+140},100%,88%,.78)`);
+bx.beginPath();bx.arc(x,y,r,0,7);bx.fillStyle=g;bx.fill();bx.lineWidth=1;bx.strokeStyle='rgba(255,255,255,.55)';bx.stroke();
+bx.beginPath();bx.ellipse(x-r*.38,y-r*.42,r*.22,r*.11,-.7,0,7);bx.fillStyle='rgba(255,255,255,.85)';bx.fill();
+bx.beginPath();bx.arc(x+r*.42,y+r*.4,r*.06,0,7);bx.fillStyle='rgba(255,255,255,.5)';bx.fill();
+if(b.text){bx.fillStyle=light?'#fff':'#3d3480';bx.font='600 13px Fredoka, Nunito, sans-serif';bx.textAlign='center';bx.textBaseline='middle';const ls=wrap(b.text,13);ls.forEach((l,i)=>bx.fillText(l,x,y+(i-(ls.length-1)/2)*16))}}
+function starPath(c,z){c.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,rr=i%2?z*.35:z;c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}c.closePath();c.fill()}
+const palette=['#8b7cf8','#ff8ccf','#5ed6b6','#ffb48f','#ffd86e','#7cc8ff'];
+function confetti(x,y,n=40){for(let i=0;i<n;i++){const a=rand(0,Math.PI*2),s=rand(3,9);parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3,g:.18,life:rand(55,95),c:pick(palette),z:rand(3,6),s:pick(['rect','dot','star']),rot:rand(0,6),vr:rand(-.25,.25)})}}
+function sparkle(x,y,n=16){for(let i=0;i<n;i++){const a=rand(0,Math.PI*2),s=rand(1,4);parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1,g:.02,life:rand(35,60),c:pick(['#fff','#ffe58a','#ffc6e8','#c9b8ff']),z:rand(3,7),s:'star',rot:0,vr:rand(-.1,.1)})}}
+function floatWord(x,y,text){const d=document.createElement('div');d.className='floatword';d.textContent=text;d.style.left=Math.max(110,Math.min(W-110,x))+'px';d.style.top=Math.max(40,y)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),2900)}
+function pop(i){const b=bubbles.splice(i,1)[0];for(let k=0;k<18;k++){const a=k/18*Math.PI*2,s=rand(1.5,4.5);parts.push({x:b.x+Math.cos(a)*b.r,y:b.y+Math.sin(a)*b.r,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:.06,life:rand(25,45),c:k%3?`hsl(${b.hue+k*20},100%,85%)`:'#fff',z:rand(1.5,3),s:'dot',rot:0,vr:0})}sparkle(b.x,b.y,b.text?24:6);
+floatWord(b.x,b.y,b.text?'✦ '+b.text:pick(affirmations));state.pops++;save();$('#popCount').textContent=state.pops;if(state.pops%25===0){confetti(b.x,b.y,90);toast(`${state.pops} bubbles popped. Pure joy 🫧`)}}
+let last=performance.now();
+function frame(t){const dt=Math.min(3,(t-last)/16.7);last=t;const light=document.body.classList.contains('night')||document.body.classList.contains('dusk');bx.clearRect(0,0,W,H);
+for(let i=bubbles.length-1;i>=0;i--){const b=bubbles[i];b.y-=b.vy*dt;b.x+=Math.sin(t/1100+b.ph)*b.amp*.5*dt;if(b.y<-b.r-10)bubbles.splice(i,1)}
+let plain=bubbles.filter(b=>!b.text).length;while(plain++<target())spawn();
+for(const b of bubbles)drawBubble(b,t,light);
+fx.clearRect(0,0,W,H);
+for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.vy+=p.g*dt;p.vx*=.985;p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;p.rot+=p.vr*dt;if(p.life<=0){parts.splice(i,1);continue}fx.globalAlpha=Math.min(1,p.life/25);fx.fillStyle=p.c;fx.save();fx.translate(p.x,p.y);fx.rotate(p.rot);if(p.s==='rect')fx.fillRect(-p.z,-p.z/2,p.z*2,p.z);else if(p.s==='star')starPath(fx,p.z);else{fx.beginPath();fx.arc(0,0,p.z,0,7);fx.fill()}fx.restore()}
+fx.globalAlpha=1;requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+
+/* ---------- Sky: clouds, stars, sun ---------- */
+function makeClouds(){const sky=$('#clouds');sky.innerHTML='';const n=W<700?4:7;for(let i=0;i<n;i++){const dur=rand(80,160)*(calm?3:1),tr=document.createElement('div');tr.className='track';tr.style.top=rand(3,80)+'%';tr.style.animationDuration=dur+'s';tr.style.animationDelay=-rand(0,dur)+'s';tr.innerHTML=`<div style="transform:scale(${rand(.5,1.2).toFixed(2)})"><div class="cloud"></div></div>`;sky.appendChild(tr)}}
+makeClouds();
+(function(){const s=$('#stars');for(let i=0;i<90;i++){const d=document.createElement('i');d.className='skystar';d.style.left=rand(0,100)+'%';d.style.top=rand(0,75)+'%';d.style.animationDelay=-rand(0,3)+'s';d.style.animationDuration=rand(2,5)+'s';if(Math.random()<.15){d.style.width=d.style.height='3px'}s.appendChild(d)}})();
+setInterval(()=>{if(calm||document.hidden||!document.body.classList.contains('night'))return;const d=document.createElement('i');d.className='shoot';d.style.left=rand(10,70)+'vw';d.style.top=rand(2,35)+'vh';$('#sky').appendChild(d);setTimeout(()=>d.remove(),1400)},7000);
+function poofCloud(cl,x,y){cl.classList.add('poof');floatWord(x,y,'☁ '+pick(sparks));for(let k=0;k<16;k++)parts.push({x:x+rand(-30,30),y:y+rand(-10,10),vx:rand(-2.5,2.5),vy:rand(-2,.5),g:-.01,life:rand(40,70),c:'rgba(255,255,255,.9)',z:rand(4,11),s:'dot',rot:0,vr:0});setTimeout(()=>cl.classList.remove('poof'),8000)}
+const phases=['dawn','day','dusk','night'];let phaseOverride=null;
+function autoPhase(){const h=londonHour();return h>=5&&h<8?'dawn':h>=8&&h<17?'day':h>=17&&h<20?'dusk':'night'}
+function applySky(){const p=phaseOverride||autoPhase();phases.forEach(x=>document.body.classList.toggle(x,x===p))}
+function cycleSky(){const cur=phases.find(p=>document.body.classList.contains(p));phaseOverride=phases[(phases.indexOf(cur)+1)%4];applySky();const [x,y]=center($('.sun'));sparkle(x,y,24);toast({dawn:'Dawn sky 🌅',day:'Blue sky ☀️',dusk:'Golden hour 🌇',night:'Starry night 🌙'}[phaseOverride])}
+applySky();
+
+const blockSel='.panel,.note,.quote-card,.hero,dialog,button,input,textarea,select,a,label,aside,.notice,.filters,header,.floatword,.board,.boardbar';
+function hitBubble(x,y){for(let i=bubbles.length-1;i>=0;i--){const b=bubbles[i];if(Math.hypot(b.x-x,b.y-y)<b.r+6)return i}return -1}
+function skyAt(x,y){const els=document.elementsFromPoint(x,y);return {sun:els.find(e=>e.classList?.contains('sun')),cloud:els.find(e=>e.classList?.contains('cloud')&&!e.classList.contains('poof'))}}
+addEventListener('pointerdown',e=>{if(e.target.closest(blockSel))return;const i=hitBubble(e.clientX,e.clientY);if(i>-1)return pop(i);const s=skyAt(e.clientX,e.clientY);if(s.sun)return cycleSky();if(s.cloud)return poofCloud(s.cloud,e.clientX,e.clientY);sparkle(e.clientX,e.clientY,5)});
+let hoverQueued=false;addEventListener('pointermove',e=>{if(hoverQueued)return;hoverQueued=true;requestAnimationFrame(()=>{hoverQueued=false;if(e.target.closest(blockSel)){document.body.style.cursor='';return}const s=hitBubble(e.clientX,e.clientY)>-1||(()=>{const k=skyAt(e.clientX,e.clientY);return k.sun||k.cloud})();document.body.style.cursor=s?'pointer':''})});
+
+/* ---------- Global wiring ---------- */
+$('#addTask').onclick=()=>openTask(null,view==='projects'||!projList().includes(project)?null:{project});
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;try{history.replaceState(null,'','#'+view)}catch{}render();scrollTo({top:0,behavior:'smooth'})});
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+$('#taskForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),t={id:editing||uid(),title:f.get('title').trim(),project:f.get('project'),priority:+f.get('priority'),due:f.get('due'),minutes:+f.get('minutes'),time:f.get('time'),detail:f.get('detail'),focusDate:f.get('focus')?today():'',done:false};if(!t.title)return;if(t.time&&!t.due)return toast('Add a date for your start time');if(editing){let i=state.tasks.findIndex(t=>t.id===editing);t.done=state.tasks[i].done;state.tasks[i]=t}else{state.tasks.push(t);spawn({text:t.title.slice(0,40),x:rand(W*.3,W*.8),y:H+80});if(fromCard){const n=noteById(fromCard.note);if(n){if(fromCard.item){const it=n.items?.find(x=>x.id===fromCard.item);if(it)it.task=true}else n.task=true}toast('Sent to tasks 🫧')}}fromCard=null;save();$('#taskDialog').close();render()};
+$('#taskDialog').addEventListener('close',()=>{fromCard=null});
+$('#habitForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target);if(!f.get('title').trim())return;state.habits.push({id:uid(),title:f.get('title').trim(),minutes:+f.get('minutes'),repeat:f.get('repeat'),days:[]});save();e.target.reset();$('#habitDialog').close();render();toast('A new habit is planted 🌱')};
+$('#projectForm').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target),name=f.get('name').trim();if(!name)return;if(projList().includes(name))return toast('You already have a project with that name');state.projects.push({id:uid(),name,emoji:f.get('emoji').trim()||'✨',blurb:f.get('blurb').trim(),color:f.get('color'),notes:''});save();$('#projectDialog').close();render();confetti(W/2,H/3,70);toast(`${name} has launched 🚀`)};
+$('#backup').onclick=()=>download('headspace-backup-'+today()+'.json',JSON.stringify(state,null,2),'application/json');
+$('#restore').onclick=()=>{$('#restoreText').value='';$('#restoreDialog').showModal()};
+$('#restoreChoose').onclick=()=>$('#restoreFile').click();
+$('#restoreGo').onclick=()=>restoreFrom($('#restoreText').value);
+$('#restoreFile').onchange=async e=>{try{const txt=await e.target.files[0].text();$('#restoreText').value=txt;restoreFrom(txt)}catch{toast('Couldn’t read that file')}e.target.value=''};
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openTask()}});
+let lastDay=today();setInterval(()=>{if(!phaseOverride)applySky();if(today()!==lastDay){lastDay=today();render()}},30000);
+render();save();
+</script>
+<script>
+/* Headspace cloud layer: sync, Apple Health, Google Calendar & Drive, links.
+   Runs on your own Cloudflare deployment. Anywhere else (a file on disk, a preview)
+   the app quietly stays in local mode. */
+(function () {
+  const HS = (window.HS = { on: false, me: null, health: null, events: null, eventsAt: 0, status: 'local' });
+  const COLLS = ['tasks', 'notes', 'projects', 'habits'];
+  const METAS = ['scratch', 'pops', 'quoteFavourites', 'settings'];
+  const SEP = '|';
+  let synced = {}, syncSince = 0, syncTimer = null, syncing = false, again = false, pendingRender = false;
+
+  /* ---------- helpers ---------- */
+  async function api(path, opts = {}) {
+    let r;
+    try {
+      r = await fetch(path, {
+        method: opts.method || 'GET',
+        headers: opts.body ? { 'content-type': 'application/json' } : {},
+        body: opts.body ? JSON.stringify(opts.body) : undefined,
+        credentials: 'same-origin',
+        redirect: 'manual',
+      });
+    } catch {
+      throw new Error(navigator.onLine ? 'auth' : 'offline');
+    }
+    if (r.type === 'opaqueredirect' || r.status === 401 || r.status === 403) throw new Error('auth');
+    const ct = r.headers.get('content-type') || '';
+    if (!ct.includes('json')) throw new Error('not-headspace');
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || String(r.status));
+    return j;
+  }
+  const typing = () => {
+    const a = document.activeElement;
+    return (a && a.matches('input,textarea,select') && a.closest('#content')) || document.querySelector('dialog[open]');
+  };
+  function softRender() {
+    if (typing()) pendingRender = true;
+    else render();
+  }
+  document.addEventListener('focusout', () => setTimeout(() => { if (pendingRender && !typing()) { pendingRender = false; render(); } }, 400));
+  document.addEventListener('close', () => setTimeout(() => { if (pendingRender && !typing()) { pendingRender = false; render(); } }, 100), true);
+  const hm = (iso) => new Date(iso).toLocaleTimeString('en-GB', { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
+  const dayOf = (iso) => (iso.length === 10 ? iso : day(new Date(iso)));
+
+  function setStatus(s) {
+    HS.status = s;
+    const el = $('#saveStatus');
+    const txt = {
+      synced: '● Synced to your cloud',
+      syncing: '◌ Syncing…',
+      offline: '○ Offline. Saved here, syncs when you’re back',
+      auth: '↻ Sign-in expired. Tap to sign in again',
+      local: '● Saved in this browser · no cloud sync',
+    }[s];
+    el.textContent = txt;
+    el.classList.toggle('click', s === 'auth');
+    el.onclick = s === 'auth' ? () => location.reload() : null;
+  }
+
+  /* ---------- sync engine ---------- */
+  function snap() {
+    const m = {};
+    for (const c of COLLS) for (const it of state[c] || []) m[c + SEP + it.id] = JSON.stringify(it);
+    for (const [d, j] of Object.entries(state.journal || {})) m['journal' + SEP + d] = JSON.stringify(j);
+    for (const k of METAS) if (state[k] !== undefined) m['meta' + SEP + k] = JSON.stringify({ v: state[k] });
+    return m;
+  }
+  const splitKey = (k) => { const i = k.indexOf(SEP); return [k.slice(0, i), k.slice(i + 1)]; };
+  function applyChange(coll, id, data) {
+    if (COLLS.includes(coll)) {
+      const a = state[coll], i = a.findIndex((x) => x.id === id);
+      if (data == null) { if (i > -1) a.splice(i, 1); }
+      else if (i > -1) a[i] = data;
+      else a.push(data);
+    } else if (coll === 'journal') {
+      if (data == null) delete state.journal[id]; else state.journal[id] = data;
+    } else if (coll === 'meta' && METAS.includes(id)) {
+      if (data == null) delete state[id]; else state[id] = data.v;
+    }
+  }
+  function persist() {
+    try { localStorage.setItem('headspace-v1', JSON.stringify(state)); } catch {}
+    try { localStorage.setItem('headspace-sync', JSON.stringify({ synced })); } catch {}
+  }
+  HS.queueSync = () => {
+    if (!HS.on) return;
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(sync, 1200);
+  };
+  async function sync() {
+    if (!HS.on) return;
+    if (syncing) { again = true; return; }
+    syncing = true;
+    clearTimeout(syncTimer);
+    try {
+      const cur = snap(), changes = [];
+      for (const k in cur) if (cur[k] !== synced[k]) { const [c, id] = splitKey(k); changes.push({ collection: c, id, data: JSON.parse(cur[k]) }); }
+      for (const k in synced) if (!(k in cur)) { const [c, id] = splitKey(k); changes.push({ collection: c, id, data: null }); }
+      if (changes.length) setStatus('syncing');
+      const res = await api('/api/sync', { method: 'POST', body: { since: syncSince, changes } });
+      for (const ch of changes) { const k = ch.collection + SEP + ch.id; if (ch.data == null) delete synced[k]; else synced[k] = JSON.stringify(ch.data); }
+      const now = snap();
+      let changed = false;
+      for (const ch of res.changes) {
+        const k = ch.collection + SEP + ch.id;
+        const incoming = ch.data == null ? undefined : JSON.stringify(ch.data);
+        if (now[k] !== synced[k]) continue; // you edited it since; your version wins and goes up next sync
+        if (incoming === now[k]) { if (incoming === undefined) delete synced[k]; else synced[k] = incoming; continue; }
+        applyChange(ch.collection, ch.id, ch.data);
+        if (incoming === undefined) delete synced[k]; else synced[k] = incoming;
+        changed = true;
+      }
+      syncSince = res.now;
+      if (changed) { normalise(); softRender(); }
+      persist();
+      setStatus('synced');
+    } catch (e) {
+      setStatus(e.message === 'auth' ? 'auth' : 'offline');
+    } finally {
+      syncing = false;
+      if (again) { again = false; sync(); }
+    }
+  }
+  HS.syncNow = sync;
+
+  /* ---------- boot ---------- */
+  async function boot() {
+    try {
+      HS.me = await api('/api/me');
+      if (HS.me.app !== 'headspace') throw 0;
+    } catch {
+      return; // local mode
+    }
+    HS.on = true;
+    setStatus('syncing');
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('headspace-sync')); } catch {}
+    try {
+      if (saved && saved.synced) {
+        synced = saved.synced;
+        await sync();
+      } else {
+        const res = await api('/api/sync', { method: 'POST', body: { since: 0, changes: [] } });
+        if (!res.changes.length) {
+          synced = {}; // brand new cloud: upload what's on this device
+          await sync();
+        } else {
+          // this device is new: take what's in the cloud
+          state = { tasks: [], notes: [], projects: [], habits: [], journal: {}, scratch: '', pops: 0 };
+          for (const ch of res.changes) applyChange(ch.collection, ch.id, ch.data);
+          normalise();
+          synced = snap();
+          syncSince = res.now;
+          persist();
+          setStatus('synced');
+        }
+      }
+    } catch (e) {
+      setStatus(e.message === 'auth' ? 'auth' : 'offline');
+    }
+    const g = new URLSearchParams(location.search).get('google');
+    if (g) {
+      toast({ connected: 'Google connected ✨', cancelled: 'Google connection cancelled', state: 'That sign-in link expired, try again', failed: 'Google didn’t send a long-lived key. Remove Headspace at myaccount.google.com/permissions and connect again' }[g] || 'Google: ' + g);
+      try { history.replaceState(null, '', location.pathname + location.hash); } catch {}
+      if (g === 'connected') HS.me = await api('/api/me').catch(() => HS.me);
+    }
+    render();
+    loadHealth();
+    loadEvents();
+    setInterval(sync, 30000);
+    setInterval(() => { loadHealth(); loadEvents(); }, 10 * 60000);
+    addEventListener('focus', () => { sync(); if (Date.now() - HS.eventsAt > 120000) { loadHealth(); loadEvents(); } });
+    addEventListener('online', sync);
+  }
+
+  /* ---------- Apple Health ---------- */
+  async function loadHealth() {
+    if (!HS.on) return;
+    try {
+      HS.health = await api('/api/health/summary?days=7');
+      autoMove();
+      if (view === 'today' || view === 'connections') softRender();
+    } catch {}
+  }
+  function autoMove() {
+    const h = HS.health, s = state.settings || {};
+    if (!h || !s.autoMove) return;
+    const t = h.days.find((d) => d.date === today());
+    if (!t) return;
+    const moved = (t.workouts && t.workouts.length) || (t.steps || 0) >= (s.stepGoal || 8000);
+    const habit = state.habits.find((x) => x.id === 'move') || state.habits.find((x) => /move|walk|exercise|gym|run/i.test(x.title));
+    if (moved && habit && !habit.days.includes(today())) {
+      habit.days.push(today());
+      save();
+      toast('Apple Health says you moved today. Habit ticked 🌿');
+    }
+  }
+  const fmtSleep = (h) => (h ? `${Math.floor(h)}h ${String(Math.round((h % 1) * 60)).padStart(2, '0')}m` : '–');
+  function healthCard() {
+    if (!HS.on) return '';
+    const h = HS.health, goal = state.settings.stepGoal || 8000;
+    const has = h && h.days.some((d) => d.steps || d.sleep || d.energy || d.workouts.length);
+    if (!has) return `<section class="panel health"><div class="section-head"><h2>Your body today</h2><span>🌿</span></div><div class="empty">Apple Health isn’t sending anything yet.<br><button class="tiny" data-goview="connections">Set it up in Connections ↗</button></div></section>`;
+    const days = h.days, t = days.find((d) => d.date === today()) || {}, y = days[days.length - 2] || {};
+    const sleep = t.sleep || y.sleep || 0, steps = Math.round(t.steps || 0), pct = Math.min(1, steps / goal), C = 2 * Math.PI * 40;
+    const max = Math.max(goal, ...days.map((d) => d.steps || 0));
+    const wk = (t.workouts || []).map((w) => `${esc(w.name)} · ${w.minutes} min`).join('<br>');
+    return `<section class="panel health"><div class="section-head"><h2>Your body today</h2><span class="hint">${h.last ? 'Updated ' + hm(h.last) : ''}</span></div>
+      <div class="hgrid"><div class="ring"><svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="none" stroke="#efedfa" stroke-width="9"/><circle cx="48" cy="48" r="40" fill="none" stroke="url(#hsg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct)}"/><defs><linearGradient id="hsg"><stop offset="0" stop-color="#ff9ecf"/><stop offset="1" stop-color="#8fd3ff"/></linearGradient></defs></svg><b>${steps.toLocaleString('en-GB')}<small>of ${goal.toLocaleString('en-GB')} steps</small></b></div>
+      <div class="hstats"><div><span>SLEEP</span>${fmtSleep(sleep)}</div><div><span>ACTIVE</span>${t.energy ? Math.round(t.energy) + ' kcal' : '–'}</div><div><span>RESTING HR</span>${t.restingHr ? Math.round(t.restingHr) + ' bpm' : '–'}</div><div><span>EXERCISE</span>${t.exercise ? Math.round(t.exercise) + ' min' : '–'}</div></div></div>
+      ${wk ? `<p class="hint" style="margin:12px 0 0">🏃 ${wk}</p>` : ''}
+      <div class="bars" aria-label="Steps over the last 7 days">${days.map((d) => `<i class="${d.date === today() ? 'today' : ''}" style="height:${Math.max(4, ((d.steps || 0) / max) * 100)}%" title="${d.date}: ${Math.round(d.steps || 0)} steps"></i>`).join('')}</div>
+      <div class="barlabels">${days.map((d) => `<span>${new Date(d.date + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'narrow' })}</span>`).join('')}</div></section>`;
+  }
+
+  /* ---------- Google Calendar ---------- */
+  async function loadEvents() {
+    if (!HS.on || !HS.me?.google?.connected) return;
+    try {
+      HS.events = (await api('/api/google/calendar?days=21')).events;
+      HS.eventsAt = Date.now();
+      if (view === 'today' || view === 'calendar') softRender();
+    } catch (e) {
+      if (/not_connected|refresh_failed/.test(e.message)) { HS.me.google.connected = false; softRender(); }
+    }
+  }
+  function evRow(e) {
+    const t = e.allDay ? 'All day' : hm(e.start);
+    return `<div class="ev"><time>${t}</time><div><a href="${esc(e.link)}" target="_blank" rel="noopener">${esc(e.title)}</a>${e.location ? `<span class="loc">${esc(e.location)}</span>` : ''}</div></div>`;
+  }
+  function scheduleCard() {
+    if (!HS.on || !HS.me?.google?.connected || !HS.events) return '';
+    const todays = HS.events.filter((e) => dayOf(e.start) === today() || (e.allDay && e.start <= today() && e.end > today()));
+    return `<section class="panel"><div class="section-head"><h2>Today’s schedule</h2><button class="tiny" data-goview="calendar">Calendar ↗</button></div>${todays.map(evRow).join('') || '<div class="empty" style="padding:8px 0">Nothing in your calendar today. Open sky.</div>'}</section>`;
+  }
+  HS.todayExtras = () => healthCard() + scheduleCard();
+  HS.gcalBtn = (t) => {
+    if (!HS.on || !HS.me?.google?.connected || !t.due || t.done) return '';
+    return t.gcal
+      ? `<a class="tiny" href="${esc(t.gcal.link)}" target="_blank" rel="noopener" title="Open in Google Calendar" style="text-decoration:none">📅</a>`
+      : `<button class="tiny" data-gcal="${t.id}" title="Add to Google Calendar" aria-label="Add to Google Calendar">📅＋</button>`;
+  };
+  HS.calendarHTML = () => {
+    const g = HS.me?.google?.connected;
+    const tasks = state.tasks.filter((t) => t.due && !t.done);
+    const overdue = tasks.filter((t) => t.due < today());
+    const keys = [];
+    for (let i = 0; i < 21; i++) keys.push(day(new Date(Date.now() + i * 864e5)));
+    const evs = HS.events || [];
+    const block = keys.map((k) => {
+      const e = evs.filter((x) => dayOf(x.start) === k || (x.allDay && x.start <= k && x.end > k));
+      const t = tasks.filter((x) => x.due === k).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+      if (!e.length && !t.length) return '';
+      const label = k === today() ? 'Today' : new Date(k + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short' });
+      return `<div class="dayhead">${label}</div>${e.map(evRow).join('')}${t.map(taskRow).join('')}`;
+    }).join('');
+    return head('YOUR TIME, WITH A LITTLE MORE INTENTION', 'Make space.', g ? 'Your Google Calendar and dated tasks, side by side.' : 'Dated tasks. Connect Google to bring in your real calendar.') +
+      `<div class="notice">${g ? `<strong>Live from Google Calendar</strong> · ${esc(HS.me.google.email || '')}${HS.eventsAt ? ' · refreshed ' + hm(new Date(HS.eventsAt).toISOString()) : ''}. Tap 📅＋ on a dated task to add it to your calendar.` : `<strong>Google Calendar isn’t connected.</strong> <button class="tiny" data-goview="connections">Connect it in Connections ↗</button>`}</div>
+      <div class="section-head" style="margin-top:24px"><h2 style="color:var(--skyink)">Next three weeks</h2><div>${g ? '<button id="refreshCal" class="tiny" style="color:var(--skymuted)">↻ Refresh</button>' : ''}<button id="exportCalendar" class="dark">↓ .ics</button></div></div>
+      <div class="panel">${overdue.length ? `<div class="dayhead" style="color:#c2455f">Overdue</div>${overdue.map(taskRow).join('')}` : ''}${block || '<div class="empty">Nothing coming up. Add a due date to a task to see it here.</div>'}</div>`;
+  };
+
+  /* ---------- Project files & links ---------- */
+  const linkMeta = (url) => {
+    let host = '';
+    try { host = new URL(url).hostname.replace(/^www\./, ''); } catch {}
+    const known = [
+      [/milanote\.com/, '🟪', 'Milanote board'], [/docs\.google\.com\/spreadsheets/, '📊', 'Google Sheet'], [/docs\.google\.com\/document/, '📄', 'Google Doc'],
+      [/docs\.google\.com\/presentation/, '📽️', 'Google Slides'], [/drive\.google\.com/, '📁', 'Google Drive'], [/notion\.(so|site)/, '📓', 'Notion'],
+      [/figma\.com/, '🎨', 'Figma'], [/dropbox\.com/, '📦', 'Dropbox'], [/canva\.com/, '🖌️', 'Canva'], [/instagram\.com/, '📸', 'Instagram'],
+    ];
+    for (const [re, emo, label] of known) if (re.test(url)) return { emo, label };
+    return { emo: '🔗', label: host || 'Link' };
+  };
+  const mimeEmo = (m = '') => (/folder/.test(m) ? '📁' : /spreadsheet|excel|csv/.test(m) ? '📊' : /presentation|powerpoint/.test(m) ? '📽️' : /pdf/.test(m) ? '📕' : /image/.test(m) ? '🖼️' : /document|word|text/.test(m) ? '📄' : '📎');
+  HS.projExtras = (p) => {
+    const files = (p.files || []).map((f) => `<span class="chip"><a href="${esc(f.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:flex;gap:6px"><span>${mimeEmo(f.mime)} ${esc(f.name)}</span></a><button data-rmfile="${p.id}|${esc(f.id)}" aria-label="Remove ${esc(f.name)}">×</button></span>`);
+    const links = (p.links || []).map((l) => { const m = linkMeta(l.url); return `<span class="chip"><a href="${esc(l.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;display:flex"><span>${m.emo} ${esc(l.label || m.label)}</span></a><button data-rmlink="${p.id}|${esc(l.id)}" aria-label="Remove link">×</button></span>`; });
+    return `<div style="margin-top:16px"><div class="hint" style="font-weight:800;margin-bottom:6px">Files & boards</div><div class="chips">${[...files, ...links].join('') || '<span class="hint">Pin Drive files, Milanote boards, anything with a link.</span>'}</div>
+      <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap"><button class="tiny" data-drive="${p.id}">📎 From Google Drive</button><button class="tiny" data-addlink="${p.id}">🔗 Add a link</button></div>
+      <form class="quick" data-linkform="${p.id}" hidden><input name="url" type="url" placeholder="Paste a Milanote board or any link" required aria-label="Link URL"><input name="label" placeholder="Name (optional)" aria-label="Link name" style="max-width:140px"><button class="dark">Add</button></form></div>`;
+  };
+  let gapiP = null;
+  const loadPicker = () => gapiP || (gapiP = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://apis.google.com/js/api.js';
+    s.onload = () => gapi.load('picker', { callback: res, onerror: rej });
+    s.onerror = rej;
+    document.head.appendChild(s);
+  }));
+  async function pickDrive(p) {
+    if (!HS.on) return toast('Drive works once Headspace is on your own Cloudflare site');
+    if (!HS.me?.google?.connected) { view = 'connections'; render(); return toast('Connect Google first 🔌'); }
+    if (!HS.me.google.picker) return toast('Add GOOGLE_API_KEY and GOOGLE_APP_ID to switch on the Drive picker');
+    try {
+      const t = await api('/api/google/token');
+      await loadPicker();
+      const pk = google.picker;
+      const docs = new pk.DocsView().setIncludeFolders(true).setSelectFolderEnabled(true);
+      new pk.PickerBuilder()
+        .setOAuthToken(t.accessToken).setDeveloperKey(t.apiKey).setAppId(t.appId)
+        .addView(docs).addView(new pk.DocsUploadView()).enableFeature(pk.Feature.MULTISELECT_ENABLED)
+        .setTitle('Pin files to ' + p.name)
+        .setCallback((d) => {
+          if (d.action !== pk.Action.PICKED) return;
+          p.files = p.files || [];
+          let n = 0;
+          for (const f of d.docs) if (!p.files.some((x) => x.id === f.id)) { p.files.push({ id: f.id, name: f.name, url: f.url, mime: f.mimeType }); n++; }
+          save(); render(); toast(`${n} ${n === 1 ? 'file' : 'files'} pinned to ${p.name} 📎`);
+        })
+        .build().setVisible(true);
+    } catch (e) {
+      toast('Couldn’t open Google Drive. Try reconnecting Google.');
+    }
+  }
+
+  /* ---------- Connections page ---------- */
+  HS.connectionsHTML = () => {
+    const on = HS.on, me = HS.me || {}, g = me.google || {}, h = me.health || {}, s = state.settings;
+    const hook = `${location.origin}/api/health/ingest`;
+    const lastH = HS.health?.last || h.last;
+    const pill = (ok, yes, no, warn) => `<span class="pill ${ok ? 'ok' : warn ? 'warn' : ''}">${ok ? yes : no}</span>`;
+    return head('PLUG IN YOUR WORLD', 'Connections.', 'The bits that make Headspace your one-stop shop.') + `<div class="conngrid">
+    <section class="panel conn"><h2><span class="emo">☁️</span>Cloud sync</h2>${pill(on && HS.status === 'synced', 'Synced', on ? (HS.status === 'auth' ? 'Sign in again' : 'Offline') : 'Local only', true)}
+      ${on ? `<p class="hint">Signed in as <b>${esc(me.email || '')}</b>. Everything syncs between your iPhone and laptop every 30 seconds and whenever you switch back to the app.</p><button class="tiny" id="syncNow">↻ Sync now</button>`
+           : `<p class="hint">You’re in local mode, so everything lives in this browser only. Deploy Headspace to Cloudflare (see the README) and this switches on by itself.</p>`}</section>
+
+    <section class="panel conn"><h2><span class="emo">📅</span>Google Calendar & Drive</h2>${pill(g.connected, 'Connected', on ? (g.configured ? 'Not connected' : 'Needs setup') : 'Needs cloud', !g.configured)}
+      ${!on ? '<p class="hint">Needs the Cloudflare version.</p>'
+        : !g.configured ? '<p class="hint">Add your Google keys first (README, step 6), then come back here.</p>'
+        : g.connected ? `<p class="hint">Connected as <b>${esc(g.email || 'your Google account')}</b>. Your calendar shows on My day and in Calendar. Pin Drive files from any project card${g.picker ? '' : ' (add GOOGLE_API_KEY and GOOGLE_APP_ID to switch on the picker)'}.</p><button class="tiny" id="gDisconnect">Disconnect</button>`
+        : `<p class="hint">See today’s schedule on My day, push dated tasks into your calendar, and pin Drive files to projects. Headspace only sees Drive files you pick.</p><a class="dark" href="/api/google/auth" style="display:inline-block;text-decoration:none;margin-top:6px">Connect Google</a>`}</section>
+
+    <section class="panel conn"><h2><span class="emo">🌿</span>Apple Health</h2>${pill(!!lastH, 'Receiving', on ? (h.configured ? 'Waiting for data' : 'Needs setup') : 'Needs cloud', on && !h.configured)}
+      ${lastH ? `<p class="hint">Last update ${new Date(lastH).toLocaleString('en-GB', { timeZone: TZ, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}.</p>` : ''}
+      ${on ? `<ol class="steps"><li>Install <b>Health Auto Export</b> on your iPhone (automations need Premium).</li><li>Automations → <b>New</b> → type <b>REST API</b>.</li><li>URL:<div class="codebox"><span>${esc(hook)}</span><button class="tiny" data-copy="${esc(hook)}">Copy</button></div></li><li>Headers → add <code>Authorization</code> = <code>Bearer</code> + your <code>HEALTH_TOKEN</code></li><li>Format <b>JSON</b>, Aggregate <b>Days</b>, Period <b>Since last sync</b>. Pick: Step Count, Active Energy, Sleep Analysis, Resting Heart Rate, Exercise Time, Workouts.</li><li>Turn on, then tap <b>Manual Sync</b> to test.</li></ol>` : '<p class="hint">Needs the Cloudflare version, so your phone has somewhere to send data.</p>'}
+      <label style="margin-top:12px">Daily step goal<input type="number" min="1000" max="50000" step="500" id="stepGoal" value="${s.stepGoal}"></label>
+      <label class="checklabel" style="margin-top:8px"><input type="checkbox" id="autoMove" ${s.autoMove ? 'checked' : ''}> Tick “Move your body” when I hit my goal or log a workout</label></section>
+
+    <section class="panel conn"><h2><span class="emo">🟪</span>Milanote</h2><span class="pill">Links</span>
+      <p class="hint">Milanote doesn’t offer a public API, so nothing can sync with it reliably. Instead, pin your boards to the right project and they open in one tap. Your Notebook board here also does most of what Milanote does and connects to your tasks.</p><button class="tiny" data-goview="projects">Pin boards to projects ↗</button></section>
+
+    <section class="panel conn"><h2><span class="emo">📱</span>On your iPhone</h2><span class="pill">App-like</span>
+      <p class="hint">Open your Headspace address in <b>Safari</b> → Share → <b>Add to Home Screen</b>. It opens full screen like an app, signed in, and syncs with your laptop.</p></section>
+    </div>`;
+  };
+
+  /* ---------- event wiring after each render ---------- */
+  HS.bindExtras = () => {
+    document.querySelectorAll('[data-goview]').forEach((b) => (b.onclick = () => { view = b.dataset.goview; try { history.replaceState(null, '', '#' + view); } catch {} render(); scrollTo({ top: 0 }); }));
+    document.querySelectorAll('[data-copy]').forEach((b) => (b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.copy); toast('Copied ✨'); } catch { toast('Press and hold to copy'); } }));
+    if ($('#syncNow')) $('#syncNow').onclick = async () => { await sync(); toast(HS.status === 'synced' ? 'All synced ☁️' : 'Couldn’t reach your cloud'); render(); };
+    if ($('#refreshCal')) $('#refreshCal').onclick = () => { loadEvents(); toast('Refreshing…'); };
+    if ($('#gDisconnect')) $('#gDisconnect').onclick = async () => { if (!(await ask('Disconnect Google?', 'Disconnect'))) return; await api('/api/google/disconnect', { method: 'POST' }).catch(() => {}); HS.me.google.connected = false; HS.events = null; render(); };
+    if ($('#stepGoal')) $('#stepGoal').onchange = (e) => { state.settings.stepGoal = Math.max(1000, +e.target.value || 8000); save(); autoMove(); };
+    if ($('#autoMove')) $('#autoMove').onchange = (e) => { state.settings.autoMove = e.target.checked; save(); autoMove(); };
+    document.querySelectorAll('[data-gcal]').forEach((b) => (b.onclick = async () => {
+      const t = state.tasks.find((x) => x.id === b.dataset.gcal);
+      b.disabled = true;
+      try {
+        const r = await api('/api/google/calendar', { method: 'POST', body: { title: t.title, date: t.due, time: t.time, minutes: t.minutes, detail: t.detail } });
+        t.gcal = { id: r.id, link: r.link };
+        save();
+        const [x, y] = center(b); sparkle(x, y, 14);
+        toast('Added to Google Calendar 📅');
+        loadEvents(); render();
+      } catch (e) { b.disabled = false; toast('Couldn’t add it: ' + e.message); }
+    }));
+    document.querySelectorAll('[data-drive]').forEach((b) => (b.onclick = () => pickDrive(state.projects.find((p) => p.id === b.dataset.drive))));
+    document.querySelectorAll('[data-addlink]').forEach((b) => (b.onclick = () => { const f = document.querySelector(`[data-linkform="${b.dataset.addlink}"]`); f.hidden = !f.hidden; if (!f.hidden) f.url.focus(); }));
+    document.querySelectorAll('[data-linkform]').forEach((f) => (f.onsubmit = (e) => {
+      e.preventDefault();
+      const p = state.projects.find((x) => x.id === f.dataset.linkform);
+      let url = f.url.value.trim();
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+      p.links = p.links || [];
+      p.links.push({ id: uid(), url, label: f.label.value.trim() });
+      save(); render(); toast(linkMeta(url).label + ' pinned to ' + p.name);
+    }));
+    document.querySelectorAll('[data-rmfile]').forEach((b) => (b.onclick = () => { const [pid, fid] = b.dataset.rmfile.split('|'); const p = state.projects.find((x) => x.id === pid); p.files = (p.files || []).filter((f) => f.id !== fid); save(); render(); }));
+    document.querySelectorAll('[data-rmlink]').forEach((b) => (b.onclick = () => { const [pid, lid] = b.dataset.rmlink.split('|'); const p = state.projects.find((x) => x.id === pid); p.links = (p.links || []).filter((l) => l.id !== lid); save(); render(); }));
+  };
+
+  boot();
+  render();
+})();
+</script>
+</body>
+</html>

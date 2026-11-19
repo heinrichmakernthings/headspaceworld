@@ -1,0 +1,20 @@
+# Headspace runs in your existing "headspaceworld" Worker
+name = "headspaceworld"
+main = "src/worker.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+preview_urls = false
+
+# Your login settings (ACCESS_TEAM_DOMAIN, ACCESS_AUD, ALLOWED_EMAIL) and secrets live in the
+# Cloudflare dashboard: headspaceworld > Settings > Variables and Secrets.
+# keep_vars stops each deploy from wiping them.
+keep_vars = true
+
+[assets]
+directory = "public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "headspace"
+database_id = "7502b9e7-d51d-474d-bf00-e666d0a782d9"
