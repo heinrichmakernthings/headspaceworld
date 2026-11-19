@@ -1,7 +1,7 @@
-import { json, setMeta } from '../../../lib/util.js';
+import { json, setMeta, safeEqual, privateKeyOk } from '../../../lib/util.js';
 
 // Receives Apple Health data from the Health Auto Export iPhone app (REST API automation).
-// Protected by its own secret: header  Authorization: Bearer <HEALTH_TOKEN>
+// Protected by header  Authorization: Bearer <your private key>  (or a separate HEALTH_TOKEN if you set one)
 const KEEP = new Set([
   'step_count',
   'active_energy',
@@ -14,16 +14,11 @@ const KEEP = new Set([
   'weight_body_mass',
 ]);
 
-const safeEqual = (a, b) => {
-  if (a.length !== b.length) return false;
-  let r = 0;
-  for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return r === 0;
-};
-
 export async function onRequestPost({ request, env }) {
   const auth = request.headers.get('authorization') || '';
-  if (!env.HEALTH_TOKEN || !safeEqual(auth, `Bearer ${env.HEALTH_TOKEN}`)) return json({ error: 'unauthorised' }, 401);
+  const bearer = auth.replace(/^Bearer\s+/i, '').trim();
+  const ok = (env.HEALTH_TOKEN && safeEqual(bearer, env.HEALTH_TOKEN)) || (await privateKeyOk(env, bearer));
+  if (!ok) return json({ error: 'unauthorised' }, 401);
 
   let body;
   try {

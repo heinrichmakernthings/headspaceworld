@@ -3,7 +3,7 @@
 Your Headspace app, ready to run on **Cloudflare** (free plan) with:
 
 - **Cloud sync** between iPhone and laptop (Cloudflare D1 database)
-- **A private login** so only your email gets in (Cloudflare Access)
+- **A private link** so only your devices get in (no password), with an optional email login later (Cloudflare Access)
 - **Apple Health**: steps, sleep, active energy, resting heart rate and workouts, sent by the Health Auto Export iPhone app
 - **Google Calendar**: today's schedule on My day, a live Calendar page, and 📅＋ to push dated tasks into your calendar
 - **Google Drive**: pin files and folders to project cards
@@ -42,7 +42,22 @@ This repo is connected to your **headspaceworld** Worker through Cloudflare's Gi
 
 Already done: the `headspace` database exists (London region) with its tables, and its ID is in `wrangler.toml`.
 
-## 3. Turn on the login screen
+## 3. Your private link (no password)
+
+Headspace is locked with a **private link**: your address plus a secret key, like `https://headspaceworld.<you>.workers.dev/?k=...`.
+
+- Open the link once on each device (laptop, iPhone). That device remembers it and syncs from then on.
+- Anyone without the link sees an empty, unlinked Headspace and can't read or change your data.
+- Lost it on a device? Connections → paste the link. Already linked somewhere? Connections → **Copy private link**.
+- **iPhone:** open the link in Safari, then Share → Add to Home Screen. The home screen app keeps the link.
+- The same key is your Apple Health token (Connections shows the exact header to paste).
+- Only a one-way fingerprint of the key is stored in the database, so the key can't be read back out of it.
+
+To change the key (if you ever share it by mistake), ask Claude to make a new one. Old links stop working straight away.
+
+## 3b. Optional later: a proper login screen
+
+If you want an email login on top, turn on Cloudflare Access:
 
 1. **headspaceworld** → **Settings** → **Domains & Routes**.
 2. Next to `workers.dev`, click **Enable Cloudflare Access**. (First time only: pick a Zero Trust team name and the **Free** plan.)
@@ -50,7 +65,7 @@ Already done: the `headspace` database exists (London region) with its tables, a
 4. Click **Manage Cloudflare Access** and check only your email is allowed.
 5. Let your iPhone send health data without a login screen (only needed for Apple Health): **Zero Trust → Access → Applications → Add an application → Self-hosted**, domain `headspaceworld.<your-subdomain>.workers.dev`, path `api/health/ingest`, policy action **Bypass**, Include → **Everyone**.
 
-## 4. Tell Headspace who you are
+## 4. Login screen settings (only with 3b)
 
 **headspaceworld** → **Settings** → **Variables and Secrets** → **Add** (type **Text**), one at a time:
 
@@ -62,7 +77,7 @@ Already done: the `headspace` database exists (London region) with its tables, a
 
 Click **Deploy**. These live in Cloudflare, not in this repo, so they stay private and survive future deploys.
 
-Open `https://headspaceworld.<your-subdomain>.workers.dev`, sign in with the code Cloudflare emails you, and the sidebar should say **● Synced to your cloud**.
+With Access on, open your address and sign in with the code Cloudflare emails you.
 
 > **Bringing your existing data across:** in the old Headspace, click **Export backup** and copy the text. In the new one, click **Restore backup**, paste and confirm.
 

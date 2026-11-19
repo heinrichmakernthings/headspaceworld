@@ -1,7 +1,7 @@
-import { json, verifyAccess } from '../../lib/util.js';
+import { json, verifyAccess, privateKeyOk, getCookie } from '../../lib/util.js';
 
-// Every /api route needs a valid Cloudflare Access login, except the Apple Health webhook,
-// which your iPhone calls with its own secret token instead.
+// Every /api route needs either your private link key (saved on each device when you open the link)
+// or a Cloudflare Access login. The Apple Health webhook checks its own token instead.
 const OPEN = new Set(['/api/health/ingest']);
 
 export async function onRequest({ request, env, next, data }) {
@@ -12,13 +12,22 @@ export async function onRequest({ request, env, next, data }) {
     data.email = env.ALLOWED_EMAIL || 'dev@localhost';
     return next();
   }
-  const token = request.headers.get('cf-access-jwt-assertion');
-  if (!token || !env.ACCESS_TEAM_DOMAIN || !env.ACCESS_AUD) return json({ error: 'auth' }, 401);
-  try {
-    const payload = await verifyAccess(token, env);
-    data.email = payload.email;
+
+  const key = request.headers.get('x-headspace-key') || getCookie(request, 'hs_key');
+  if (key && (await privateKeyOk(env, key))) {
+    data.email = env.ALLOWED_EMAIL || null;
+    data.via = 'link';
     return next();
-  } catch {
-    return json({ error: 'auth' }, 401);
   }
+
+  const token = request.headers.get('cf-access-jwt-assertion');
+  if (token && env.ACCESS_TEAM_DOMAIN && env.ACCESS_AUD) {
+    try {
+      const payload = await verifyAccess(token, env);
+      data.email = payload.email;
+      data.via = 'access';
+      return next();
+    } catch {}
+  }
+  return json({ error: 'auth' }, 401);
 }

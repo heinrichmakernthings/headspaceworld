@@ -535,13 +535,41 @@ render();save();
   const SEP = '|';
   let synced = {}, syncSince = 0, syncTimer = null, syncing = false, again = false, pendingRender = false;
 
+  /* ---------- private link ---------- */
+  const KEY_RE = /^[A-Za-z0-9_-]{20,200}$/;
+  const getKey = () => { try { return localStorage.getItem('hs-key') || ''; } catch { return ''; } };
+  function saveKey(k) {
+    try { localStorage.setItem('hs-key', k); } catch {}
+    document.cookie = `hs_key=${encodeURIComponent(k)}; Path=/; Max-Age=34560000; SameSite=Lax${location.protocol === 'https:' ? '; Secure' : ''}`;
+  }
+  (function captureKey() {
+    const q = new URLSearchParams(location.search), k = q.get('k');
+    if (!k || !KEY_RE.test(k)) return;
+    saveKey(k);
+    HS.justLinked = true;
+    // On iPhone Safari keep the link in the address bar so "Add to Home Screen" carries it over
+    const iosSafari = /iPhone|iPad|iPod/.test(navigator.userAgent) && !navigator.standalone;
+    if (!iosSafari) { q.delete('k'); try { history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); } catch {} }
+  })();
+  HS.linkFrom = (text) => {
+    const t = String(text || '').trim();
+    let k = t;
+    try { k = new URL(t, location.origin).searchParams.get('k') || t; } catch {}
+    if (!KEY_RE.test(k)) return false;
+    saveKey(k);
+    location.href = location.pathname + '#connections';
+    setTimeout(() => location.reload(), 50);
+    return true;
+  };
+  HS.privateLink = () => (getKey() ? `${location.origin}/?k=${getKey()}` : '');
+
   /* ---------- helpers ---------- */
   async function api(path, opts = {}) {
     let r;
     try {
       r = await fetch(path, {
         method: opts.method || 'GET',
-        headers: opts.body ? { 'content-type': 'application/json' } : {},
+        headers: Object.assign(opts.body ? { 'content-type': 'application/json' } : {}, getKey() ? { 'x-headspace-key': getKey() } : {}),
         body: opts.body ? JSON.stringify(opts.body) : undefined,
         credentials: 'same-origin',
         redirect: 'manual',
@@ -578,10 +606,11 @@ render();save();
       offline: '○ Offline. Saved here, syncs when you’re back',
       auth: '↻ Sign-in expired. Tap to sign in again',
       local: '● Saved in this browser · no cloud sync',
+      locked: '○ This device isn’t linked. Tap to link',
     }[s];
     el.textContent = txt;
-    el.classList.toggle('click', s === 'auth');
-    el.onclick = s === 'auth' ? () => location.reload() : null;
+    el.classList.toggle('click', s === 'auth' || s === 'locked');
+    el.onclick = s === 'auth' ? () => location.reload() : s === 'locked' ? () => { view = 'connections'; render(); } : null;
   }
 
   /* ---------- sync engine ---------- */
@@ -655,9 +684,16 @@ render();save();
     try {
       HS.me = await api('/api/me');
       if (HS.me.app !== 'headspace') throw 0;
-    } catch {
+    } catch (e) {
+      if (e && e.message === 'auth') {
+        HS.locked = true;
+        setStatus('locked');
+        if (getKey()) toast('That private link didn’t work here. Paste it again in Connections.');
+        render();
+      }
       return; // local mode
     }
+    if (HS.justLinked) setTimeout(() => toast('This device is linked ✨ Everything syncs now'), 600);
     HS.on = true;
     setStatus('syncing');
     let saved = null;
@@ -848,9 +884,10 @@ render();save();
     const lastH = HS.health?.last || h.last;
     const pill = (ok, yes, no, warn) => `<span class="pill ${ok ? 'ok' : warn ? 'warn' : ''}">${ok ? yes : no}</span>`;
     return head('PLUG IN YOUR WORLD', 'Connections.', 'The bits that make Headspace your one-stop shop.') + `<div class="conngrid">
-    <section class="panel conn"><h2><span class="emo">☁️</span>Cloud sync</h2>${pill(on && HS.status === 'synced', 'Synced', on ? (HS.status === 'auth' ? 'Sign in again' : 'Offline') : 'Local only', true)}
-      ${on ? `<p class="hint">Signed in as <b>${esc(me.email || '')}</b>. Everything syncs between your iPhone and laptop every 30 seconds and whenever you switch back to the app.</p><button class="tiny" id="syncNow">↻ Sync now</button>`
-           : `<p class="hint">You’re in local mode, so everything lives in this browser only. Deploy Headspace to Cloudflare (see the README) and this switches on by itself.</p>`}</section>
+    <section class="panel conn"><h2><span class="emo">☁️</span>Cloud sync</h2>${pill(on && HS.status === 'synced', 'Synced', on ? (HS.status === 'auth' ? 'Sign in again' : 'Offline') : HS.locked ? 'Not linked' : 'Local only', true)}
+      ${on ? `<p class="hint">${me.via === 'link' ? 'Linked with your private link.' : `Signed in as <b>${esc(me.email || '')}</b>.`} Everything syncs between your devices every 30 seconds and whenever you switch back to the app.</p><button class="tiny" id="syncNow">↻ Sync now</button>${HS.privateLink() ? `<button class="tiny" data-copy="${esc(HS.privateLink())}">🔗 Copy private link</button><p class="hint" style="margin-top:6px">To add another device, open that link on it. Keep it to yourself: it works like a key.</p>` : ''}`
+        : HS.locked ? `<p class="hint">This device isn’t linked yet. Open your private link on it, or paste the link here:</p><form class="quick" id="linkForm"><input name="link" placeholder="Paste your private link" aria-label="Private link" required autocomplete="off"><button class="dark">Link</button></form>`
+        : `<p class="hint">You’re in local mode, so everything lives in this browser only. On your Headspace web address this switches on by itself.</p>`}</section>
 
     <section class="panel conn"><h2><span class="emo">📅</span>Google Calendar & Drive</h2>${pill(g.connected, 'Connected', on ? (g.configured ? 'Not connected' : 'Needs setup') : 'Needs cloud', !g.configured)}
       ${!on ? '<p class="hint">Needs the Cloudflare version.</p>'
@@ -860,7 +897,7 @@ render();save();
 
     <section class="panel conn"><h2><span class="emo">🌿</span>Apple Health</h2>${pill(!!lastH, 'Receiving', on ? (h.configured ? 'Waiting for data' : 'Needs setup') : 'Needs cloud', on && !h.configured)}
       ${lastH ? `<p class="hint">Last update ${new Date(lastH).toLocaleString('en-GB', { timeZone: TZ, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}.</p>` : ''}
-      ${on ? `<ol class="steps"><li>Install <b>Health Auto Export</b> on your iPhone (automations need Premium).</li><li>Automations → <b>New</b> → type <b>REST API</b>.</li><li>URL:<div class="codebox"><span>${esc(hook)}</span><button class="tiny" data-copy="${esc(hook)}">Copy</button></div></li><li>Headers → add <code>Authorization</code> = <code>Bearer</code> + your <code>HEALTH_TOKEN</code></li><li>Format <b>JSON</b>, Aggregate <b>Days</b>, Period <b>Since last sync</b>. Pick: Step Count, Active Energy, Sleep Analysis, Resting Heart Rate, Exercise Time, Workouts.</li><li>Turn on, then tap <b>Manual Sync</b> to test.</li></ol>` : '<p class="hint">Needs the Cloudflare version, so your phone has somewhere to send data.</p>'}
+      ${on ? `<ol class="steps"><li>Install <b>Health Auto Export</b> on your iPhone (automations need Premium).</li><li>Automations → <b>New</b> → type <b>REST API</b>.</li><li>URL:<div class="codebox"><span>${esc(hook)}</span><button class="tiny" data-copy="${esc(hook)}">Copy</button></div></li><li>Headers → add one called <code>Authorization</code> with this value:${getKey() ? `<div class="codebox"><span>Bearer ${esc(getKey())}</span><button class="tiny" data-copy="Bearer ${esc(getKey())}">Copy</button></div>` : ' <code>Bearer</code> followed by your private key'}</li><li>Format <b>JSON</b>, Aggregate <b>Days</b>, Period <b>Since last sync</b>. Pick: Step Count, Active Energy, Sleep Analysis, Resting Heart Rate, Exercise Time, Workouts.</li><li>Turn on, then tap <b>Manual Sync</b> to test.</li></ol>` : '<p class="hint">Needs the Cloudflare version, so your phone has somewhere to send data.</p>'}
       <label style="margin-top:12px">Daily step goal<input type="number" min="1000" max="50000" step="500" id="stepGoal" value="${s.stepGoal}"></label>
       <label class="checklabel" style="margin-top:8px"><input type="checkbox" id="autoMove" ${s.autoMove ? 'checked' : ''}> Tick “Move your body” when I hit my goal or log a workout</label></section>
 
@@ -876,6 +913,7 @@ render();save();
   HS.bindExtras = () => {
     document.querySelectorAll('[data-goview]').forEach((b) => (b.onclick = () => { view = b.dataset.goview; try { history.replaceState(null, '', '#' + view); } catch {} render(); scrollTo({ top: 0 }); }));
     document.querySelectorAll('[data-copy]').forEach((b) => (b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.copy); toast('Copied ✨'); } catch { toast('Press and hold to copy'); } }));
+    if ($('#linkForm')) $('#linkForm').onsubmit = (e) => { e.preventDefault(); if (!HS.linkFrom(e.target.link.value)) toast('That doesn’t look like your Headspace link'); };
     if ($('#syncNow')) $('#syncNow').onclick = async () => { await sync(); toast(HS.status === 'synced' ? 'All synced ☁️' : 'Couldn’t reach your cloud'); render(); };
     if ($('#refreshCal')) $('#refreshCal').onclick = () => { loadEvents(); toast('Refreshing…'); };
     if ($('#gDisconnect')) $('#gDisconnect').onclick = async () => { if (!(await ask('Disconnect Google?', 'Disconnect'))) return; await api('/api/google/disconnect', { method: 'POST' }).catch(() => {}); HS.me.google.connected = false; HS.events = null; render(); };
