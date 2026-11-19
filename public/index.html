@@ -245,6 +245,19 @@ form{display:grid;gap:14px}
 .chip button{padding:0 6px;font-size:12px;border-radius:999px;color:#8f8cb3}
 #saveStatus.click{cursor:pointer;text-decoration:underline}
 @media(max-width:700px){aside{margin-top:calc(12px + env(safe-area-inset-top))}.health .hgrid{flex-direction:column;align-items:flex-start}}
+
+.steplist{display:grid;gap:18px;max-width:860px}
+.stepcard{display:flex;gap:18px;align-items:flex-start;margin:0}
+.stepcard .num{flex-shrink:0;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:600 20px Fredoka,sans-serif;color:#fff;background:linear-gradient(135deg,var(--lav),var(--pink));box-shadow:0 8px 20px rgba(139,124,248,.35)}
+.stepcard.done .num{background:linear-gradient(135deg,var(--mint),#7cc8ff)}
+.stepbody{flex:1;min-width:0}.stephead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.stephead .pill{margin:0}
+.stepbody .btns{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.stepbody details{margin-top:8px}.stepbody summary{cursor:pointer;font-weight:800;color:#6d61d8;font-size:13px;padding:6px 0}
+.codebox small{display:block;font:700 10px Nunito,sans-serif;color:var(--muted)}
+.qr{background:#fff;padding:12px;border-radius:16px;display:inline-block;margin:6px 0;box-shadow:0 8px 24px rgba(60,50,150,.12)}
+.settingsrow{display:grid;gap:8px;margin-top:14px;max-width:420px}
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}.tips .panel{margin:0}
+@media(max-width:700px){.stepcard{flex-direction:column;gap:10px}}
 </style>
 </head>
 <body class="night">
@@ -879,41 +892,66 @@ render();save();
 
   /* ---------- Connections page ---------- */
   HS.connectionsHTML = () => {
-    const on = HS.on, me = HS.me || {}, g = me.google || {}, h = me.health || {}, s = state.settings;
-    const hook = `${location.origin}/api/health/ingest`;
-    const lastH = HS.health?.last || h.last;
-    const pill = (ok, yes, no, warn) => `<span class="pill ${ok ? 'ok' : warn ? 'warn' : ''}">${ok ? yes : no}</span>`;
-    return head('PLUG IN YOUR WORLD', 'Connections.', 'The bits that make Headspace your one-stop shop.') + `<div class="conngrid">
-    <section class="panel conn"><h2><span class="emo">☁️</span>Cloud sync</h2>${pill(on && HS.status === 'synced', 'Synced', on ? (HS.status === 'auth' ? 'Sign in again' : 'Offline') : HS.locked ? 'Not linked' : 'Local only', true)}
-      ${on ? `<p class="hint">${me.via === 'link' ? 'Linked with your private link.' : `Signed in as <b>${esc(me.email || '')}</b>.`} Everything syncs between your devices every 30 seconds and whenever you switch back to the app.</p><button class="tiny" id="syncNow">↻ Sync now</button>${HS.privateLink() ? `<button class="tiny" data-copy="${esc(HS.privateLink())}">🔗 Copy private link</button><p class="hint" style="margin-top:6px">To add another device, open that link on it. Keep it to yourself: it works like a key.</p>` : ''}`
-        : HS.locked ? `<p class="hint">This device isn’t linked yet. Open your private link on it, or paste the link here:</p><form class="quick" id="linkForm"><input name="link" placeholder="Paste your private link" aria-label="Private link" required autocomplete="off"><button class="dark">Link</button></form>`
-        : `<p class="hint">You’re in local mode, so everything lives in this browser only. On your Headspace web address this switches on by itself.</p>`}</section>
+    const on = HS.on, me = HS.me || {}, g = me.google || {}, s = state.settings;
+    const lastH = HS.health?.last || me.health?.last;
+    const synced = on && HS.status === 'synced';
+    const step = (n, done, title, pillTxt, body) => `<section class="panel stepcard ${done ? 'done' : ''}"><div class="num">${done ? '✓' : n}</div><div class="stepbody"><div class="stephead"><h2>${title}</h2><span class="pill ${done ? 'ok' : ''}">${pillTxt}</span></div>${body}</div></section>`;
+    const copyBox = (label, value, shown) => `<div class="codebox"><span><small>${label}</small>${esc(shown || value)}</span><button class="tiny" data-copy="${esc(value)}">Copy</button></div>`;
 
-    <section class="panel conn"><h2><span class="emo">📅</span>Google Calendar & Drive</h2>${pill(g.connected, 'Connected', on ? (g.configured ? 'Not connected' : 'Needs setup') : 'Needs cloud', !g.configured)}
-      ${!on ? '<p class="hint">Needs the Cloudflare version.</p>'
-        : !g.configured ? '<p class="hint">Add your Google keys first (README, step 6), then come back here.</p>'
-        : g.connected ? `<p class="hint">Connected as <b>${esc(g.email || 'your Google account')}</b>. Your calendar shows on My day and in Calendar. Pin Drive files from any project card${g.picker ? '' : ' (add GOOGLE_API_KEY and GOOGLE_APP_ID to switch on the picker)'}.</p><button class="tiny" id="gDisconnect">Disconnect</button>`
-        : `<p class="hint">See today’s schedule on My day, push dated tasks into your calendar, and pin Drive files to projects. Headspace only sees Drive files you pick.</p><a class="dark" href="/api/google/auth" style="display:inline-block;text-decoration:none;margin-top:6px">Connect Google</a>`}</section>
+    const sync = on
+      ? `<p class="hint">This device saves everything to your cloud and stays in step with your other devices.</p>
+         <div class="btns"><button class="dark" id="addPhone">📱 Add my iPhone</button><button class="tiny" id="syncNow">↻ Sync now</button></div>
+         <div id="phoneBox" hidden><p class="hint" style="margin-top:14px"><b>Point your iPhone camera at this code</b> and tap the link. Then in Safari: Share → <b>Add to Home Screen</b>.</p><div id="qr" class="qr"></div><p class="hint">No camera handy? <button class="tiny" data-copy="${esc(HS.privateLink())}">Copy the link</button> and send it to yourself. Keep it private: it works like a key.</p></div>`
+      : HS.locked
+      ? `<p class="hint">Paste your private key below (or the whole link). That’s it: this device then syncs.</p>
+         <form class="quick" id="linkForm"><input name="link" placeholder="Paste your key here" aria-label="Private key or link" required autocomplete="off"><button class="dark">Connect</button></form>`
+      : `<p class="hint">This copy of Headspace isn’t on your web address, so it can’t sync. Open Headspace at your <b>workers.dev</b> address to switch this on.</p>`;
 
-    <section class="panel conn"><h2><span class="emo">🌿</span>Apple Health</h2>${pill(!!lastH, 'Receiving', on ? (h.configured ? 'Waiting for data' : 'Needs setup') : 'Needs cloud', on && !h.configured)}
-      ${lastH ? `<p class="hint">Last update ${new Date(lastH).toLocaleString('en-GB', { timeZone: TZ, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}.</p>` : ''}
-      ${on ? `<ol class="steps"><li>Install <b>Health Auto Export</b> on your iPhone (automations need Premium).</li><li>Automations → <b>New</b> → type <b>REST API</b>.</li><li>URL:<div class="codebox"><span>${esc(hook)}</span><button class="tiny" data-copy="${esc(hook)}">Copy</button></div></li><li>Headers → add one called <code>Authorization</code> with this value:${getKey() ? `<div class="codebox"><span>Bearer ${esc(getKey())}</span><button class="tiny" data-copy="Bearer ${esc(getKey())}">Copy</button></div>` : ' <code>Bearer</code> followed by your private key'}</li><li>Format <b>JSON</b>, Aggregate <b>Days</b>, Period <b>Since last sync</b>. Pick: Step Count, Active Energy, Sleep Analysis, Resting Heart Rate, Exercise Time, Workouts.</li><li>Turn on, then tap <b>Manual Sync</b> to test.</li></ol>` : '<p class="hint">Needs the Cloudflare version, so your phone has somewhere to send data.</p>'}
-      <label style="margin-top:12px">Daily step goal<input type="number" min="1000" max="50000" step="500" id="stepGoal" value="${s.stepGoal}"></label>
-      <label class="checklabel" style="margin-top:8px"><input type="checkbox" id="autoMove" ${s.autoMove ? 'checked' : ''}> Tick “Move your body” when I hit my goal or log a workout</label></section>
+    const health = !on
+      ? `<p class="hint">Do step 1 first.</p>`
+      : `<p class="hint">${lastH ? `Last update ${new Date(lastH).toLocaleString('en-GB', { timeZone: TZ, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}. Your steps, sleep and workouts show on My day.` : 'Shows your steps, sleep and workouts on My day. You need the <b>Health Auto Export</b> app on your iPhone (its Premium tier does the automatic sending).'}</p>
+         <details ${lastH ? '' : 'open'}><summary>${lastH ? 'Setup details' : 'Show me how (5 minutes)'}</summary>
+           <ol class="steps">
+             <li>In Health Auto Export, tap <b>Automations</b> → <b>New automation</b> → <b>REST API</b>.</li>
+             <li>Paste this into <b>URL</b>:${copyBox('', `${location.origin}/api/health/ingest`)}</li>
+             <li>Tap <b>Headers</b> → add one. Name: <code>Authorization</code>. Value:${copyBox('', 'Bearer ' + (HS.privateLink() ? new URL(HS.privateLink()).searchParams.get('k') : ''), 'Bearer ••••••••••••')}</li>
+             <li>Set <b>Format</b> to JSON and <b>Aggregate data</b> to Days.</li>
+             <li>Under <b>Health metrics</b> tick Step Count, Active Energy, Sleep Analysis, Resting Heart Rate and Exercise Time. Turn on <b>Workouts</b>.</li>
+             <li>Switch the automation on and tap <b>Manual sync</b>. Come back here and it should say Connected.</li>
+           </ol></details>
+         <div class="settingsrow"><label>Daily step goal<input type="number" min="1000" max="50000" step="500" id="stepGoal" value="${s.stepGoal}"></label>
+         <label class="checklabel"><input type="checkbox" id="autoMove" ${s.autoMove ? 'checked' : ''}> Tick “Move your body” when I hit it or log a workout</label></div>`;
 
-    <section class="panel conn"><h2><span class="emo">🟪</span>Milanote</h2><span class="pill">Links</span>
-      <p class="hint">Milanote doesn’t offer a public API, so nothing can sync with it reliably. Instead, pin your boards to the right project and they open in one tap. Your Notebook board here also does most of what Milanote does and connects to your tasks.</p><button class="tiny" data-goview="projects">Pin boards to projects ↗</button></section>
+    const google = !on
+      ? `<p class="hint">Do step 1 first.</p>`
+      : !g.configured
+      ? `<p class="hint">Brings your calendar onto My day and lets you pin Drive files to projects. It needs a one-off setup in Google (about 20 minutes). When you’re ready, ask Claude to walk you through it.</p>`
+      : g.connected
+      ? `<p class="hint">Connected as <b>${esc(g.email || 'your Google account')}</b>. Your calendar shows on My day and in Calendar, and you can pin Drive files from any project.</p><button class="tiny" id="gDisconnect">Disconnect</button>`
+      : `<p class="hint">See today’s schedule on My day, add tasks to your calendar, and pin Drive files to projects.</p><a class="dark" href="/api/google/auth" style="display:inline-block;text-decoration:none">Connect Google</a>`;
 
-    <section class="panel conn"><h2><span class="emo">📱</span>On your iPhone</h2><span class="pill">App-like</span>
-      <p class="hint">Open your Headspace address in <b>Safari</b> → Share → <b>Add to Home Screen</b>. It opens full screen like an app, signed in, and syncs with your laptop.</p></section>
+    return head('PLUG IN YOUR WORLD', 'Connections.', 'Three steps. Do the first one now, the others whenever you like.') + `<div class="steplist">
+      ${step(1, synced, 'Sync your devices', synced ? 'Connected' : on ? 'Reconnecting' : HS.locked ? 'Not connected' : 'Local only', sync)}
+      ${step(2, !!lastH, 'Apple Health', lastH ? 'Connected' : 'Not yet', health)}
+      ${step(3, !!g.connected, 'Google Calendar & Drive', g.connected ? 'Connected' : 'Optional', google)}
+      <div class="tips"><div class="panel"><b>🟪 Milanote</b><p class="hint">Milanote can’t sync with other apps, so pin your boards to the right project instead. They open in one tap.</p><button class="tiny" data-goview="projects">Go to Projects ↗</button></div>
+      <div class="panel"><b>📱 Feels like an app</b><p class="hint">On iPhone, open Headspace in Safari → Share → Add to Home Screen. It opens full screen and stays linked.</p></div></div>
     </div>`;
   };
+
+  let qrP = null;
+  const loadQR = () => qrP || (qrP = new Promise((res, rej) => { const s = document.createElement('script'); s.src = '/qrcode.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); }));
 
   /* ---------- event wiring after each render ---------- */
   HS.bindExtras = () => {
     document.querySelectorAll('[data-goview]').forEach((b) => (b.onclick = () => { view = b.dataset.goview; try { history.replaceState(null, '', '#' + view); } catch {} render(); scrollTo({ top: 0 }); }));
     document.querySelectorAll('[data-copy]').forEach((b) => (b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.copy); toast('Copied ✨'); } catch { toast('Press and hold to copy'); } }));
-    if ($('#linkForm')) $('#linkForm').onsubmit = (e) => { e.preventDefault(); if (!HS.linkFrom(e.target.link.value)) toast('That doesn’t look like your Headspace link'); };
+    if ($('#addPhone')) $('#addPhone').onclick = async () => {
+      const box = $('#phoneBox'); box.hidden = !box.hidden; if (box.hidden) return;
+      try { await loadQR(); $('#qr').innerHTML = ''; const q = qrcode(0, 'M'); q.addData(HS.privateLink()); q.make(); $('#qr').innerHTML = q.createSvgTag(5, 2); }
+      catch { $('#qr').innerHTML = '<p class="hint">Couldn’t draw the code. Use Copy the link instead.</p>'; }
+    };
+    if ($('#linkForm')) $('#linkForm').onsubmit = (e) => { e.preventDefault(); if (!HS.linkFrom(e.target.link.value)) toast('That doesn’t look like your Headspace key. Check you copied all of it.'); };
     if ($('#syncNow')) $('#syncNow').onclick = async () => { await sync(); toast(HS.status === 'synced' ? 'All synced ☁️' : 'Couldn’t reach your cloud'); render(); };
     if ($('#refreshCal')) $('#refreshCal').onclick = () => { loadEvents(); toast('Refreshing…'); };
     if ($('#gDisconnect')) $('#gDisconnect').onclick = async () => { if (!(await ask('Disconnect Google?', 'Disconnect'))) return; await api('/api/google/disconnect', { method: 'POST' }).catch(() => {}); HS.me.google.connected = false; HS.events = null; render(); };
