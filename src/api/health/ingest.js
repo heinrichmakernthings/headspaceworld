@@ -12,6 +12,11 @@ const KEEP = new Set([
   'sleep_analysis',
   'mindful_minutes',
   'weight_body_mass',
+  'dietary_energy',
+  'protein',
+  'carbohydrates',
+  'total_fat',
+  'dietary_water',
 ]);
 
 export async function onRequestPost({ request, env }) {

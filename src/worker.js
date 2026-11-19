@@ -12,6 +12,7 @@ import * as gCalendar from './api/google/calendar.js';
 import * as gDisconnect from './api/google/disconnect.js';
 import * as backups from './api/backups.js';
 import * as ai from './api/ai.js';
+import * as aiModels from './api/ai-models.js';
 import { makeBackup } from '../lib/backup.js';
 
 const routes = {
@@ -26,6 +27,7 @@ const routes = {
   '/api/google/disconnect': gDisconnect,
   '/api/backups': backups,
   '/api/ai': ai,
+  '/api/ai/models': aiModels,
 };
 
 export default {

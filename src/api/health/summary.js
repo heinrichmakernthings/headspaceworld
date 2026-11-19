@@ -1,6 +1,6 @@
 import { json, getMeta, londonDay } from '../../../lib/util.js';
 
-const SUM = { step_count: 'steps', active_energy: 'energy', walking_running_distance: 'distance', apple_exercise_time: 'exercise', mindful_minutes: 'mindful', sleep_analysis: 'sleep' };
+const SUM = { step_count: 'steps', active_energy: 'energy', walking_running_distance: 'distance', apple_exercise_time: 'exercise', mindful_minutes: 'mindful', sleep_analysis: 'sleep', dietary_energy: 'eaten', protein: 'protein', carbohydrates: 'carbs', total_fat: 'fat', dietary_water: 'water' };
 const AVG = { resting_heart_rate: 'restingHr', heart_rate_variability: 'hrv', weight_body_mass: 'weight' };
 
 export async function onRequestGet({ request, env }) {

@@ -306,6 +306,43 @@ body.calm .logo,body.calm .breath,body.calm .breath span,body.calm .floaty .note
 .fab:hover{background:linear-gradient(135deg,#7a6af0,#ff7cc6);transform:translateY(-2px)}
 body.view-ask .fab{display:none}
 @media(max-width:700px){header{flex-direction:column;align-items:stretch}.capture{max-width:none;order:2}.hdrbtns{justify-content:space-between}.chat{max-height:none}.fab{right:14px;bottom:calc(14px + env(safe-area-inset-bottom))}}
+/* ---------- AI app ---------- */
+.aiapp{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;margin-top:22px;align-items:start}
+.ailist{background:rgba(255,255,255,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:24px;padding:14px;max-height:calc(100vh - 150px);overflow:auto;box-shadow:0 14px 34px rgba(60,50,150,.12)}
+.ailabel{font-size:10px;letter-spacing:2px;font-weight:800;color:var(--muted);margin:16px 6px 6px;display:flex;justify-content:space-between}.ailabel small{letter-spacing:0;font-weight:700}
+.asst{display:block;width:100%;text-align:left;padding:8px 10px;border-radius:12px;font-weight:700;font-size:13px;color:#4b4880}
+.asst.on{background:linear-gradient(135deg,#efeaff,#ffe6f4);color:#4b3fb5}
+.chatitem{display:flex;align-items:center;border-radius:12px}.chatitem.on{background:linear-gradient(135deg,#efeaff,#ffe6f4)}
+.chatitem>button:first-child{flex:1;min-width:0;text-align:left;padding:8px 10px;display:flex;flex-direction:column}
+.chatitem span{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chatitem small{font-size:10px;color:var(--muted);font-weight:700}
+.chatitem .tiny{opacity:.35}.chatitem:hover .tiny{opacity:1}
+.aimain{margin:0;padding:18px 20px;display:flex;flex-direction:column;min-height:calc(100vh - 220px)}
+.aimain.drop{outline:3px dashed #b7acfa;outline-offset:-8px}
+.aihead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.aititle{flex:1;min-width:140px;display:flex;flex-direction:column;line-height:1.3}.aititle b{font:600 17px Fredoka,sans-serif}.aititle small{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px}
+.modelsel{width:auto;max-width:200px;padding:7px 10px;font-size:12px;border-radius:999px}
+.iconbtn{width:38px;height:38px;padding:0;border-radius:50%;font-size:16px;flex-shrink:0}.iconbtn.on{background:linear-gradient(135deg,#efeaff,#ffe6f4)}
+#micBtn.on{background:linear-gradient(135deg,#ff9ecf,#ff7c9c);color:#fff;animation:glow 1.2s ease-in-out infinite}
+.listbtn{display:none}
+.aimain .chat{flex:1;max-height:none;min-height:260px}
+.aiempty{text-align:center;margin:auto;padding:30px 10px;max-width:460px}.aiempty .emo{margin:0 auto 10px}
+.mtext{white-space:pre-wrap}.mmeta{font-size:10px;color:var(--muted);margin-top:8px;font-weight:700}
+.mfiles{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.mfiles span{background:rgba(255,255,255,.25);border-radius:999px;padding:2px 9px;font-size:11px}
+.filechips{margin-top:8px}
+.aimain .askbar{align-items:flex-end}.aimain .askbar textarea{min-height:46px;max-height:180px}
+.aifoot{font-size:11px;color:var(--muted);margin-top:8px;font-weight:700}
+.aimanage .asstcard{border-top:1px solid var(--line);padding:14px 0;display:grid;gap:8px}
+.asstrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.asstrow input{flex:1;min-width:120px}.asstrow select{width:auto}.asstrow label{flex:1;min-width:110px}
+.emojiin{flex:0 0 56px!important;min-width:0!important;text-align:center;font-size:18px}
+body.askfull>aside{display:none}
+body.askfull main{margin-left:0;padding:16px 20px;max-width:none}
+body.askfull main>header{display:none}
+body.askfull .aiapp{margin-top:0}
+body.askfull #content>.eyebrow,body.askfull #content>h1,body.askfull #content>p.sub{display:none}
+body.askfull .aimain{min-height:calc(100vh - 34px)}
+body.askfull .ailist{max-height:calc(100vh - 34px)}
+@media(max-width:900px){.aiapp{grid-template-columns:1fr}.listbtn{display:inline-block}.ailist{display:none;max-height:none}.ailist.open{display:block}.aihead .modelsel{max-width:140px}}
+@media(max-width:700px){.aimain{padding:14px;min-height:calc(100vh - 160px)}body.askfull main{padding:calc(8px + env(safe-area-inset-top)) 8px 8px}.msg{max-width:92%}}
 </style>
 </head>
 <body class="night">
@@ -363,6 +400,11 @@ const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math
 const rand=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
 const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isCalm=()=>calm||document.body.classList.contains('calm');
+const DEFAULT_ASSISTANTS=[
+{id:'headspace',name:'Headspace',emoji:'✨',instructions:'',starters:['Plan my day','What’s overdue?','Sort my inbox for me','What can I drop this week?']},
+{id:'madruga',name:'Madruga producer',emoji:'☀️',instructions:'You are a seasoned UK festival producer helping Sam run Madruga, a boutique multi-day electronic music festival at Baskerville Hall, Hay-on-Wye. Think practically about suppliers, licensing, site operations, artist liaison, ticketing, budgets, crew and timelines. Flag risks early and suggest next steps as tasks in the Madruga project.',starters:['What should I be doing this month for Madruga?','Draft a supplier check-in email','Build a production timeline','What are the biggest risks right now?']},
+{id:'email',name:'Email drafter',emoji:'✉️',instructions:'Draft clear, friendly, concise emails and messages in Sam’s voice: warm, direct, British English, no fluff or corporate jargon. Give a subject line and one draft. Always offer a copy_text action containing the full draft, and chips for tweaks (shorter, firmer, warmer).',starters:['Chase an unpaid invoice politely','Say no to a request kindly','Follow up after a meeting','Ask a venue for a quote']},
+{id:'assembly',name:'Assembly growth',emoji:'🌐',instructions:'You help Sam with business development and growth for Assembly, an all-in-one platform for events, ticketing and merch. Think about prospects, pitches, partnerships, outreach and follow-ups. Be commercially sharp and suggest concrete next steps as tasks in the Assembly project.',starters:['Who should Assembly be pitching?','Write a short cold intro email','Plan this week’s outreach','Turn my notes into a pitch']}];
 const seed={tasks:[],
 notes:[
  {id:'h1',type:'heading',title:'Brain dump',body:'',later:false,x:40,y:30},
@@ -376,7 +418,7 @@ projects:[
  {id:'assembly',name:'Assembly',emoji:'🌐',blurb:'All-in-one events, ticketing & merch platform',color:'blue',notes:''}],
 habits:[{id:'move',title:'Move your body',minutes:30,repeat:'daily',days:[]},{id:'language',title:'Language practice',minutes:15,repeat:'daily',days:[]}],scratch:''};
 let state;try{state=JSON.parse(localStorage.getItem('headspace-v1'))||structuredClone(seed)}catch{state=structuredClone(seed)}
-function normalise(){state.journal=state.journal||{};state.pops=state.pops||0;state.projects=Array.isArray(state.projects)?state.projects:structuredClone(seed.projects);state.settings=Object.assign({stepGoal:8000,autoMove:true},state.settings||{});state.inbox=Array.isArray(state.inbox)?state.inbox:[];if(state.scratch&&state.scratch.trim()){state.inbox.unshift({id:uid(),text:state.scratch.trim(),created:Date.now()});state.scratch=''};if(!state.settings.iconsV2){state.projects.forEach(p=>{if(p.id==='madruga'&&p.emoji==='🌙')p.emoji='☀️';if(p.id==='assembly'&&p.emoji==='🧩')p.emoji='🌐';if(p.id==='juntada'&&!p.emoji)p.emoji='🫶'});state.settings.iconsV2=true}state.notes.forEach(n=>{n.type=n.type||'note';if(n.type==='list')n.items=n.items||[]})}
+function normalise(){state.journal=state.journal||{};state.pops=state.pops||0;state.projects=Array.isArray(state.projects)?state.projects:structuredClone(seed.projects);state.settings=Object.assign({stepGoal:8000,autoMove:true},state.settings||{});state.inbox=Array.isArray(state.inbox)?state.inbox:[];state.chats=Array.isArray(state.chats)?state.chats:[];state.assistants=Array.isArray(state.assistants)&&state.assistants.length?state.assistants:structuredClone(DEFAULT_ASSISTANTS);if(state.scratch&&state.scratch.trim()){state.inbox.unshift({id:uid(),text:state.scratch.trim(),created:Date.now()});state.scratch=''};if(!state.settings.iconsV2){state.projects.forEach(p=>{if(p.id==='madruga'&&p.emoji==='🌙')p.emoji='☀️';if(p.id==='assembly'&&p.emoji==='🧩')p.emoji='🌐';if(p.id==='juntada'&&!p.emoji)p.emoji='🫶'});state.settings.iconsV2=true}state.notes.forEach(n=>{n.type=n.type||'note';if(n.type==='list')n.items=n.items||[]})}
 normalise();
 const VIEWS=['today','ask','tasks','projects','notes','journal','later','calendar','connections'];
 let journalDate=today(),view=VIEWS.includes(location.hash.slice(1))?location.hash.slice(1):'today',editing=null,fromCard=null,search='',project='All projects',sort='smart',boardScroll={l:0,t:0};
@@ -623,7 +665,7 @@ render();save();
    the app quietly stays in local mode. */
 (function () {
   const HS = (window.HS = { on: false, me: null, health: null, events: null, eventsAt: 0, status: 'local' });
-  const COLLS = ['tasks', 'notes', 'projects', 'habits', 'inbox'];
+  const COLLS = ['tasks', 'notes', 'projects', 'habits', 'inbox', 'chats', 'assistants'];
   const METAS = ['scratch', 'pops', 'quoteFavourites', 'settings'];
   const SEP = '|';
   let synced = {}, syncSince = 0, syncTimer = null, syncing = false, again = false, pendingRender = false;
@@ -679,7 +721,7 @@ render();save();
   }
   const typing = () => {
     const a = document.activeElement;
-    return (a && a.matches('input,textarea,select') && a.closest('#content')) || document.querySelector('dialog[open]');
+    return HS.streaming || (a && a.matches('input,textarea,select') && a.closest('#content')) || document.querySelector('dialog[open]');
   };
   function softRender() {
     if (typing()) pendingRender = true;
@@ -802,7 +844,7 @@ render();save();
           await sync();
         } else {
           // this device is new: take what's in the cloud
-          state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], journal: {}, scratch: '', pops: 0 };
+          state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], chats: [], assistants: [], journal: {}, scratch: '', pops: 0 };
           for (const ch of res.changes) applyChange(ch.collection, ch.id, ch.data);
           normalise();
           synced = snap();
@@ -864,7 +906,7 @@ render();save();
     const wk = (t.workouts || []).map((w) => `${esc(w.name)} · ${w.minutes} min`).join('<br>');
     return `<section class="panel health"><div class="section-head"><h2>Your body today</h2><span class="hint">${h.last ? 'Updated ' + hm(h.last) : ''}</span></div>
       <div class="hgrid"><div class="ring"><svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="none" stroke="#efedfa" stroke-width="9"/><circle cx="48" cy="48" r="40" fill="none" stroke="url(#hsg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - pct)}"/><defs><linearGradient id="hsg"><stop offset="0" stop-color="#ff9ecf"/><stop offset="1" stop-color="#8fd3ff"/></linearGradient></defs></svg><b>${steps.toLocaleString('en-GB')}<small>of ${goal.toLocaleString('en-GB')} steps</small></b></div>
-      <div class="hstats"><div><span>SLEEP</span>${fmtSleep(sleep)}</div><div><span>ACTIVE</span>${t.energy ? Math.round(t.energy) + ' kcal' : '–'}</div><div><span>RESTING HR</span>${t.restingHr ? Math.round(t.restingHr) + ' bpm' : '–'}</div><div><span>EXERCISE</span>${t.exercise ? Math.round(t.exercise) + ' min' : '–'}</div></div></div>
+      <div class="hstats"><div><span>SLEEP</span>${fmtSleep(sleep)}</div><div><span>ACTIVE</span>${t.energy ? Math.round(t.energy) + ' kcal' : '–'}</div><div><span>RESTING HR</span>${t.restingHr ? Math.round(t.restingHr) + ' bpm' : '–'}</div><div><span>EXERCISE</span>${t.exercise ? Math.round(t.exercise) + ' min' : '–'}</div>${t.eaten ? `<div><span>EATEN</span>${Math.round(t.eaten)} kcal</div><div><span>PROTEIN</span>${t.protein ? Math.round(t.protein) + ' g' : '–'}</div>` : ''}</div></div>
       ${wk ? `<p class="hint" style="margin:12px 0 0">🏃 ${wk}</p>` : ''}
       <div class="bars" aria-label="Steps over the last 7 days">${days.map((d) => `<i class="${d.date === today() ? 'today' : ''}" style="height:${Math.max(4, ((d.steps || 0) / max) * 100)}%" title="${d.date}: ${Math.round(d.steps || 0)} steps"></i>`).join('')}</div>
       <div class="barlabels">${days.map((d) => `<span>${new Date(d.date + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'narrow' })}</span>`).join('')}</div></section>`;
@@ -997,7 +1039,7 @@ render();save();
              <li>Paste this into <b>URL</b>:${copyBox('', `${location.origin}/api/health/ingest`)}</li>
              <li>Tap <b>Headers</b> → add one. Name: <code>Authorization</code>. Value:${copyBox('', 'Bearer ' + (HS.privateLink() ? new URL(HS.privateLink()).searchParams.get('k') : ''), 'Bearer ••••••••••••')}</li>
              <li>Set <b>Format</b> to JSON and <b>Aggregate data</b> to Days.</li>
-             <li>Under <b>Health metrics</b> tick Step Count, Active Energy, Sleep Analysis, Resting Heart Rate and Exercise Time. Turn on <b>Workouts</b>.</li>
+             <li>Under <b>Health metrics</b> tick Step Count, Active Energy, Sleep Analysis, Resting Heart Rate and Exercise Time (plus Dietary Energy and Protein if your food app saves to Apple Health). Turn on <b>Workouts</b>.</li>
              <li>Switch the automation on and tap <b>Manual sync</b>. Come back here and it should say Connected.</li>
            </ol></details>
          <div class="settingsrow"><label>Daily step goal<input type="number" min="1000" max="50000" step="500" id="stepGoal" value="${s.stepGoal}"></label>
@@ -1025,20 +1067,52 @@ render();save();
   const loadQR = () => qrP || (qrP = new Promise((res, rej) => { const s = document.createElement('script'); s.src = '/qrcode.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); }));
 
 
-  /* ---------- Ask: built-in assistant (Claude or ChatGPT) ---------- */
-  let chat = [];
-  try { chat = JSON.parse(localStorage.getItem('hs-chat') || '[]'); } catch {}
-  let askBusy = false;
-  const saveChat = () => { chat = chat.slice(-40); try { localStorage.setItem('hs-chat', JSON.stringify(chat)); } catch {} };
+  /* ---------- Ask: your own AI app (Claude or ChatGPT) ---------- */
+  const MARK = '@@ACTIONS@@';
+  const ACTION_TYPES = ['add_task', 'complete_task', 'focus_tasks', 'add_note', 'add_idea', 'add_project', 'inbox_to_task', 'clear_inbox_item', 'copy_text', 'open'];
+  const ui = { chatId: null, newAsst: null, busy: false, full: false, listOpen: false, manage: false, files: [], models: null, listening: false };
+  const getPref = (k, d = '') => { try { return localStorage.getItem(k) || d; } catch { return d; } };
+  const setPref = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
+  ui.full = getPref('hs-askfull') === '1';
+  try {
+    const old = JSON.parse(localStorage.getItem('hs-chat') || '[]');
+    if (old.length) {
+      state.chats.unshift({ id: uid(), title: String(old.find((m) => m.role === 'user')?.content || 'Earlier chat').slice(0, 60), assistantId: 'headspace', provider: '', model: '', messages: old.map((m) => ({ role: m.role, content: m.content, actions: m.actions, chips: m.chips, err: m.err })), created: Date.now(), updated: Date.now(), usage: { in: 0, out: 0 } });
+      localStorage.removeItem('hs-chat');
+      save();
+    }
+  } catch {}
+
   const aiAvail = () => HS.me?.ai || {};
-  const provider = () => {
-    let p = ''; try { p = localStorage.getItem('hs-ai') || ''; } catch {}
+  const assistantsList = () => (state.assistants && state.assistants.length ? state.assistants : DEFAULT_ASSISTANTS);
+  const assistantById = (id) => assistantsList().find((a) => a.id === id) || assistantsList()[0];
+  const curChat = () => (ui.chatId ? state.chats.find((c) => c.id === ui.chatId) || null : null);
+  const curAsst = () => assistantById(curChat()?.assistantId || ui.newAsst || getPref('hs-asst', 'headspace'));
+  function pickProvider(want) {
     const a = aiAvail();
-    if (p === 'chatgpt' && a.chatgpt) return 'chatgpt';
-    if (p === 'claude' && a.claude) return 'claude';
+    if (want === 'chatgpt' && a.chatgpt) return 'chatgpt';
+    if (want === 'claude' && a.claude) return 'claude';
     return a.claude ? 'claude' : a.chatgpt ? 'chatgpt' : 'claude';
-  };
-  const STARTERS = ['Plan my day', 'What’s overdue?', 'Sort my inbox for me', 'Break a project into steps', 'Help me say no to something', 'What can I drop this week?'];
+  }
+  const curProvider = () => pickProvider(curChat()?.provider || curAsst()?.provider || getPref('hs-ai'));
+  const curModel = () => curChat()?.model || getPref('hs-model-' + curProvider());
+  const RATES_DEFAULT = { claude: [3, 15], chatgpt: [2, 10] };
+  const rates = (p) => (state.settings.aiRates && state.settings.aiRates[p]) || RATES_DEFAULT[p];
+  const costOf = (c) => { const r = rates(c.provider || 'claude'); return ((c.usage?.in || 0) * r[0] + (c.usage?.out || 0) * r[1]) / 1e6; };
+  const fmtCost = (usd) => (usd <= 0 ? '' : usd < 0.01 ? '≈ under 1¢' : `≈ $${usd.toFixed(2)}`);
+  const visible = (s) => { const i = s.indexOf('@@'); return i >= 0 ? s.slice(0, i) : s; };
+  function splitTail(full) {
+    const i = full.indexOf(MARK);
+    if (i < 0) return [full, { actions: [], chips: [] }];
+    let tail = {};
+    const m = full.slice(i + MARK.length).match(/\{[\s\S]*\}/);
+    if (m) { try { tail = JSON.parse(m[0]); } catch {} }
+    const actions = (Array.isArray(tail.actions) ? tail.actions : []).filter((a) => a && ACTION_TYPES.includes(a.type) && a.label).slice(0, 6).map((a) => ({ ...a, label: String(a.label).slice(0, 60) }));
+    const chips = (Array.isArray(tail.chips) ? tail.chips : []).filter((c) => typeof c === 'string' && c.trim()).slice(0, 4).map((c) => c.slice(0, 60));
+    return [full.slice(0, i), { actions, chips }];
+  }
+  const errText = (m) => m === 'auth' ? 'This device isn’t linked, so Ask can’t reach your cloud. Connect it in Connections first.'
+    : m === 'offline' || m === 'not-headspace' ? 'Ask needs your online Headspace (your workers.dev address) and an internet connection.' : m;
 
   function askContext() {
     const open = sorted(state.tasks.filter((t) => !t.done));
@@ -1095,71 +1169,281 @@ render();save();
         msg = 'Inbox item is now a task'; break;
       }
       case 'clear_inbox_item': state.inbox = (state.inbox || []).filter((x) => x.id !== a.inbox_id); msg = 'Let go ☁️'; break;
+      case 'copy_text':
+        navigator.clipboard.writeText(String(a.text || '')).then(() => toast('Copied ✨ Paste it wherever you need'), () => toast('Couldn’t copy. Select the text and copy it instead.'));
+        return;
       case 'open': view = a.view || 'today'; render(); return;
       default: return;
     }
     a.done = true;
-    saveChat();
     save();
     render();
     toast(msg);
   }
 
+  /* --- sending + live streaming --- */
   async function sendAsk(text) {
     text = String(text || '').trim();
-    if (!text || askBusy) return;
-    chat.push({ role: 'user', content: text });
-    saveChat();
-    askBusy = true;
-    render();
-    try {
-      const r = await api('/api/ai', { method: 'POST', body: { provider: provider(), context: askContext(), messages: chat.filter((m) => !m.err).map((m) => ({ role: m.role, content: m.content })) } });
-      chat.push({ role: 'assistant', content: r.reply, actions: r.actions, chips: r.chips, provider: r.provider });
-    } catch (e) {
-      chat.push({ role: 'assistant', err: true, content: e.message === 'auth' ? 'This device isn’t linked, so Ask can’t reach your cloud. Connect it in Connections first.' : e.message === 'offline' || e.message === 'not-headspace' ? 'Ask needs your online Headspace (your workers.dev address) and an internet connection.' : e.message });
+    if ((!text && !ui.files.length) || ui.busy) return;
+    let c = curChat();
+    if (!c) {
+      const a = curAsst();
+      c = { id: uid(), title: 'New chat', assistantId: a.id, provider: curProvider(), model: curModel(), messages: [], created: Date.now(), updated: Date.now(), usage: { in: 0, out: 0 } };
+      state.chats.unshift(c);
+      ui.chatId = c.id;
     }
-    askBusy = false;
-    saveChat();
+    const files = ui.files;
+    ui.files = [];
+    const ctxText = files.filter((f) => f.kind === 'text').map((f) => `\n\n--- ${f.name} ---\n${f.text.slice(0, 20000)}`).join('');
+    const content = text || 'Please look at the attached file(s).';
+    c.messages.push({ role: 'user', content, files: files.map((f) => ({ name: f.name, kind: f.kind })), ctxText: ctxText || undefined });
+    if (c.title === 'New chat') c.title = content.slice(0, 50);
+    const asst = assistantById(c.assistantId);
+    const body = {
+      provider: c.provider || curProvider(),
+      model: c.model || '',
+      assistant: asst && asst.id !== 'headspace' ? { name: asst.name, instructions: asst.instructions } : asst?.instructions ? { name: asst.name, instructions: asst.instructions } : null,
+      context: askContext(),
+      messages: c.messages.filter((m) => !m.err && (m.content || m.ctxText)).map((m) => ({ role: m.role, content: (m.content || '') + (m.ctxText || '') })),
+      attachments: files.filter((f) => f.kind !== 'text').map((f) => ({ name: f.name, kind: f.kind, mime: f.mime, data: f.data })),
+    };
+    const msg = { role: 'assistant', content: '', provider: body.provider };
+    c.messages.push(msg);
+    ui.busy = true;
+    HS.streaming = true;
+    render();
+    let full = '';
+    try {
+      const r = await fetch('/api/ai', { method: 'POST', headers: Object.assign({ 'content-type': 'application/json' }, getKey() ? { 'x-headspace-key': getKey() } : {}), body: JSON.stringify(body), credentials: 'same-origin', redirect: 'manual' });
+      if (r.type === 'opaqueredirect' || r.status === 401) throw new Error('auth');
+      if (!(r.headers.get('content-type') || '').includes('event-stream')) { const j = await r.json().catch(() => ({})); throw new Error(j.error || 'not-headspace'); }
+      const reader = r.body.getReader(), dec = new TextDecoder();
+      let buf = '';
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let i;
+        while ((i = buf.indexOf('\n\n')) >= 0) {
+          const line = buf.slice(0, i).split('\n').find((l) => l.startsWith('data:'));
+          buf = buf.slice(i + 2);
+          if (!line) continue;
+          let e; try { e = JSON.parse(line.slice(5)); } catch { continue; }
+          if (e.t) {
+            full += e.t;
+            const el = document.querySelector('#liveMsg .mtext');
+            if (el) { el.textContent = visible(full); document.querySelector('#liveMsg .typing')?.remove(); scrollChat(); }
+          } else if (e.start) msg.model = e.model;
+          else if (e.done) { c.usage = c.usage || { in: 0, out: 0 }; c.usage.in += e.usage?.in || 0; c.usage.out += e.usage?.out || 0; c.provider = e.provider; msg.model = e.model; }
+          else if (e.error) throw new Error(e.error);
+        }
+      }
+      const [reply, tail] = splitTail(full);
+      msg.content = reply.trim() || '…';
+      msg.actions = tail.actions;
+      msg.chips = tail.chips;
+      if (getPref('hs-speak') === '1') speak(msg.content);
+    } catch (e) {
+      msg.err = true;
+      msg.content = errText(e.message) + (full ? '\n\n' + visible(full) : '');
+    }
+    ui.busy = false;
+    HS.streaming = false;
+    c.messages = c.messages.slice(-60);
+    c.updated = Date.now();
+    state.chats.sort((a, b) => b.updated - a.updated);
+    save();
     render();
   }
+  const scrollChat = () => { const b = $('#chatBox'); if (b) b.scrollTop = b.scrollHeight; };
 
+  /* --- voice --- */
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let rec = null;
+  function toggleMic() {
+    if (!SR) return toast('Voice input isn’t available in this browser. On iPhone, the keyboard’s 🎙️ key works too.');
+    if (ui.listening) { try { rec.stop(); } catch {} return; }
+    const ta = $('#askForm textarea');
+    const base = ta.value ? ta.value.trim() + ' ' : '';
+    rec = new SR();
+    rec.lang = 'en-GB';
+    rec.interimResults = true;
+    rec.continuous = false;
+    rec.onresult = (e) => { let t = ''; for (const r of e.results) t += r[0].transcript; ta.value = base + t; };
+    const stop = () => { ui.listening = false; $('#micBtn')?.classList.remove('on'); };
+    rec.onend = () => { stop(); if (ta.value.trim() && getPref('hs-autosend') !== '0') $('#askForm')?.requestSubmit(); };
+    rec.onerror = (e) => { stop(); if (e.error === 'not-allowed') toast('Allow microphone access to talk to Ask'); };
+    ui.listening = true;
+    $('#micBtn')?.classList.add('on');
+    try { rec.start(); } catch { stop(); }
+  }
+  function speak(text) {
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(String(text).slice(0, 3000));
+      u.lang = 'en-GB';
+      const v = speechSynthesis.getVoices().find((x) => /en-GB/i.test(x.lang));
+      if (v) u.voice = v;
+      speechSynthesis.speak(u);
+    } catch {}
+  }
+
+  /* --- files --- */
+  const libs = {};
+  const loadLib = (src) => libs[src] || (libs[src] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }));
+  const b64 = (blob) => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); });
+  async function shrinkImage(f) {
+    try {
+      const bmp = await createImageBitmap(f);
+      const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+      if (scale === 1 && f.size < 3.5e6 && /png|jpe?g|webp|gif/.test(f.type)) return { mime: f.type === 'image/jpg' ? 'image/jpeg' : f.type, data: await b64(f) };
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(bmp.width * scale); cv.height = Math.round(bmp.height * scale);
+      cv.getContext('2d').drawImage(bmp, 0, 0, cv.width, cv.height);
+      const blob = await new Promise((r) => cv.toBlob(r, 'image/jpeg', 0.85));
+      return { mime: 'image/jpeg', data: await b64(blob) };
+    } catch { return { mime: f.type, data: await b64(f) }; }
+  }
+  async function addFiles(list) {
+    for (const f of [...list].slice(0, Math.max(0, 5 - ui.files.length))) {
+      if (f.size > 20 * 1024 * 1024) { toast(`${f.name} is over 20MB`); continue; }
+      const ext = (f.name.split('.').pop() || '').toLowerCase();
+      try {
+        if (/^image\//.test(f.type) || ['heic', 'jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) ui.files.push({ name: f.name, kind: 'image', ...(await shrinkImage(f)) });
+        else if (f.type === 'application/pdf' || ext === 'pdf') ui.files.push({ name: f.name, kind: 'pdf', mime: 'application/pdf', data: await b64(f) });
+        else if (['xlsx', 'xls'].includes(ext)) {
+          await loadLib('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+          const wb = XLSX.read(await f.arrayBuffer());
+          ui.files.push({ name: f.name, kind: 'text', text: wb.SheetNames.map((n) => `# Sheet: ${n}\n` + XLSX.utils.sheet_to_csv(wb.Sheets[n])).join('\n\n') });
+        } else if (ext === 'docx') {
+          await loadLib('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+          ui.files.push({ name: f.name, kind: 'text', text: (await mammoth.extractRawText({ arrayBuffer: await f.arrayBuffer() })).value });
+        } else if (/^text\//.test(f.type) || ['csv', 'txt', 'md', 'json', 'tsv', 'html', 'ics', 'xml'].includes(ext)) ui.files.push({ name: f.name, kind: 'text', text: (await f.text()).slice(0, 200000) });
+        else toast(`Can’t read ${f.name} yet. Try a PDF, photo, Word, Excel, CSV or text file.`);
+      } catch { toast(`Couldn’t read ${f.name}`); }
+    }
+    renderFiles();
+  }
+  const fileIcon = (k) => (k === 'image' ? '🖼️' : k === 'pdf' ? '📕' : '📄');
+  function renderFiles() {
+    const box = $('#fileChips');
+    if (!box) return;
+    box.innerHTML = ui.files.map((f, i) => `<span class="chip">${fileIcon(f.kind)} <span>${esc(f.name)}</span><button type="button" data-rmfileask="${i}" aria-label="Remove ${esc(f.name)}">×</button></span>`).join('');
+    box.querySelectorAll('[data-rmfileask]').forEach((b) => (b.onclick = () => { ui.files.splice(+b.dataset.rmfileask, 1); renderFiles(); }));
+  }
+
+  /* --- models --- */
+  async function loadModels() {
+    if (ui.models || !HS.on) return;
+    try { ui.models = await api('/api/ai/models'); if (view === 'ask') softRender(); } catch { ui.models = { claude: [], chatgpt: [], defaults: {} }; }
+  }
+
+  /* --- the screen --- */
   HS.askHTML = () => {
-    const a = aiAvail(), p = provider(), ready = HS.on && (a.claude || a.chatgpt);
-    const last = chat[chat.length - 1];
-    const chips = !chat.length ? STARTERS : last && last.role === 'assistant' && last.chips ? last.chips : [];
+    const a = aiAvail(), ready = HS.on && (a.claude || a.chatgpt);
+    const c = curChat(), asst = curAsst(), p = curProvider(), model = curModel();
+    const msgs = c ? c.messages : [];
+    const last = msgs[msgs.length - 1];
+    const chips = ui.busy ? [] : !msgs.length ? asst.starters || [] : last && last.role === 'assistant' && last.chips ? last.chips : [];
+    const models = (ui.models && ui.models[p]) || [];
+    const def = ui.models?.defaults?.[p];
+    const totalCost = state.chats.reduce((s, x) => s + costOf(x), 0);
     const setup = !HS.on
       ? `<div class="notice">Ask works on your online Headspace once this device is connected. <button class="tiny" data-goview="connections">Go to Connections ↗</button></div>`
       : !ready
-      ? `<div class="notice"><strong>One-off setup:</strong> add an API key so Ask can think.<br>
-          • <b>Claude:</b> get a key at console.anthropic.com → API keys.<br>
-          • <b>ChatGPT:</b> get a key at platform.openai.com → API keys.<br>
-          Then in Cloudflare: headspaceworld → Settings → Variables and Secrets → Add → type <b>Secret</b>, named <code>ANTHROPIC_API_KEY</code> or <code>OPENAI_API_KEY</code> → Deploy. Add both to switch between them. These are pay-as-you-go (separate from a Claude or ChatGPT subscription), usually pennies a day.</div>`
+      ? `<div class="notice"><strong>One-off setup:</strong> add an API key so Ask can think.<br>• <b>Claude:</b> console.anthropic.com → API keys.<br>• <b>ChatGPT:</b> platform.openai.com → API keys.<br>Then in Cloudflare: headspaceworld → Settings → Variables and Secrets → Add → type <b>Secret</b>, named <code>ANTHROPIC_API_KEY</code> or <code>OPENAI_API_KEY</code> → Deploy. Pay-as-you-go, separate from a Claude or ChatGPT subscription.</div>`
       : '';
     const bubble = (m, i) => {
-      if (m.role === 'user') return `<div class="msg user">${esc(m.content)}</div>`;
-      return `<div class="msg assistant ${m.err ? 'err' : ''}">${esc(m.content)}${(m.actions || []).length ? `<div class="acts">${m.actions.map((x, j) => `<button class="act ${x.done ? 'done' : ''}" data-act="${i}|${j}" ${x.done ? 'disabled' : ''}>${x.done ? '✓ ' : ''}${esc(x.label)}</button>`).join('')}</div>` : ''}</div>`;
+      if (m.role === 'user') return `<div class="msg user">${esc(m.content)}${(m.files || []).length ? `<div class="mfiles">${m.files.map((f) => `<span>${fileIcon(f.kind)} ${esc(f.name)}</span>`).join('')}</div>` : ''}</div>`;
+      const live = ui.busy && i === msgs.length - 1;
+      return `<div class="msg assistant ${m.err ? 'err' : ''}" ${live ? 'id="liveMsg"' : ''}><span class="mtext">${esc(m.content)}</span>${live ? '<span class="typing" aria-label="Thinking"><span></span><span></span><span></span></span>' : ''}${(m.actions || []).length ? `<div class="acts">${m.actions.map((x, j) => `<button class="act ${x.done ? 'done' : ''}" data-act="${i}|${j}" ${x.done ? 'disabled' : ''}>${x.done ? '✓ ' : ''}${esc(x.label)}</button>`).join('')}</div>` : ''}${m.model && !live ? `<div class="mmeta">${esc(m.model)}</div>` : ''}</div>`;
     };
-    return head('YOUR SIDEKICK', 'Ask anything.', 'Plan, untangle, draft. Tap a suggestion and it happens in Headspace.') +
-      `<div class="askwrap"><div class="section-head"><div class="provider" role="group" aria-label="Choose assistant"><button data-ai="claude" class="${p === 'claude' ? 'on' : ''}" ${a.claude ? '' : 'disabled title="Add ANTHROPIC_API_KEY to use Claude"'}>Claude</button><button data-ai="chatgpt" class="${p === 'chatgpt' ? 'on' : ''}" ${a.chatgpt ? '' : 'disabled title="Add OPENAI_API_KEY to use ChatGPT"'}>ChatGPT</button></div>${chat.length ? '<button class="tiny" id="askClear" style="color:var(--skymuted)">Clear chat</button>' : ''}</div>
-      ${setup}
-      <section class="panel"><div class="chat" id="chatBox">${chat.length ? chat.map(bubble).join('') : '<div class="empty">Ask about your day, your projects or anything on your mind. It can see your tasks, projects and inbox, and offers buttons you can tap.</div>'}${askBusy ? '<div class="msg assistant typing" aria-label="Thinking"><span></span><span></span><span></span></div>' : ''}</div>
-      ${chips.length && !askBusy ? `<div class="chips2" style="margin-top:12px">${chips.map((c) => `<button class="chip2" data-chip="${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}
-      <form class="askbar" id="askForm"><textarea name="q" rows="2" placeholder="${ready ? 'Ask anything… (Enter to send, Shift+Enter for a new line)' : 'Set up Ask first (see above)'}" aria-label="Message" ${ready ? '' : 'disabled'}></textarea><button class="dark" ${ready && !askBusy ? '' : 'disabled'}>Send</button></form></section></div>`;
+    const list = `<div class="ailist ${ui.listOpen ? 'open' : ''}">
+        <button class="dark" id="newChat" style="width:100%">＋ New chat</button>
+        <div class="ailabel">ASSISTANTS</div>
+        ${assistantsList().map((x) => `<button class="asst ${!ui.manage && x.id === asst.id ? 'on' : ''}" data-asst="${x.id}">${esc(x.emoji || '✨')} ${esc(x.name)}</button>`).join('')}
+        <button class="tiny" id="manageAsst" style="margin-top:4px">⚙ Manage assistants</button>
+        <div class="ailabel">CHATS ${totalCost ? `<small>${fmtCost(totalCost)} total</small>` : ''}</div>
+        ${state.chats.map((x) => `<div class="chatitem ${x.id === ui.chatId && !ui.manage ? 'on' : ''}"><button data-openchat="${x.id}"><span>${esc(assistantById(x.assistantId)?.emoji || '✨')} ${esc(x.title)}</span><small>${new Date(x.updated).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}${costOf(x) ? ' · ' + fmtCost(costOf(x)) : ''}</small></button><button class="tiny" data-delchat="${x.id}" aria-label="Delete chat">×</button></div>`).join('') || '<p class="hint">Your chats will appear here.</p>'}
+      </div>`;
+    const manage = `<div class="aimanage"><div class="section-head"><h2>Your assistants</h2><button class="dark" id="addAsst">＋ New assistant</button></div>
+        <p class="hint">Each assistant has its own instructions on top of knowing your Headspace. Pick one when you start a chat.</p>
+        ${assistantsList().map((x) => `<div class="asstcard"><div class="asstrow"><input class="emojiin" data-asstf="${x.id}|emoji" value="${esc(x.emoji || '')}" maxlength="4" aria-label="Emoji"><input data-asstf="${x.id}|name" value="${esc(x.name)}" aria-label="Name"><select data-asstf="${x.id}|provider" aria-label="Preferred assistant"><option value="">Either AI</option><option value="claude" ${x.provider === 'claude' ? 'selected' : ''}>Claude</option><option value="chatgpt" ${x.provider === 'chatgpt' ? 'selected' : ''}>ChatGPT</option></select>${x.id === 'headspace' ? '' : `<button class="tiny" data-delasst="${x.id}" aria-label="Delete assistant">×</button>`}</div>
+          <textarea rows="3" data-asstf="${x.id}|instructions" placeholder="${x.id === 'headspace' ? 'Optional extra instructions for your everyday assistant' : 'What is this assistant for? How should it talk?'}">${esc(x.instructions || '')}</textarea>
+          <input data-asstf="${x.id}|starters" value="${esc((x.starters || []).join(' | '))}" placeholder="Starter prompts, separated by |" aria-label="Starter prompts"></div>`).join('')}
+        <div class="asstcard"><b>Cost estimates</b><p class="hint">Used for the rough cost shown on each chat. US dollars per million tokens (input / output). Check your provider’s pricing page for exact rates.</p>
+          <div class="asstrow"><label>Claude in<input type="number" step="0.1" min="0" data-rate="claude|0" value="${rates('claude')[0]}"></label><label>Claude out<input type="number" step="0.1" min="0" data-rate="claude|1" value="${rates('claude')[1]}"></label><label>ChatGPT in<input type="number" step="0.1" min="0" data-rate="chatgpt|0" value="${rates('chatgpt')[0]}"></label><label>ChatGPT out<input type="number" step="0.1" min="0" data-rate="chatgpt|1" value="${rates('chatgpt')[1]}"></label></div></div>
+        <button class="tiny" id="doneManage">← Back to chat</button></div>`;
+    const chatPane = `${setup}
+        <div class="chat" id="chatBox">${msgs.length ? msgs.map(bubble).join('') : `<div class="aiempty"><div class="emo">${esc(asst.emoji || '✨')}</div><h2>${esc(asst.name)}</h2><p class="hint">${asst.id === 'headspace' ? 'Ask about your day, your projects or anything on your mind. I can see your tasks, projects and inbox, and offer buttons you can tap.' : esc((asst.instructions || '').slice(0, 160))}${(asst.instructions || '').length > 160 ? '…' : ''}</p></div>`}</div>
+        ${chips.length ? `<div class="chips2">${chips.map((x) => `<button class="chip2" data-chip="${esc(x)}">${esc(x)}</button>`).join('')}</div>` : ''}
+        <div id="fileChips" class="chips filechips"></div>
+        <form class="askbar" id="askForm">
+          <button type="button" class="iconbtn" id="attachBtn" title="Attach files (PDF, photos, Word, Excel, CSV, text)" aria-label="Attach files" ${ready ? '' : 'disabled'}>📎</button>
+          <input type="file" id="fileIn" multiple hidden accept="image/*,.pdf,.csv,.txt,.md,.json,.xlsx,.xls,.docx,.tsv,.ics">
+          <textarea name="q" rows="1" placeholder="${ready ? 'Message ' + esc(asst.name) + '…' : 'Set up Ask first (see above)'}" aria-label="Message" ${ready ? '' : 'disabled'}></textarea>
+          <button type="button" class="iconbtn" id="micBtn" title="Talk" aria-label="Talk" ${ready ? '' : 'disabled'}>🎙️</button>
+          <button class="dark" ${ready && !ui.busy ? '' : 'disabled'}>Send</button>
+        </form>
+        <div class="aifoot">${c && (c.usage?.in || c.usage?.out) ? `${(c.usage.in + c.usage.out).toLocaleString('en-GB')} tokens · ${fmtCost(costOf(c))}` : 'Drop files onto the chat, paste screenshots, or tap 🎙️ to talk.'}</div>`;
+    return `<div class="aiapp ${ui.full ? 'full' : ''}">${list}
+      <section class="aimain panel">
+        <div class="aihead">
+          <button class="iconbtn listbtn" id="listToggle" aria-label="Chats and assistants">☰</button>
+          <div class="aititle"><b>${ui.manage ? '⚙ Assistants' : esc(asst.emoji || '✨') + ' ' + esc(asst.name)}</b><small>${ui.manage ? '' : c ? esc(c.title) : 'New chat'}</small></div>
+          ${ui.manage ? '' : `<div class="provider" role="group" aria-label="Choose AI"><button data-ai="claude" class="${p === 'claude' ? 'on' : ''}" ${a.claude ? '' : 'disabled title="Add ANTHROPIC_API_KEY to use Claude"'}>Claude</button><button data-ai="chatgpt" class="${p === 'chatgpt' ? 'on' : ''}" ${a.chatgpt ? '' : 'disabled title="Add OPENAI_API_KEY to use ChatGPT"'}>ChatGPT</button></div>
+          <select id="modelSel" class="modelsel" aria-label="Model"><option value="">${def ? 'Default (' + esc(def) + ')' : 'Default model'}</option>${models.map((m) => `<option value="${esc(m.id)}" ${m.id === model ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}${model && !models.some((m) => m.id === model) ? `<option value="${esc(model)}" selected>${esc(model)}</option>` : ''}</select>
+          <button class="iconbtn ${getPref('hs-speak') === '1' ? 'on' : ''}" id="speakBtn" title="Read replies aloud" aria-label="Read replies aloud">🔊</button>`}
+          <button class="iconbtn" id="fullBtn" title="${ui.full ? 'Exit full screen' : 'Full screen'}" aria-label="Toggle full screen">${ui.full ? '✕' : '⤢'}</button>
+        </div>
+        ${ui.manage ? manage : chatPane}
+      </section></div>`;
   };
 
   function bindAsk() {
+    document.body.classList.toggle('askfull', view === 'ask' && ui.full);
     if (view !== 'ask') return;
-    const box = $('#chatBox'); if (box) box.scrollTop = box.scrollHeight;
-    document.querySelectorAll('[data-ai]').forEach((b) => (b.onclick = () => { try { localStorage.setItem('hs-ai', b.dataset.ai); } catch {} render(); }));
+    loadModels();
+    scrollChat();
+    renderFiles();
+    const go = () => { ui.listOpen = false; render(); };
+    $('#listToggle').onclick = () => { ui.listOpen = !ui.listOpen; $('.ailist')?.classList.toggle('open', ui.listOpen); };
+    $('#fullBtn').onclick = () => { ui.full = !ui.full; setPref('hs-askfull', ui.full ? '1' : '0'); render(); };
+    $('#newChat').onclick = () => { ui.chatId = null; ui.manage = false; ui.files = []; go(); };
+    document.querySelectorAll('[data-asst]').forEach((b) => (b.onclick = () => { ui.newAsst = b.dataset.asst; setPref('hs-asst', b.dataset.asst); ui.chatId = null; ui.manage = false; go(); }));
+    document.querySelectorAll('[data-openchat]').forEach((b) => (b.onclick = () => { ui.chatId = b.dataset.openchat; ui.manage = false; go(); }));
+    document.querySelectorAll('[data-delchat]').forEach((b) => (b.onclick = async () => { if (!(await ask('Delete this chat?'))) return; state.chats = state.chats.filter((x) => x.id !== b.dataset.delchat); if (ui.chatId === b.dataset.delchat) ui.chatId = null; save(); render(); }));
+    $('#manageAsst').onclick = () => { ui.manage = true; go(); };
+    if ($('#doneManage')) $('#doneManage').onclick = () => { ui.manage = false; render(); };
+    if ($('#addAsst')) $('#addAsst').onclick = () => { state.assistants = assistantsList().slice(); state.assistants.push({ id: uid(), name: 'New assistant', emoji: '🤖', instructions: '', starters: [] }); save(); render(); document.querySelector('.asstcard:nth-last-of-type(2) input[data-asstf$="|name"]')?.select(); };
+    document.querySelectorAll('[data-delasst]').forEach((b) => (b.onclick = async () => { if (!(await ask('Delete this assistant? Its chats stay.'))) return; state.assistants = assistantsList().filter((x) => x.id !== b.dataset.delasst); save(); render(); }));
+    document.querySelectorAll('[data-asstf]').forEach((el) => {
+      const [id, key] = el.dataset.asstf.split('|');
+      const apply = () => { state.assistants = assistantsList().slice(); const x = state.assistants.find((y) => y.id === id); if (!x) return; x[key] = key === 'starters' ? el.value.split('|').map((s) => s.trim()).filter(Boolean).slice(0, 6) : el.value; save(); };
+      el.oninput = apply; el.onchange = () => { apply(); if (key === 'emoji' || key === 'name') render(); };
+    });
+    document.querySelectorAll('[data-rate]').forEach((el) => (el.onchange = () => { const [p, i] = el.dataset.rate.split('|'); state.settings.aiRates = state.settings.aiRates || { claude: [...RATES_DEFAULT.claude], chatgpt: [...RATES_DEFAULT.chatgpt] }; state.settings.aiRates[p][+i] = Math.max(0, +el.value || 0); save(); }));
+    if (ui.manage) return;
+    document.querySelectorAll('[data-ai]').forEach((b) => (b.onclick = () => { setPref('hs-ai', b.dataset.ai); const c = curChat(); if (c) { c.provider = b.dataset.ai; c.model = ''; save(); } render(); }));
+    if ($('#modelSel')) $('#modelSel').onchange = (e) => { const c = curChat(); if (c) { c.model = e.target.value; save(); } else setPref('hs-model-' + curProvider(), e.target.value); };
+    if ($('#speakBtn')) $('#speakBtn').onclick = () => { const on = getPref('hs-speak') !== '1'; setPref('hs-speak', on ? '1' : '0'); if (!on) try { speechSynthesis.cancel(); } catch {} toast(on ? 'Replies will be read aloud 🔊' : 'Read aloud off'); render(); };
     document.querySelectorAll('[data-chip]').forEach((b) => (b.onclick = () => sendAsk(b.dataset.chip)));
-    document.querySelectorAll('[data-act]').forEach((b) => (b.onclick = () => { const [i, j] = b.dataset.act.split('|').map(Number); const a = chat[i]?.actions?.[j]; if (a && !a.done) { const [x, y] = center(b); sparkle(x, y, 12); runAction(a); } }));
-    if ($('#askClear')) $('#askClear').onclick = () => { chat = []; saveChat(); render(); };
+    document.querySelectorAll('[data-act]').forEach((b) => (b.onclick = () => { const [i, j] = b.dataset.act.split('|').map(Number); const a = curChat()?.messages?.[i]?.actions?.[j]; if (a && !a.done) { const [x, y] = center(b); sparkle(x, y, 12); runAction(a); } }));
+    $('#attachBtn').onclick = () => $('#fileIn').click();
+    $('#fileIn').onchange = (e) => { addFiles(e.target.files); e.target.value = ''; };
+    $('#micBtn').onclick = toggleMic;
+    const box = $('.aimain');
+    box.ondragover = (e) => { e.preventDefault(); box.classList.add('drop'); };
+    box.ondragleave = () => box.classList.remove('drop');
+    box.ondrop = (e) => { e.preventDefault(); box.classList.remove('drop'); if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); };
     const f = $('#askForm');
-    if (f) {
-      f.onsubmit = (e) => { e.preventDefault(); const v = f.q.value; f.q.value = ''; sendAsk(v); };
-      f.q.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); f.requestSubmit(); } };
-      if (!askBusy && !typing()) setTimeout(() => f.q.focus(), 30);
-    }
+    const ta = f.q;
+    const grow = () => { ta.style.height = 'auto'; ta.style.height = Math.min(180, ta.scrollHeight) + 'px'; };
+    ta.oninput = grow;
+    ta.onpaste = (e) => { const fl = [...(e.clipboardData?.files || [])]; if (fl.length) { e.preventDefault(); addFiles(fl); } };
+    f.onsubmit = (e) => { e.preventDefault(); const v = ta.value; ta.value = ''; grow(); sendAsk(v); };
+    ta.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); f.requestSubmit(); } };
+    if (!ui.busy && !typing() && matchMedia('(min-width:700px)').matches) setTimeout(() => ta.focus(), 30);
   }
 
   /* ---------- Backups ---------- */
@@ -1179,7 +1463,7 @@ render();save();
     try {
       const snap = await api('/api/backups?id=' + id);
       await api('/api/backups', { method: 'POST' }).catch(() => {}); // safety copy of the current state first
-      state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], journal: {}, scratch: '', pops: state.pops || 0 };
+      state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], chats: state.chats || [], assistants: state.assistants || [], journal: {}, scratch: '', pops: state.pops || 0 };
       for (const it of snap.items || []) applyChange(it.collection, it.id, it.data);
       normalise(); save(); render(); confetti(W / 2, H / 3, 60);
       toast('Backup restored ✨ (your previous state was saved as a backup too)');

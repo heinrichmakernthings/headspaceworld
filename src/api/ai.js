@@ -1,180 +1,186 @@
 import { json } from '../../lib/util.js';
 
-// Headspace's built-in assistant. Uses Claude (ANTHROPIC_API_KEY) or ChatGPT (OPENAI_API_KEY).
-// Always answers with { reply, actions[], chips[] } so the app can show tappable buttons.
+// Headspace AI: Claude (ANTHROPIC_API_KEY) or ChatGPT (OPENAI_API_KEY).
+// Streams the reply word by word (server-sent events). After the reply the model writes
+//   @@ACTIONS@@ {"actions":[...],"chips":[...]}
+// which the app turns into tappable buttons.
 
 const VIEWS = ['today', 'tasks', 'projects', 'notes', 'journal', 'later', 'calendar', 'connections'];
-const TYPES = ['add_task', 'complete_task', 'focus_tasks', 'add_note', 'add_idea', 'add_project', 'inbox_to_task', 'clear_inbox_item', 'open'];
+const MARK = '@@ACTIONS@@';
 
-const SCHEMA = {
-  type: 'object',
-  properties: {
-    reply: { type: 'string', description: 'Your message to Sam. Plain text, short, warm, practical. Use line breaks for lists.' },
-    actions: {
-      type: 'array',
-      description: 'Up to 5 buttons Sam can tap. Nothing happens until he taps one.',
-      items: {
-        type: 'object',
-        properties: {
-          label: { type: 'string', description: 'Button text, max 40 characters, starts with a verb' },
-          type: { type: 'string', enum: TYPES },
-          title: { type: 'string' },
-          project: { type: 'string', description: 'Exact project name from context' },
-          due: { type: 'string', description: 'YYYY-MM-DD' },
-          priority: { type: 'integer', enum: [1, 2, 3] },
-          minutes: { type: 'integer' },
-          focus: { type: 'boolean', description: "Put in today's focus" },
-          repeat: { type: 'string', enum: ['', 'daily', 'weekdays', 'weekly', 'monthly'] },
-          id: { type: 'string', description: 'Task id from context (complete_task)' },
-          ids: { type: 'array', items: { type: 'string' }, description: 'Up to 3 task ids from context (focus_tasks)' },
-          body: { type: 'string' },
-          name: { type: 'string' },
-          emoji: { type: 'string' },
-          blurb: { type: 'string' },
-          inbox_id: { type: 'string' },
-          view: { type: 'string', enum: VIEWS },
-        },
-        required: ['label', 'type'],
-      },
-    },
-    chips: { type: 'array', items: { type: 'string' }, description: 'Up to 4 short follow-up messages Sam might want to send next (max 40 characters each)' },
-  },
-  required: ['reply', 'actions', 'chips'],
-};
+function systemPrompt(context, assistant) {
+  const persona = assistant && assistant.instructions ? `\n\nYour role for this chat ("${String(assistant.name || 'Assistant').slice(0, 60)}"):\n${String(assistant.instructions).slice(0, 4000)}` : '';
+  return `You are an assistant inside Headspace, Sam's calm personal planner app. Sam is busy and wants less on his plate, not more.
+Today is ${context?.today || 'unknown'} (${context?.weekday || ''}, Europe/London). Write in British English. Be warm, clear and practical. Keep answers focused; use short paragraphs and "•" bullets. Avoid markdown symbols like ** or #.${persona}
 
-function systemPrompt(context) {
-  return `You are the assistant inside Headspace, Sam's calm personal planner app. Sam is busy and wants less on his plate, not more.
-Today is ${context?.today || 'unknown'} (Europe/London). Write in British English. Be brief (under 120 words), warm and practical. No markdown symbols like ** or #; use plain line breaks and "•" for lists.
-
-You can't change anything yourself. Instead, offer buttons ("actions") that Sam can tap, and Headspace carries them out:
-• add_task: title (+ optional project, due YYYY-MM-DD, priority 1 low / 2 normal / 3 high, minutes, focus, repeat)
-• complete_task: id
-• focus_tasks: ids (max 3), sets today's focus
-• add_note: title, body (goes on his Notebook board)
-• add_idea: title, body (goes to Ideas for later)
-• add_project: name, emoji, blurb
-• inbox_to_task: inbox_id, title (+ optional project, due)
-• clear_inbox_item: inbox_id
-• open: view (${VIEWS.join(', ')})
-Only use ids and project names that appear in the context. Never say something is done; say what tapping will do. Offer 1 to 5 genuinely useful actions (none if it's just chat), and up to 4 short follow-up chips.
+HOW TO FINISH EVERY REPLY
+After your reply, on a new line, write exactly ${MARK} followed by ONE line of JSON:
+{"actions":[...],"chips":[...]}
+• actions: 0 to 5 buttons Sam can tap. Nothing happens until he taps. Each has "label" (max 40 chars, starts with a verb) and "type", plus fields:
+  add_task {title, project?, due? "YYYY-MM-DD", priority? 1|2|3, minutes?, focus? true|false, repeat? ""|"daily"|"weekdays"|"weekly"|"monthly"}
+  complete_task {id}
+  focus_tasks {ids: [up to 3 task ids]}  (sets today's focus)
+  add_note {title, body}  (Notebook board)
+  add_idea {title, body}  (Ideas for later)
+  add_project {name, emoji, blurb}
+  inbox_to_task {inbox_id, title, project?, due?}
+  clear_inbox_item {inbox_id}
+  copy_text {text}  (copies text to the clipboard, e.g. a drafted email)
+  open {view: ${VIEWS.join('|')}}
+• chips: up to 4 short follow-up messages Sam might send next (max 40 chars each).
+Only use ids and project names from the context below. Never claim you've done something; say what tapping will do. Always include the ${MARK} line, even if both lists are empty.
 
 Sam's Headspace right now (JSON):
 ${JSON.stringify(context || {}).slice(0, 12000)}`;
 }
 
-function cleanMessages(messages) {
+/* Build provider-specific messages. Attachments only travel with the latest user message. */
+function buildMessages(messages, attachments, provider) {
   const out = [];
-  for (const m of (Array.isArray(messages) ? messages : []).slice(-16)) {
+  for (const m of (Array.isArray(messages) ? messages : []).slice(-24)) {
     const role = m.role === 'assistant' ? 'assistant' : 'user';
-    const content = String(m.content || '').slice(0, 4000);
+    const content = String(m.content || '').slice(0, 30000);
     if (!content) continue;
     if (out.length && out[out.length - 1].role === role) out[out.length - 1].content += '\n\n' + content;
     else out.push({ role, content });
   }
   while (out.length && out[0].role !== 'user') out.shift();
+  if (!out.length) return out;
+  const files = (Array.isArray(attachments) ? attachments : []).slice(0, 5);
+  if (files.length) {
+    const last = out[out.length - 1];
+    const parts = [];
+    for (const f of files) {
+      const name = String(f.name || 'file').slice(0, 120);
+      if (f.kind === 'text') parts.push({ type: 'text', text: `--- ${name} ---\n${String(f.text || '').slice(0, 120000)}` });
+      else if (f.kind === 'image' && /^image\/(png|jpe?g|gif|webp)$/.test(f.mime) && f.data) {
+        parts.push(provider === 'claude'
+          ? { type: 'image', source: { type: 'base64', media_type: f.mime === 'image/jpg' ? 'image/jpeg' : f.mime, data: f.data } }
+          : { type: 'image_url', image_url: { url: `data:${f.mime};base64,${f.data}` } });
+      } else if (f.kind === 'pdf' && f.data) {
+        parts.push(provider === 'claude'
+          ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: f.data }, title: name }
+          : { type: 'file', file: { filename: name, file_data: `data:application/pdf;base64,${f.data}` } });
+      }
+    }
+    parts.push({ type: 'text', text: last.content });
+    last.content = parts;
+  }
   return out;
 }
 
-function sanitise(r) {
-  const s = (v, n) => (typeof v === 'string' ? v.slice(0, n) : undefined);
-  const actions = (Array.isArray(r?.actions) ? r.actions : [])
-    .filter((a) => a && TYPES.includes(a.type) && a.label)
-    .slice(0, 6)
-    .map((a) => ({
-      ...a,
-      label: s(a.label, 60),
-      title: s(a.title, 250),
-      body: s(a.body, 4000),
-      ids: Array.isArray(a.ids) ? a.ids.slice(0, 3).map(String) : undefined,
-      view: VIEWS.includes(a.view) ? a.view : undefined,
-    }));
-  const chips = (Array.isArray(r?.chips) ? r.chips : []).filter((c) => typeof c === 'string' && c.trim()).slice(0, 4).map((c) => c.slice(0, 60));
-  return { reply: s(r?.reply, 4000) || '…', actions, chips };
+const sse = (obj) => `data: ${JSON.stringify(obj)}\n\n`;
+
+/* Read an upstream SSE stream line by line */
+async function* sseLines(body) {
+  const reader = body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let i;
+    while ((i = buf.indexOf('\n')) >= 0) {
+      const line = buf.slice(0, i).trim();
+      buf = buf.slice(i + 1);
+      if (line.startsWith('data:')) yield line.slice(5).trim();
+    }
+  }
 }
 
-function parseJSON(text) {
-  try { return JSON.parse(text); } catch {}
-  const m = String(text || '').match(/\{[\s\S]*\}/);
-  if (m) { try { return JSON.parse(m[0]); } catch {} }
-  return { reply: String(text || '').slice(0, 2000), actions: [], chips: [] };
-}
-
-async function askClaude(env, system, messages) {
+async function claudeStream(env, model, system, messages, write) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify({
-      model: env.ANTHROPIC_MODEL || 'claude-sonnet-5-5',
-      max_tokens: 1500,
-      system,
-      messages,
-      tools: [{ name: 'respond', description: 'Reply to Sam with a message, tappable actions and follow-up chips.', input_schema: SCHEMA }],
-      tool_choice: { type: 'tool', name: 'respond' },
-    }),
+    body: JSON.stringify({ model, max_tokens: 4000, system, messages, stream: true }),
   });
-  const j = await r.json();
-  if (!r.ok) throw new Error(j.error?.message || `Claude error ${r.status}`);
-  const tool = (j.content || []).find((c) => c.type === 'tool_use');
-  if (tool) return tool.input;
-  return parseJSON((j.content || []).map((c) => c.text || '').join(''));
+  if (!r.ok) {
+    const j = await r.json().catch(() => ({}));
+    throw new Error(j.error?.message || `Claude error ${r.status}`);
+  }
+  const usage = { in: 0, out: 0 };
+  for await (const d of sseLines(r.body)) {
+    let e; try { e = JSON.parse(d); } catch { continue; }
+    if (e.type === 'message_start') usage.in = e.message?.usage?.input_tokens || 0;
+    else if (e.type === 'content_block_delta' && e.delta?.type === 'text_delta') await write(sse({ t: e.delta.text }));
+    else if (e.type === 'message_delta' && e.usage) usage.out = e.usage.output_tokens || usage.out;
+    else if (e.type === 'error') throw new Error(e.error?.message || 'Claude stream error');
+  }
+  return usage;
 }
 
-async function askChatGPT(env, system, messages) {
-  const body = {
-    model: env.OPENAI_MODEL || 'chat-latest',
-    messages: [{ role: 'system', content: `${system}\n\nRespond ONLY with a JSON object of this shape: ${JSON.stringify(SCHEMA)}` }, ...messages],
-    response_format: { type: 'json_object' },
-  };
-  let r = await fetch('https://api.openai.com/v1/chat/completions', {
+async function openaiStream(env, model, system, messages, write) {
+  const call = (withUsage) => fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { authorization: `Bearer ${env.OPENAI_API_KEY}`, 'content-type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ model, stream: true, ...(withUsage ? { stream_options: { include_usage: true } } : {}), messages: [{ role: 'system', content: system }, ...messages] }),
   });
-  let j = await r.json();
-  if (!r.ok && /response_format/i.test(j.error?.message || '')) {
-    delete body.response_format;
-    r = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { authorization: `Bearer ${env.OPENAI_API_KEY}`, 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    j = await r.json();
+  let r = await call(true);
+  if (!r.ok) {
+    const j = await r.json().catch(() => ({}));
+    if (/stream_options/i.test(j.error?.message || '')) r = await call(false);
+    else throw new Error(j.error?.message || `ChatGPT error ${r.status}`);
+    if (!r.ok) { const j2 = await r.json().catch(() => ({})); throw new Error(j2.error?.message || `ChatGPT error ${r.status}`); }
   }
-  if (!r.ok) throw new Error(j.error?.message || `ChatGPT error ${r.status}`);
-  return parseJSON(j.choices?.[0]?.message?.content);
+  const usage = { in: 0, out: 0 };
+  for await (const d of sseLines(r.body)) {
+    if (d === '[DONE]') break;
+    let e; try { e = JSON.parse(d); } catch { continue; }
+    const t = e.choices?.[0]?.delta?.content;
+    if (t) await write(sse({ t }));
+    if (e.usage) usage.in = e.usage.prompt_tokens || 0, usage.out = e.usage.completion_tokens || 0;
+  }
+  return usage;
 }
 
-function mock(context, messages) {
+async function mockStream(context, messages, write) {
+  const last = messages[messages.length - 1];
+  const said = typeof last?.content === 'string' ? last.content : (last?.content || []).map((p) => p.text || `[${p.type}]`).join(' ');
   const t = (context?.open_tasks || [])[0];
-  const last = messages[messages.length - 1]?.content || '';
-  return {
-    reply: `Test mode. You said: "${last.slice(0, 80)}". Here are some things I could do.`,
-    actions: [
-      { label: 'Add “Book stage crew” for Friday', type: 'add_task', title: 'Book stage crew', project: 'Madruga', due: context?.today, priority: 3 },
-      ...(t ? [{ label: `Focus on “${t.title}”`, type: 'focus_tasks', ids: [t.id] }] : []),
-      { label: 'Save a note about this', type: 'add_note', title: 'From Ask', body: last },
-      { label: 'Open Projects', type: 'open', view: 'projects' },
-    ],
-    chips: ['Plan my day', 'What’s overdue?'],
-  };
+  const text = `Test mode. You said: "${String(said).slice(0, 90)}". Here's a streamed reply so you can see words arriving one by one.`;
+  for (const w of text.split(/(\s+)/)) { await write(sse({ t: w })); await new Promise((r) => setTimeout(r, 15)); }
+  const tail = { actions: [
+    { label: 'Add “Book stage crew” for today', type: 'add_task', title: 'Book stage crew', project: 'Madruga', due: context?.today, priority: 3 },
+    ...(t ? [{ label: `Focus on “${t.title.slice(0, 24)}”`, type: 'focus_tasks', ids: [t.id] }] : []),
+    { label: 'Copy a draft email', type: 'copy_text', text: 'Hi Laura, quick one about the site visit…' },
+    { label: 'Open Projects', type: 'open', view: 'projects' },
+  ], chips: ['Plan my day', 'What’s overdue?'] };
+  await write(sse({ t: `\n${MARK} ${JSON.stringify(tail)}` }));
+  return { in: 1200, out: 180 };
 }
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   let b;
   try { b = await request.json(); } catch { return json({ error: 'bad json' }, 400); }
   const provider = b.provider === 'chatgpt' ? 'chatgpt' : 'claude';
-  const messages = cleanMessages(b.messages);
+  const mock = env.AI_MOCK === '1';
+  if (!mock && provider === 'claude' && !env.ANTHROPIC_API_KEY) return json({ error: 'Claude isn’t set up yet: add ANTHROPIC_API_KEY in Cloudflare.' }, 409);
+  if (!mock && provider === 'chatgpt' && !env.OPENAI_API_KEY) return json({ error: 'ChatGPT isn’t set up yet: add OPENAI_API_KEY in Cloudflare.' }, 409);
+  const model = String(b.model || '').slice(0, 100) || (provider === 'claude' ? env.ANTHROPIC_MODEL || 'claude-sonnet-5-5' : env.OPENAI_MODEL || 'chat-latest');
+  const messages = buildMessages(b.messages, b.attachments, provider);
   if (!messages.length) return json({ error: 'say something first' }, 400);
-  const system = systemPrompt(b.context);
-  try {
-    if (env.AI_MOCK === '1') return json({ provider, ...sanitise(mock(b.context, messages)) });
-    if (provider === 'claude') {
-      if (!env.ANTHROPIC_API_KEY) return json({ error: 'Claude isn’t set up yet: add ANTHROPIC_API_KEY in Cloudflare.' }, 409);
-      return json({ provider, ...sanitise(await askClaude(env, system, messages)) });
+  const system = systemPrompt(b.context, b.assistant);
+
+  const { readable, writable } = new TransformStream();
+  const writer = writable.getWriter();
+  const enc = new TextEncoder();
+  const write = (s) => writer.write(enc.encode(s));
+
+  const run = (async () => {
+    try {
+      await write(sse({ start: true, provider, model }));
+      const usage = mock ? await mockStream(b.context, messages, write)
+        : provider === 'claude' ? await claudeStream(env, model, system, messages, write)
+        : await openaiStream(env, model, system, messages, write);
+      await write(sse({ done: true, usage, provider, model }));
+    } catch (e) {
+      await write(sse({ error: e.message || 'The assistant had a problem' }));
+    } finally {
+      await writer.close();
     }
-    if (!env.OPENAI_API_KEY) return json({ error: 'ChatGPT isn’t set up yet: add OPENAI_API_KEY in Cloudflare.' }, 409);
-    return json({ provider, ...sanitise(await askChatGPT(env, system, messages)) });
-  } catch (e) {
-    return json({ error: e.message || 'The assistant had a problem' }, 502);
-  }
+  })();
+  if (waitUntil) waitUntil(run);
+
+  return new Response(readable, { headers: { 'content-type': 'text/event-stream', 'cache-control': 'no-store', 'x-accel-buffering': 'no' } });
 }
