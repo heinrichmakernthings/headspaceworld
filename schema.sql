@@ -36,3 +36,13 @@ CREATE TABLE IF NOT EXISTS meta (
   k TEXT PRIMARY KEY,
   v TEXT
 );
+
+-- Weekly snapshots of everything in `items` (the app keeps the latest 12)
+CREATE TABLE IF NOT EXISTS backups (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at INTEGER NOT NULL,
+  kind TEXT,
+  items INTEGER,
+  bytes INTEGER,
+  data TEXT NOT NULL
+);

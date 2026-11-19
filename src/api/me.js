@@ -17,6 +17,7 @@ export async function onRequestGet({ env, data }) {
       email: gEmail,
       picker: !!(env.GOOGLE_API_KEY && env.GOOGLE_APP_ID),
     },
+    ai: { claude: !!env.ANTHROPIC_API_KEY || env.AI_MOCK === '1', chatgpt: !!env.OPENAI_API_KEY || env.AI_MOCK === '1' },
     health: { configured: !!env.HEALTH_TOKEN || !!keyHash, last: healthLast },
   });
 }

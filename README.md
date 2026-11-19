@@ -81,6 +81,19 @@ With Access on, open your address and sign in with the code Cloudflare emails yo
 
 > **Bringing your existing data across:** in the old Headspace, click **Export backup** and copy the text. In the new one, click **Restore backup**, paste and confirm.
 
+## Ask (Claude or ChatGPT inside Headspace)
+
+Ask can see your tasks, projects and inbox and replies with buttons you tap to make things happen. It needs an API key (pay-as-you-go, separate from a Claude or ChatGPT subscription):
+
+- **Claude:** console.anthropic.com → API keys → Create key.
+- **ChatGPT:** platform.openai.com → API keys → Create key.
+
+Add them in Cloudflare: **headspaceworld → Settings → Variables and Secrets → Add**, type **Secret**, named `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY`. Click Deploy. Add both to switch between them in Ask. Optional: `ANTHROPIC_MODEL` / `OPENAI_MODEL` to choose a specific model (defaults: `claude-sonnet-5-5`, `chat-latest`).
+
+## Weekly backups
+
+Every Monday at 03:00 UTC the Worker saves a snapshot of everything to the `backups` table and keeps the last 12. Connections → Weekly backups shows them, with **Back up now** and **Restore**.
+
 ## 5. Put it on your iPhone
 
 Open your address in **Safari** → Share → **Add to Home Screen**. Sign in once. It now opens full screen with the bubble icon and syncs with your laptop.
@@ -137,6 +150,8 @@ All routes need your Cloudflare Access login except `/api/health/ingest`.
 
 | Method | Route | What it does |
 |---|---|---|
+| POST | `/api/ai` | `{provider: claude|chatgpt, messages, context}`. Returns `{reply, actions, chips}` |
+| GET/POST | `/api/backups` | List snapshots / make one now; `?id=` returns one to restore |
 | GET | `/api/me` | Who you are, plus Google and Health connection status |
 | POST | `/api/sync` | `{since, changes:[{collection,id,data|null}]}`. Saves your changes and returns everything changed since `since` |
 | POST | `/api/health/ingest` | Health Auto Export webhook (`Authorization: Bearer HEALTH_TOKEN`) |
@@ -147,7 +162,7 @@ All routes need your Cloudflare Access login except `/api/health/ingest`.
 | GET | `/api/google/token` | Short-lived token for the Drive picker |
 | POST | `/api/google/disconnect` | Revokes and forgets Google access |
 
-Collections: `tasks`, `notes`, `projects`, `habits`, `journal`, `meta`. If the same item is edited on two devices before they sync, the last change saved wins.
+Collections: `tasks`, `notes`, `projects`, `habits`, `inbox`, `journal`, `meta`. If the same item is edited on two devices before they sync, the last change saved wins.
 
 ## Security notes
 

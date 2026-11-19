@@ -10,6 +10,10 @@ preview_urls = false
 # keep_vars stops each deploy from wiping them.
 keep_vars = true
 
+# Automatic backup every Monday at 03:00 UTC
+[triggers]
+crons = ["0 3 * * 1"]
+
 [assets]
 directory = "public"
 binding = "ASSETS"

@@ -10,6 +10,9 @@ import * as gCallback from './api/google/callback.js';
 import * as gToken from './api/google/token.js';
 import * as gCalendar from './api/google/calendar.js';
 import * as gDisconnect from './api/google/disconnect.js';
+import * as backups from './api/backups.js';
+import * as ai from './api/ai.js';
+import { makeBackup } from '../lib/backup.js';
 
 const routes = {
   '/api/me': me,
@@ -21,6 +24,8 @@ const routes = {
   '/api/google/token': gToken,
   '/api/google/calendar': gCalendar,
   '/api/google/disconnect': gDisconnect,
+  '/api/backups': backups,
+  '/api/ai': ai,
 };
 
 export default {
@@ -42,5 +47,10 @@ export default {
       console.error(e);
       return json({ error: 'server error' }, 500);
     }
+  },
+
+  // Weekly automatic backup (schedule set in wrangler.toml)
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(makeBackup(env, 'weekly'));
   },
 };

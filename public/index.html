@@ -263,6 +263,49 @@ form{display:grid;gap:14px}
 .emopick{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;background:#fff;border-radius:18px;padding:10px;margin:0 0 12px;max-width:360px;box-shadow:0 14px 34px rgba(60,50,150,.18)}
 .emopick[hidden]{display:none}.emopick button{font-size:20px;padding:6px 0;border-radius:10px}.emopick input{grid-column:1/-1;margin-top:6px;font-size:13px;padding:8px 10px}
 [hidden]{display:none!important}
+/* ---------- Inbox capture, calm mode, Ask ---------- */
+header{gap:14px;flex-wrap:wrap}
+.capture{flex:1;max-width:560px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.9);border-radius:999px;padding:4px 6px 4px 16px;box-shadow:0 10px 30px rgba(60,50,150,.14)}
+.capture input{border:0;background:transparent;padding:8px 4px;font-weight:600}.capture input:focus{outline:none}
+.capicon{color:#8b7cf8;font-size:16px}
+.inboxcount{background:linear-gradient(135deg,var(--lav),var(--pink));color:#fff;border-radius:999px;padding:4px 11px;font-size:12px;font-weight:800;min-width:30px}
+.hdrbtns{display:flex;gap:8px;align-items:center}
+.calmbtn{background:rgba(255,255,255,.8);border-radius:999px;padding:9px 14px;color:#4b3fb5}.calmbtn.on{background:linear-gradient(135deg,#d6f7e6,#d9f0ff);color:#1f7a5f}
+.navbadge{margin-left:auto;background:linear-gradient(135deg,var(--lav),var(--pink));color:#fff;border-radius:999px;font-size:11px;padding:1px 8px}
+.inboxrow{border-top:1px solid var(--line);padding:12px 0}
+.inboxtext{font-weight:600;line-height:1.5;word-break:break-word}
+.inboxacts{display:flex;flex-wrap:wrap;gap:2px;margin-top:6px}
+.inboxacts .tiny{padding:5px 8px}.projsel{width:auto;border:0;background:transparent;color:#7f7ca3;font-weight:700;cursor:pointer}
+body.calm #bubbles{display:none}
+body.calm .track{animation-play-state:paused!important}
+body.calm .cloud{opacity:.55}
+body.calm .shoot{display:none}
+body.calm .logo,body.calm .breath,body.calm .breath span,body.calm .floaty .note,body.calm .quote-card::before,body.calm .quote-card::after,body.calm .sun,body.calm .skystar,body.calm .emo{animation:none!important}
+.askwrap{max-width:860px}
+.provider{display:inline-flex;background:rgba(255,255,255,.8);border-radius:999px;padding:4px;gap:2px;box-shadow:0 6px 16px rgba(60,50,150,.12)}
+.provider button{border-radius:999px;padding:7px 14px;font-weight:800;font-size:13px;color:#6b6990}
+.provider button.on{background:linear-gradient(135deg,var(--lav),var(--pink));color:#fff}
+.provider button:disabled{opacity:.4;cursor:not-allowed}
+.chat{display:flex;flex-direction:column;gap:14px;min-height:240px;max-height:calc(100vh - 380px);overflow:auto;padding:4px 2px 8px}
+.msg{max-width:85%;padding:12px 16px;border-radius:20px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,#8b7cf8,#c27cf0);color:#fff;border-bottom-right-radius:6px}
+.msg.assistant{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:6px}
+.msg.err{background:#fff1f3;color:#a3324b}
+.acts{display:flex;flex-direction:column;gap:6px;margin-top:10px;white-space:normal}
+.act{text-align:left;background:linear-gradient(135deg,#f3f0ff,#ffeef8);border:1px solid #e4defd;border-radius:14px;padding:9px 12px;font-weight:700;color:#4b3fb5;font-size:13px}
+.act:hover{background:linear-gradient(135deg,#ebe5ff,#ffe3f3);transform:translateY(-1px)}
+.act.done{background:#e8f8f1;border-color:#bfeedd;color:#1f7a5f;cursor:default}
+.chips2{display:flex;flex-wrap:wrap;gap:6px}
+.chip2{background:rgba(255,255,255,.85);border:1px solid #e4e0f7;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:700;color:#5a4fc0}
+.chip2:hover{background:#fff}
+.typing span{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:#b7acfa;animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.askbar{display:flex;gap:8px;margin-top:12px}.askbar textarea{flex:1;min-height:52px;max-height:160px;resize:none;border-radius:18px}
+.fab{position:fixed;right:22px;bottom:22px;z-index:60;width:58px;height:58px;border-radius:50%;font-size:24px;color:#fff;background:linear-gradient(135deg,var(--lav),var(--pink));box-shadow:0 14px 34px rgba(139,124,248,.45)}
+.fab:hover{background:linear-gradient(135deg,#7a6af0,#ff7cc6);transform:translateY(-2px)}
+body.view-ask .fab{display:none}
+@media(max-width:700px){header{flex-direction:column;align-items:stretch}.capture{max-width:none;order:2}.hdrbtns{justify-content:space-between}.chat{max-height:none}.fab{right:14px;bottom:calc(14px + env(safe-area-inset-bottom))}}
 </style>
 </head>
 <body class="night">
@@ -273,7 +316,8 @@ form{display:grid;gap:14px}
   <a class="brand" href="#"><i class="logo"></i><span>headspace</span></a>
   <div class="workspace">SAM'S LITTLE UTOPIA</div>
   <nav>
-    <button data-view="today"><span class="ic">☀️</span><span>My day</span></button>
+    <button data-view="today"><span class="ic">☀️</span><span>My day</span><b class="navbadge" id="navInbox" hidden></b></button>
+    <button data-view="ask"><span class="ic">✨</span><span>Ask</span></button>
     <button data-view="tasks"><span class="ic">🫧</span><span>All tasks</span></button>
     <button data-view="projects"><span class="ic">🚀</span><span>Projects</span></button>
     <button data-view="notes"><span class="ic">📓</span><span>Notebook</span></button>
@@ -292,11 +336,11 @@ form{display:grid;gap:14px}
   </div>
 </aside>
 
-<main><header><span id="dateLabel"></span><button id="addTask" class="dark">＋ New task</button></header><div id="content"></div></main>
+<main><header><span id="dateLabel"></span><form id="captureForm" class="capture" autocomplete="off"><span class="capicon">✦</span><input name="cap" placeholder="Capture anything… press Enter" aria-label="Capture a thought into your inbox"><button type="button" class="inboxcount" id="inboxCount" title="Open your inbox" hidden>0</button></form><div class="hdrbtns"><button id="calmBtn" class="tiny calmbtn" title="Calm mode: still the bubbles and motion" aria-pressed="false">🍃 Calm</button><button id="addTask" class="dark">＋ New task</button></div></header><div id="content"></div></main>
 
 <canvas id="fx" aria-hidden="true"></canvas>
 
-<dialog id="taskDialog"><form id="taskForm"><div class="modal-head"><h2>A next move ✨</h2><button type="button" data-close aria-label="Close">✕</button></div><input name="title" placeholder="What needs doing?" required maxlength="250"><div class="formgrid"><label>Project<select name="project"></select></label><label>Priority<select name="priority"><option value="2">Normal</option><option value="3">High</option><option value="1">Low</option></select></label><label>Due date<input name="due" type="date"></label><label>Minutes<input name="minutes" type="number" min="5" max="480" value="25"></label><label>Start time (optional)<input name="time" type="time"></label></div><label>Notes<textarea name="detail" rows="3" placeholder="A little context…"></textarea></label><label class="checklabel"><input name="focus" type="checkbox"> Put in today's focus</label><button class="dark" type="submit">Save task ↗</button></form></dialog>
+<dialog id="taskDialog"><form id="taskForm"><div class="modal-head"><h2>A next move ✨</h2><button type="button" data-close aria-label="Close">✕</button></div><input name="title" placeholder="What needs doing?" required maxlength="250"><div class="formgrid"><label>Project<select name="project"></select></label><label>Priority<select name="priority"><option value="2">Normal</option><option value="3">High</option><option value="1">Low</option></select></label><label>Due date<input name="due" type="date"></label><label>Minutes<input name="minutes" type="number" min="5" max="480" value="25"></label><label>Start time (optional)<input name="time" type="time"></label><label>Repeat<select name="repeat"><option value="">Doesn’t repeat</option><option value="daily">Every day</option><option value="weekdays">Weekdays</option><option value="weekly">Every week</option><option value="monthly">Every month</option></select></label></div><label>Notes<textarea name="detail" rows="3" placeholder="A little context…"></textarea></label><label class="checklabel"><input name="focus" type="checkbox"> Put in today's focus</label><button class="dark" type="submit">Save task ↗</button></form></dialog>
 
 <dialog id="habitDialog"><form id="habitForm"><h2>Build a small habit 🌱</h2><input name="title" required placeholder="e.g. Spanish practice"><label>Minutes<input name="minutes" type="number" min="1" max="240" value="15"></label><label>Repeat<select name="repeat"><option value="daily">Every day</option><option value="weekdays">Weekdays</option><option value="weekends">Weekends</option></select></label><div class="btnrow"><button type="button" class="ghost" data-close>Cancel</button><button class="dark">Add habit</button></div></form></dialog>
 
@@ -308,6 +352,7 @@ form{display:grid;gap:14px}
 
 <dialog id="restoreDialog"><div class="modal-head"><h2>Restore a backup</h2><button type="button" data-close aria-label="Close">✕</button></div><p class="hint">Choose your backup .json file, or paste its contents below.</p><textarea id="restoreText" rows="7" placeholder='{"tasks": [...]}'></textarea><div class="btnrow" style="margin-top:12px"><button class="ghost" id="restoreChoose">Choose file…</button><button class="dark" id="restoreGo">Restore</button></div></dialog>
 
+<button class="fab" id="askFab" title="Ask" aria-label="Open Ask">✨</button>
 <div id="toast" role="status"></div>
 
 <script>
@@ -317,6 +362,7 @@ const day=(d=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'num
 const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2);
 const rand=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
 const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isCalm=()=>calm||document.body.classList.contains('calm');
 const seed={tasks:[],
 notes:[
  {id:'h1',type:'heading',title:'Brain dump',body:'',later:false,x:40,y:30},
@@ -330,9 +376,9 @@ projects:[
  {id:'assembly',name:'Assembly',emoji:'🌐',blurb:'All-in-one events, ticketing & merch platform',color:'blue',notes:''}],
 habits:[{id:'move',title:'Move your body',minutes:30,repeat:'daily',days:[]},{id:'language',title:'Language practice',minutes:15,repeat:'daily',days:[]}],scratch:''};
 let state;try{state=JSON.parse(localStorage.getItem('headspace-v1'))||structuredClone(seed)}catch{state=structuredClone(seed)}
-function normalise(){state.journal=state.journal||{};state.pops=state.pops||0;state.projects=Array.isArray(state.projects)?state.projects:structuredClone(seed.projects);state.settings=Object.assign({stepGoal:8000,autoMove:true},state.settings||{});if(!state.settings.iconsV2){state.projects.forEach(p=>{if(p.id==='madruga'&&p.emoji==='🌙')p.emoji='☀️';if(p.id==='assembly'&&p.emoji==='🧩')p.emoji='🌐';if(p.id==='juntada'&&!p.emoji)p.emoji='🫶'});state.settings.iconsV2=true}state.notes.forEach(n=>{n.type=n.type||'note';if(n.type==='list')n.items=n.items||[]})}
+function normalise(){state.journal=state.journal||{};state.pops=state.pops||0;state.projects=Array.isArray(state.projects)?state.projects:structuredClone(seed.projects);state.settings=Object.assign({stepGoal:8000,autoMove:true},state.settings||{});state.inbox=Array.isArray(state.inbox)?state.inbox:[];if(state.scratch&&state.scratch.trim()){state.inbox.unshift({id:uid(),text:state.scratch.trim(),created:Date.now()});state.scratch=''};if(!state.settings.iconsV2){state.projects.forEach(p=>{if(p.id==='madruga'&&p.emoji==='🌙')p.emoji='☀️';if(p.id==='assembly'&&p.emoji==='🧩')p.emoji='🌐';if(p.id==='juntada'&&!p.emoji)p.emoji='🫶'});state.settings.iconsV2=true}state.notes.forEach(n=>{n.type=n.type||'note';if(n.type==='list')n.items=n.items||[]})}
 normalise();
-const VIEWS=['today','tasks','projects','notes','journal','later','calendar','connections'];
+const VIEWS=['today','ask','tasks','projects','notes','journal','later','calendar','connections'];
 let journalDate=today(),view=VIEWS.includes(location.hash.slice(1))?location.hash.slice(1):'today',editing=null,fromCard=null,search='',project='All projects',sort='smart',boardScroll={l:0,t:0};
 
 const affirmations=['You are allowed to go slowly','Small steps still move you','Today is a fresh page','Breathe. You’re right on time','Your ideas matter','Rest is productive too','One thing at a time','You’ve handled hard days before','Make room for joy','Progress, not perfection','Good things are growing','Be kind to future you','Curiosity over pressure','Let it be light','You’re building something real','Done is a lovely word','The sky is not the limit','Plant it. Water it. Wait.','Choose calm on purpose','Your pace is the right pace'];
@@ -353,10 +399,26 @@ const londonHour=()=>+new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit
 const greet=()=>{const h=londonHour();return h<5?'Hello, night owl':h<12?'Good morning':h<17?'Good afternoon':'Good evening'};
 const noteById=id=>state.notes.find(n=>n.id===id);
 
-function parseQuick(raw){let due='',p=2,minutes=25,d=new Date();if(/\btomorrow\b/i.test(raw)){d.setDate(d.getDate()+1);due=day(d);raw=raw.replace(/\btomorrow\b/i,'')}else if(/\btoday\b/i.test(raw)){due=today();raw=raw.replace(/\btoday\b/i,'')}else{const names=['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];for(let i=0;i<7;i++)if(new RegExp('\\b'+names[i]+'\\b','i').test(raw)){let current=new Date(today()+'T12:00:00').getDay();d=new Date(today()+'T12:00:00');d.setDate(d.getDate()+((i-current+7)%7||7));due=day(d);raw=raw.replace(new RegExp('\\b'+names[i]+'\\b','i'),'');break}}let m=raw.match(/\b(\d+)m\b/);if(m){minutes=Math.max(5,Math.min(480,+m[1]));raw=raw.replace(m[0],'')}if(/!high/i.test(raw)){p=3;raw=raw.replace(/!high/i,'')}return {title:raw.trim().replace(/\s{2,}/g,' '),due,priority:p,minutes}}
+const REPEAT_LABEL={daily:'every day',weekdays:'weekdays',weekly:'every week',monthly:'every month'};
+function nextDue(t){const base=t.due&&t.due>=today()?t.due:today();const d=new Date(base+'T12:00:00Z');if(t.repeat==='daily')d.setUTCDate(d.getUTCDate()+1);else if(t.repeat==='weekdays'){do{d.setUTCDate(d.getUTCDate()+1)}while([0,6].includes(d.getUTCDay()))}else if(t.repeat==='weekly')d.setUTCDate(d.getUTCDate()+7);else if(t.repeat==='monthly'){const want=new Date((t.due||base)+'T12:00:00Z').getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()+1);const last=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate();d.setUTCDate(Math.min(want,last))}return d.toISOString().slice(0,10)}
+function completeTask(t){t.done=!t.done;if(t.done&&t.repeat&&!t.nextId){const n={...t,id:uid(),done:false,due:nextDue(t),focusDate:''};delete n.gcal;delete n.nextId;state.tasks.push(n);t.nextId=n.id;setTimeout(()=>toast(`🔁 Next one ready for ${new Date(n.due+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})}`),700)}else if(!t.done&&t.nextId){const n=state.tasks.find(x=>x.id===t.nextId);if(n&&!n.done)state.tasks=state.tasks.filter(x=>x!==n);delete t.nextId}}
+function parseQuick(raw){let due='',p=2,minutes=25,d=new Date();if(/\btomorrow\b/i.test(raw)){d.setDate(d.getDate()+1);due=day(d);raw=raw.replace(/\btomorrow\b/i,'')}else if(/\btoday\b/i.test(raw)){due=today();raw=raw.replace(/\btoday\b/i,'')}else{const names=['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];for(let i=0;i<7;i++)if(new RegExp('\\b'+names[i]+'\\b','i').test(raw)){let current=new Date(today()+'T12:00:00').getDay();d=new Date(today()+'T12:00:00');d.setDate(d.getDate()+((i-current+7)%7||7));due=day(d);raw=raw.replace(new RegExp('\\b'+names[i]+'\\b','i'),'');break}}let m=raw.match(/\b(\d+)m\b/);if(m){minutes=Math.max(5,Math.min(480,+m[1]));raw=raw.replace(m[0],'')}if(/!high/i.test(raw)){p=3;raw=raw.replace(/!high/i,'')}let repeat='';for(const [re,v] of [[/\b(every ?day|daily)\b/i,'daily'],[/\b(every )?weekdays?\b/i,'weekdays'],[/\b(every ?week|weekly)\b/i,'weekly'],[/\b(every ?month|monthly)\b/i,'monthly']])if(re.test(raw)){repeat=v;raw=raw.replace(re,'');break}if(repeat&&!due)due=today();return {title:raw.trim().replace(/\s{2,}/g,' '),due,priority:p,minutes,repeat}}
 
-function taskRow(t){let due=t.due?(t.due<today()&&!t.done?'Overdue · ':'')+new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'No date';return `<div class="row ${t.done?'done':''}"><button class="tick ${t.done?'checked':''}" aria-label="${t.done?'Reopen':'Complete'} ${esc(t.title)}" data-check="${t.id}">${t.done?'✓':''}</button><div class="taskbody"><button class="tasktitle" data-edit="${t.id}">${esc(t.title)}</button><div class="meta"><span class="tag">${esc(t.project)}</span>${esc(due)} · ${Number(t.minutes)} min ${t.priority==3?'· High priority':''}</div></div>${window.HS?HS.gcalBtn(t):''}<button class="tiny ${t.focusDate===today()?'star':''}" title="Toggle today’s focus" aria-label="Toggle today’s focus" data-focus="${t.id}">${t.focusDate===today()?'★':'☆'}</button><button class="tiny" aria-label="Delete task" data-delete="${t.id}">×</button></div>`}
+function taskRow(t){let due=t.due?(t.due<today()&&!t.done?'Overdue · ':'')+new Date(t.due+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'No date';return `<div class="row ${t.done?'done':''}"><button class="tick ${t.done?'checked':''}" aria-label="${t.done?'Reopen':'Complete'} ${esc(t.title)}" data-check="${t.id}">${t.done?'✓':''}</button><div class="taskbody"><button class="tasktitle" data-edit="${t.id}">${esc(t.title)}</button><div class="meta"><span class="tag">${esc(t.project)}</span>${esc(due)} · ${Number(t.minutes)} min ${t.priority==3?'· High priority':''}${t.repeat?` · 🔁 ${REPEAT_LABEL[t.repeat]||t.repeat}`:''}</div></div>${window.HS?HS.gcalBtn(t):''}<button class="tiny ${t.focusDate===today()?'star':''}" title="Toggle today’s focus" aria-label="Toggle today’s focus" data-focus="${t.id}">${t.focusDate===today()?'★':'☆'}</button><button class="tiny" aria-label="Delete task" data-delete="${t.id}">×</button></div>`}
 const head=(ey,title,sub)=>`<div class="eyebrow">${ey}</div><h1>${title}</h1><p class="sub">${sub}</p>`;
+
+/* ---------- Inbox: one place for every loose thought ---------- */
+function addInbox(text){text=String(text||'').trim();if(!text)return false;state.inbox.unshift({id:uid(),text:text.slice(0,2000),created:Date.now()});save();updateInboxCount();return true}
+function updateInboxCount(){const n=(state.inbox||[]).length,b=$('#inboxCount'),nb=$('#navInbox');if(b){b.hidden=!n;b.textContent=n}if(nb){nb.hidden=!n;nb.textContent=n}}
+function sortInbox(act,id,projectName,el){const it=state.inbox.find(x=>x.id===id);if(!it)return;const firstLine=it.text.split('\n')[0].slice(0,140),rest=it.text.includes('\n')?it.text:'';let msg='';
+ if(act==='task'||act==='project'){const q=parseQuick(firstLine);state.tasks.push({id:uid(),...q,title:q.title||firstLine,project:act==='project'?projectName:'Personal',done:false,focusDate:'',time:'',detail:rest});msg=act==='project'?`Task added to ${projectName}`:'Added to your tasks'}
+ else if(act==='note'){state.notes.unshift({id:uid(),type:'note',title:firstLine.slice(0,60),body:it.text,later:false,color:'white',z:++zTop});msg='Pinned to your Notebook 📓'}
+ else if(act==='idea'){state.notes.unshift({id:uid(),type:'note',title:firstLine.slice(0,60),body:it.text,later:true,color:'white'});msg='Floated to Ideas for later 🎈'}
+ else if(act==='drop'){msg='Let go ☁️'}
+ state.inbox=state.inbox.filter(x=>x!==it);if(el){const [x,y]=center(el);sparkle(x,y,act==='drop'?6:14)}save();render();toast(msg+(state.inbox.length?'':'. Inbox zero ✨'))}
+function inboxPanel(){const items=state.inbox||[];return `<section class="panel cream" id="inboxPanel"><div class="section-head"><h2>Inbox</h2><span class="count">${items.length?items.length+' to sort':'All clear'}</span></div>
+${items.map(it=>`<div class="inboxrow"><div class="inboxtext">${esc(it.text).replace(/\n/g,'<br>')}</div><div class="inboxacts"><button class="tiny" data-inbox="task|${it.id}" title="Make it a task">☑ Task</button><button class="tiny" data-inbox="note|${it.id}" title="Pin to Notebook">📓 Note</button><button class="tiny" data-inbox="idea|${it.id}" title="Save for later">🎈 Later</button><select class="tiny projsel" data-inboxproj="${it.id}" aria-label="Add as a task to a project"><option value="">🚀 Project…</option>${state.projects.map(p=>`<option value="${esc(p.name)}">${esc(p.emoji||'')} ${esc(p.name)}</option>`).join('')}</select><button class="tiny" data-inbox="drop|${it.id}" title="Let it go" aria-label="Let it go">×</button></div></div>`).join('')||'<div class="empty" style="padding:6px 0 12px">Inbox zero. Anything you capture at the top lands here, ready to sort.</div>'}
+<form class="quick" id="inboxAdd"><input name="t" placeholder="Empty your head here…" aria-label="Add to inbox" required><button class="dark">＋</button></form></section>`}
 
 /* ---------- Notebook cards ---------- */
 function freeSpot(bd,t){const w=t==='heading'?460:t==='sticky'?210:260,h=t==='heading'?70:t==='sticky'?200:230,rs=[...bd.querySelectorAll('.card')].map(c=>({x:c.offsetLeft,y:c.offsetTop,w:c.offsetWidth,h:c.offsetHeight}));const x0=bd.scrollLeft+30,y0=bd.scrollTop+30,xMax=Math.min(2600-w,bd.scrollLeft+bd.clientWidth-w-20);for(let y=y0;y<1800-h;y+=30)for(let x=x0;x<=Math.max(x0,xMax);x+=30){if(!rs.some(r=>x<r.x+r.w+20&&x+w+20>r.x&&y<r.y+r.h+20&&y+h+20>r.y))return {x,y}}return {x:x0+rand(0,60),y:y0+rand(0,60)}}
@@ -375,12 +437,12 @@ return `<article class="card ${t} c-${n.color||'white'}" data-card="${n.id}" sty
 function laterCard(n){const body=n.type==='list'?`<div class="hint" style="font-size:14px;min-height:120px">${n.items.map(i=>(i.done?'✓ ':'○ ')+esc(i.text)).join('<br>')||'Empty list'}</div>`:`<textarea aria-label="Note content" data-notebody="${n.id}">${esc(n.body)}</textarea>`;return `<article class="note"><input aria-label="Note title" data-notetitle="${n.id}" value="${esc(n.title)}" placeholder="Untitled">${body}<div class="notefoot"><button class="tiny" data-movenote="${n.id}">Move to notebook</button>${n.type!=='list'?`<button class="tiny" data-cardtask="${n.id}">Make a task</button>`:''}<button class="tiny" data-deletenote="${n.id}" aria-label="Delete note">×</button></div></article>`}
 
 function render(){
-document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));document.body.classList.toggle('view-ask',view==='ask');
 $('#dateLabel').textContent=new Date().toLocaleDateString('en-GB',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'});
-$('#popCount').textContent=state.pops;
+$('#popCount').textContent=state.pops;updateInboxCount();
 let c=$('#content');
 if(view==='today'){let hs=activeHabits(),done=hs.filter(h=>h.days.includes(today())).length,focus=sorted(state.tasks.filter(t=>t.focusDate===today())),next=sorted(state.tasks.filter(t=>!t.done&&t.focusDate!==today())).slice(0,3);
-c.innerHTML=head('MAKE ROOM FOR WHAT MATTERS',greet()+', Sam.','A few good moves. A whole sky to think in.')+`<div class="hero"><div><div class="label">TODAY’S INTENTION</div><h2>Less noise. More forward.</h2><p>Choose up to three priorities. Let everything else float by.</p><form class="wish" id="wishForm"><input name="wish" maxlength="60" aria-label="Intention" placeholder="Blow a bubble with an intention…" required><button class="dark">🫧 Release</button></form></div><button class="breath" id="breath" aria-label="Start a breathing exercise"><span id="breathText">Breathe</span></button></div><div class="layout"><div><section class="panel"><div class="section-head"><h2>Your focus</h2><button id="plan" class="tiny">✧ Suggest my top 3</button></div>${focus.map(taskRow).join('')||'<div class="empty">A clear sky starts here.<br>Add a task, or let your priorities suggest the next move.</div>'}<form class="quick" id="quickForm"><input name="quick" aria-label="Quick task" placeholder="Add a next move…" required><button class="dark">＋</button></form><p class="hint">Try “Book climbing tomorrow 30m” or “Invoice Friday !high”.</p></section><section class="panel"><div class="section-head"><h2>Up next</h2><span class="count">Smart order</span></div>${next.map(taskRow).join('')||'<div class="empty">Nothing waiting in the wings.</div>'}<p class="hint">Overdue, then due today, then priority. Shorter tasks break ties.</p></section></div><div>${window.HS?HS.todayExtras():''}<section class="panel"><div class="section-head"><h2>Your daily rhythm</h2><button id="addHabit" class="tiny">＋ Habit</button></div><div class="hint">${done} of ${hs.length} done${hs.length&&done===hs.length?' · rainbow day 🌈':''}</div><div class="progress"><span style="width:${hs.length?done/hs.length*100:0}%"></span></div>${hs.map(h=>`<div class="row"><button class="tick ${h.days.includes(today())?'checked':''}" data-habit="${h.id}" aria-label="Toggle ${esc(h.title)}">${h.days.includes(today())?'✓':''}</button><div class="taskbody"><b>${esc(h.title)}</b><div class="meta">${h.minutes} min · ${esc(h.repeat)}</div></div><button class="tiny" data-removehabit="${h.id}" aria-label="Remove habit">×</button></div>`).join('')}</section><section class="panel cream"><div class="section-head"><h2>On your mind?</h2><span>☁️</span></div><textarea id="scratch" rows="5" placeholder="Empty your head here. No need to organise it yet.">${esc(state.scratch)}</textarea><button id="saveNote" class="tiny">Move to notebook ↗</button></section></div></div>`}
+c.innerHTML=head('MAKE ROOM FOR WHAT MATTERS',greet()+', Sam.','A few good moves. A whole sky to think in.')+`<div class="hero"><div><div class="label">TODAY’S INTENTION</div><h2>Less noise. More forward.</h2><p>Choose up to three priorities. Let everything else float by.</p><form class="wish" id="wishForm"><input name="wish" maxlength="60" aria-label="Intention" placeholder="Blow a bubble with an intention…" required><button class="dark">🫧 Release</button></form></div><button class="breath" id="breath" aria-label="Start a breathing exercise"><span id="breathText">Breathe</span></button></div><div class="layout"><div><section class="panel"><div class="section-head"><h2>Your focus</h2><button id="plan" class="tiny">✧ Suggest my top 3</button></div>${focus.map(taskRow).join('')||'<div class="empty">A clear sky starts here.<br>Add a task, or let your priorities suggest the next move.</div>'}<form class="quick" id="quickForm"><input name="quick" aria-label="Quick task" placeholder="Add a next move…" required><button class="dark">＋</button></form><p class="hint">Try “Book climbing tomorrow 30m” or “Invoice Friday !high”.</p></section><section class="panel"><div class="section-head"><h2>Up next</h2><span class="count">Smart order</span></div>${next.map(taskRow).join('')||'<div class="empty">Nothing waiting in the wings.</div>'}<p class="hint">Overdue, then due today, then priority. Shorter tasks break ties.</p></section></div><div>${inboxPanel()}${window.HS?HS.todayExtras():''}<section class="panel"><div class="section-head"><h2>Your daily rhythm</h2><button id="addHabit" class="tiny">＋ Habit</button></div><div class="hint">${done} of ${hs.length} done${hs.length&&done===hs.length?' · rainbow day 🌈':''}</div><div class="progress"><span style="width:${hs.length?done/hs.length*100:0}%"></span></div>${hs.map(h=>`<div class="row"><button class="tick ${h.days.includes(today())?'checked':''}" data-habit="${h.id}" aria-label="Toggle ${esc(h.title)}">${h.days.includes(today())?'✓':''}</button><div class="taskbody"><b>${esc(h.title)}</b><div class="meta">${h.minutes} min · ${esc(h.repeat)}</div></div><button class="tiny" data-removehabit="${h.id}" aria-label="Remove habit">×</button></div>`).join('')}</section></div></div>`}
 if(view==='tasks'){c.innerHTML=head('ONE PLACE FOR EVERY NEXT MOVE','The to-do list.','Keep it clear. Give each task a realistic next step.')+`<div class="filters"><input id="search" value="${esc(search)}" placeholder="Search tasks…" aria-label="Search tasks"><select id="projectFilter" aria-label="Filter project">${['All projects',...projList()].map(p=>`<option ${p===project?'selected':''}>${esc(p)}</option>`).join('')}</select><select id="sort" aria-label="Sort tasks"><option value="smart" ${sort==='smart'?'selected':''}>Smart priority</option><option value="quick" ${sort==='quick'?'selected':''}>Quick wins first</option></select></div><div class="panel">${sorted(state.tasks.filter(t=>(project==='All projects'||t.project===project)&&t.title.toLowerCase().includes(search.toLowerCase()))).map(taskRow).join('')||'<div class="empty">No tasks here yet. Add your first next move.</div>'}</div>`}
 if(view==='projects'){c.innerHTML=head('WHERE THE BIG STUFF LIVES','Your projects.','Each one gets its own little world. Drop next moves straight in.')+`<div class="section-head"><span>${state.projects.length} projects</span><button id="newProject" class="dark">＋ New project</button></div><div class="projgrid">${state.projects.map(p=>{const ts=state.tasks.filter(t=>t.project===p.name),d=ts.filter(t=>t.done).length,open=sorted(ts.filter(t=>!t.done)),pct=ts.length?Math.round(d/ts.length*100):0;return `<section class="panel proj"><div class="projhead" style="--pg:${projGrad[p.color]||projGrad.lilac}"><button class="tiny projdel" data-projdel="${p.id}" aria-label="Delete project ${esc(p.name)}">×</button><button class="emo emobtn" data-projemo="${p.id}" title="Change icon" aria-label="Change icon for ${esc(p.name)}">${esc(p.emoji||'✨')}</button><div class="emopick" data-emopick="${p.id}" hidden>${PROJECT_ICONS.map(e=>`<button type="button" data-setemo="${p.id}|${e}" aria-label="Use ${e}">${e}</button>`).join('')}<input maxlength="8" placeholder="Or type / paste any emoji" aria-label="Custom icon" data-emoinput="${p.id}"></div><input class="pname" data-projname="${p.id}" value="${esc(p.name)}" aria-label="Project name"><textarea class="blurb" rows="2" data-projblurb="${p.id}" placeholder="Add a one-line description…" aria-label="Project description">${esc(p.blurb)}</textarea><div class="projstats"><span>${open.length} open · ${d} done</span><span>${pct}%</span></div><div class="progress"><span style="width:${pct}%"></span></div></div><div class="projbody">${open.slice(0,5).map(taskRow).join('')||'<div class="empty">No open tasks. Clear skies.</div>'}<form class="quick" data-projadd="${p.id}"><input name="q" placeholder="Add a next move to ${esc(p.name)}…" required aria-label="Add a task to ${esc(p.name)}"><button class="dark">＋</button></form>${window.HS?HS.projExtras(p):''}<label style="margin-top:16px">Project notes<textarea rows="3" data-projnotes="${p.id}" placeholder="Vision, contacts, loose ends…">${esc(p.notes)}</textarea></label><div style="margin-top:6px"><button class="tiny" data-projall="${esc(p.name)}">${open.length>5?`See all ${open.length} open tasks ↗`:`All ${esc(p.name)} tasks ↗`}</button></div></div></section>`}).join('')}</div>`}
 if(view==='notes'){const ns=state.notes.filter(n=>!n.later);layoutNotes(ns);c.innerHTML=head('THOUGHTS, PLANS & EVERYTHING BETWEEN','Your notebook.','A board for loose thoughts. Drag things around. Turn anything into a task.')+`<div class="boardbar"><button data-addcard="note">📝 Note</button><button data-addcard="list">☑️ Checklist</button><button data-addcard="sticky">🟨 Sticky</button><button data-addcard="heading">🔤 Heading</button><span class="hint">Drag cards anywhere · hover a line to send it to tasks</span></div><div class="board" id="board"><div class="canvas">${ns.map(cardHTML).join('')}</div></div>`;const bd=$('#board');bd.scrollLeft=boardScroll.l;bd.scrollTop=boardScroll.t}
@@ -389,11 +451,12 @@ if(view==='journal'){let j=state.journal[journalDate]||{mood:'',thoughts:'',good
 if(view==='calendar'){let tasks=state.tasks.filter(t=>t.due&&!t.done).sort((a,b)=>(a.due+(a.time||'')).localeCompare(b.due+(b.time||'')));c.innerHTML=head('YOUR TIME, WITH A LITTLE MORE INTENTION','Make space.','Dated tasks and a simple bridge to your calendar.')+`<div class="notice"><strong>Live calendar sync isn’t connected.</strong><br>This view shows your dated tasks, not external calendar events. Export a calendar file to import into Google, Apple or Outlook Calendar. It's a one-time export; later changes won’t sync automatically.</div><div class="section-head" style="margin-top:24px"><h2 style="color:var(--skyink)">Upcoming & overdue</h2><button id="exportCalendar" class="dark">↓ Export calendar (.ics)</button></div><div class="panel">${tasks.map(t=>`<div class="calendarrow"><div class="day">${esc(t.due)}<div class="meta">${esc(t.time||'All day')}</div></div><div class="taskbody"><button class="tasktitle" data-edit="${t.id}">${esc(t.title)}</button><div class="meta">${esc(t.project)} · ${t.minutes} min</div></div></div>`).join('')||'<div class="empty">Add a due date to a task to see it here.</div>'}</div>`}
 if(view==='calendar'&&window.HS?.on)c.innerHTML=HS.calendarHTML();
 if(view==='connections')c.innerHTML=window.HS?HS.connectionsHTML():'';
+if(view==='ask')c.innerHTML=window.HS?HS.askHTML():'';
 if(view==='today'||view==='journal'){c.insertAdjacentHTML('afterbegin','<section id="quoteCard" class="quote-card" aria-label="Rotating quote"></section>');paintQuote()}
 bind();window.HS?.bindExtras();document.querySelectorAll('.card textarea').forEach(autosize)}
 
 function autosize(el){el.style.height='auto';el.style.height=el.scrollHeight+'px'}
-function openTask(t=null,pre=null,link=null){editing=t?.id||null;fromCard=link;let f=$('#taskForm');f.elements.project.innerHTML=projList().map(p=>`<option>${esc(p)}</option>`).join('');f.reset();if(t){if(!projList().includes(t.project))f.elements.project.insertAdjacentHTML('beforeend',`<option>${esc(t.project)}</option>`);for(let k of ['title','project','priority','due','minutes','time','detail'])f.elements[k].value=t[k]||'';f.elements.focus.checked=t.focusDate===today()}if(pre)for(const k in pre)if(f.elements[k])f.elements[k].value=pre[k];$('#taskDialog').showModal();f.elements.title.focus()}
+function openTask(t=null,pre=null,link=null){editing=t?.id||null;fromCard=link;let f=$('#taskForm');f.elements.project.innerHTML=projList().map(p=>`<option>${esc(p)}</option>`).join('');f.reset();if(t){if(!projList().includes(t.project))f.elements.project.insertAdjacentHTML('beforeend',`<option>${esc(t.project)}</option>`);for(let k of ['title','project','priority','due','minutes','time','detail','repeat'])f.elements[k].value=t[k]||'';f.elements.focus.checked=t.focusDate===today()}if(pre)for(const k in pre)if(f.elements[k])f.elements[k].value=pre[k];$('#taskDialog').showModal();f.elements.title.focus()}
 const center=el=>{const r=el.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]};
 const splitId=s=>{const [n,i]=s.split('|');const note=noteById(n);return [note,note?.items?.find(x=>x.id===i)]};
 
@@ -404,7 +467,7 @@ document.querySelectorAll('[data-journal]').forEach(el=>el.oninput=()=>{jget()[e
 document.querySelectorAll('[data-mood]').forEach(b=>b.onclick=()=>{let j=jget();j.mood=j.mood===b.dataset.mood?'':b.dataset.mood;if(j.mood){const [x,y]=center(b);sparkle(x,y,14)}save();render()});
 document.querySelectorAll('[data-journalday]').forEach(b=>b.onclick=()=>{journalDate=b.dataset.journalday;render()});
 if($('#journalExport'))$('#journalExport').onclick=()=>{let j=state.journal[journalDate]||{thoughts:'',good:'',tomorrow:'',mood:''};download('journal-'+journalDate+'.txt',[journalDate,'Mood: '+j.mood,'',j.thoughts,'','What went well',j.good,'','What I need tomorrow',j.tomorrow].join('\n'),'text/plain')};
-document.querySelectorAll('[data-check]').forEach(b=>b.onclick=()=>{let t=state.tasks.find(t=>t.id===b.dataset.check);t.done=!t.done;if(t.done){const [x,y]=center(b);confetti(x,y,30);floatWord(x+60,y-16,pick(doneWords));const f=state.tasks.filter(x=>x.focusDate===today());if(f.length>1&&f.every(x=>x.done))setTimeout(()=>{confetti(W/2,H/3,140);toast('Today’s focus complete. Beautiful work 🌈')},400)}save();render()});
+document.querySelectorAll('[data-check]').forEach(b=>b.onclick=()=>{let t=state.tasks.find(t=>t.id===b.dataset.check);completeTask(t);if(t.done){const [x,y]=center(b);confetti(x,y,30);floatWord(x+60,y-16,pick(doneWords));const f=state.tasks.filter(x=>x.focusDate===today());if(f.length>1&&f.every(x=>x.done))setTimeout(()=>{confetti(W/2,H/3,140);toast('Today’s focus complete. Beautiful work 🌈')},400)}save();render()});
 document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openTask(state.tasks.find(t=>t.id===b.dataset.edit)));
 document.querySelectorAll('[data-focus]').forEach(b=>b.onclick=()=>{let t=state.tasks.find(t=>t.id===b.dataset.focus);t.focusDate=t.focusDate===today()?'':today();if(t.focusDate){const [x,y]=center(b);sparkle(x,y,10)}save();render()});
 document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=async()=>{if(await ask('Delete this task?')){state.tasks=state.tasks.filter(t=>t.id!==b.dataset.delete);save();render()}});
@@ -415,8 +478,9 @@ if($('#plan'))$('#plan').onclick=()=>{state.tasks.forEach(t=>{if(t.focusDate===t
 if($('#breath'))$('#breath').onclick=breathe;
 if($('#wishForm'))$('#wishForm').onsubmit=e=>{e.preventDefault();const v=e.target.wish.value.trim();if(!v)return;spawn({text:v,x:W/2+rand(-120,120),y:H+90});e.target.reset();toast('Your intention is floating up. Pop it when you’re ready 🫧')};
 if($('#quickForm'))$('#quickForm').onsubmit=e=>{e.preventDefault();const q=parseQuick(e.target.quick.value);if(!q.title)return toast('Add a task name');state.tasks.push({id:uid(),...q,project:'Personal',done:false,focusDate:today(),time:'',detail:''});save();render()};
-if($('#scratch'))$('#scratch').oninput=e=>{state.scratch=e.target.value;save()};
-if($('#saveNote'))$('#saveNote').onclick=()=>{if(!state.scratch.trim())return toast('Write a thought first');state.notes.unshift({id:uid(),type:'note',title:'A thought worth keeping',body:state.scratch,later:false,color:'white',z:++zTop});state.scratch='';save();view='notes';render()};
+document.querySelectorAll('[data-inbox]').forEach(b=>b.onclick=()=>{const [act,id]=b.dataset.inbox.split('|');sortInbox(act,id,null,b)});
+document.querySelectorAll('[data-inboxproj]').forEach(s=>s.onchange=()=>{if(s.value)sortInbox('project',s.dataset.inboxproj,s.value,s)});
+if($('#inboxAdd'))$('#inboxAdd').onsubmit=e=>{e.preventDefault();addInbox(e.target.t.value);e.target.reset();render();document.querySelector('#inboxAdd input')?.focus()};
 if($('#newNote'))$('#newNote').onclick=()=>{state.notes.unshift({id:uid(),type:'note',title:'',body:'',later:true,color:'white'});save();render();document.querySelector('[data-notetitle]')?.focus()};
 for(let [attr,key] of [['notetitle','title'],['notebody','body']])document.querySelectorAll('[data-'+attr+']').forEach(el=>el.oninput=()=>{noteById(el.dataset[attr])[key]=el.value;if(el.tagName==='TEXTAREA'&&el.closest('.card'))autosize(el);save()});
 document.querySelectorAll('[data-movenote]').forEach(b=>b.onclick=()=>{let n=noteById(b.dataset.movenote);n.later=!n.later;if(!n.later){delete n.x;delete n.y}const [x,y]=center(b);sparkle(x,y,12);save();render();toast(n.later?'Floated to Ideas for later 🎈':'Back on your notebook board 📓')});
@@ -473,7 +537,7 @@ function paintQuote(){const host=document.getElementById('quoteCard');if(!host)r
 host.innerHTML=`<blockquote>“${esc(q.text)}”</blockquote><div class="quote-footer"><div class="quote-by">${esc(q.author)} <span>· ${esc(q.era)}</span><br><a href="${q.url}" target="_blank" rel="noopener noreferrer">${esc(q.source)} ↗</a></div><div class="qctl"><button id="quotePrev" aria-label="Previous quote">←</button><button id="quotePause" aria-label="${quotePaused?'Resume':'Pause'} quote rotation">${quotePaused?'▶':'❚❚'}</button><button id="quoteNext" aria-label="Next quote">→</button><button id="quoteFav" aria-label="${fav?'Unsave':'Save'} quote">${fav?'★':'☆'}</button><small>${quoteIndex+1}/${quotes.length}</small></div></div>`;
 $('#quotePrev').onclick=()=>{quoteIndex=(quoteIndex+quotes.length-1)%quotes.length;paintQuote()};$('#quoteNext').onclick=()=>{quoteIndex=(quoteIndex+1)%quotes.length;paintQuote()};$('#quotePause').onclick=()=>{quotePaused=!quotePaused;paintQuote()};
 $('#quoteFav').onclick=e=>{const on=!state.quoteFavourites.includes(quoteIndex);state.quoteFavourites=on?[...state.quoteFavourites,quoteIndex]:state.quoteFavourites.filter(i=>i!==quoteIndex);if(on){const [x,y]=center(e.currentTarget);sparkle(x,y,14)}save();paintQuote()}}
-setInterval(()=>{let host=document.getElementById('quoteCard');if(!quotePaused&&!document.hidden&&host&&!host.matches(':hover')&&!host.contains(document.activeElement)){quoteIndex=(quoteIndex+1)%quotes.length;paintQuote()}},20000);
+setInterval(()=>{let host=document.getElementById('quoteCard');if(!quotePaused&&!isCalm()&&!document.hidden&&host&&!host.matches(':hover')&&!host.contains(document.activeElement)){quoteIndex=(quoteIndex+1)%quotes.length;paintQuote()}},20000);
 
 /* ---------- Breathing bubble ---------- */
 let breathTimer=null;
@@ -486,7 +550,7 @@ const BC=$('#bubbles'),bx=BC.getContext('2d'),FC=$('#fx'),fx=FC.getContext('2d')
 function size(){const D=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;for(const c of [BC,FC]){c.width=W*D;c.height=H*D;c.style.width=W+'px';c.style.height=H+'px'}bx.setTransform(D,0,0,D,0,0);fx.setTransform(D,0,0,D,0,0)}
 size();addEventListener('resize',()=>{size();makeClouds()});
 let bubbles=[],parts=[];
-const target=()=>calm?5:(W<700?8:15);
+const target=()=>isCalm()?0:(W<700?8:15);
 function spawn(o={}){const r=o.text?Math.min(84,46+o.text.length*.7):rand(12,42);bubbles.push({x:o.x??rand(r,W-r),y:o.y??H+r+rand(0,H*.25),r,vy:(o.text?.5:rand(.25,.75))*(calm?.4:1),ph:rand(0,7),amp:rand(.2,.9),hue:rand(0,360),text:o.text||''})}
 for(let i=0;i<target();i++)spawn({y:rand(H*.1,H)});
 function wrap(s,n){const out=[];let line='';for(const w of s.split(/\s+/)){if((line+' '+w).trim().length>n&&line){out.push(line);line=w}else line=(line+' '+w).trim()}if(line)out.push(line);return out.slice(0,5)}
@@ -497,13 +561,13 @@ bx.beginPath();bx.arc(x+r*.42,y+r*.4,r*.06,0,7);bx.fillStyle='rgba(255,255,255,.
 if(b.text){bx.fillStyle=light?'#fff':'#3d3480';bx.font='600 13px Fredoka, Nunito, sans-serif';bx.textAlign='center';bx.textBaseline='middle';const ls=wrap(b.text,13);ls.forEach((l,i)=>bx.fillText(l,x,y+(i-(ls.length-1)/2)*16))}}
 function starPath(c,z){c.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,rr=i%2?z*.35:z;c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}c.closePath();c.fill()}
 const palette=['#8b7cf8','#ff8ccf','#5ed6b6','#ffb48f','#ffd86e','#7cc8ff'];
-function confetti(x,y,n=40){for(let i=0;i<n;i++){const a=rand(0,Math.PI*2),s=rand(3,9);parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3,g:.18,life:rand(55,95),c:pick(palette),z:rand(3,6),s:pick(['rect','dot','star']),rot:rand(0,6),vr:rand(-.25,.25)})}}
+function confetti(x,y,n=40){if(isCalm())n=Math.min(n,10);for(let i=0;i<n;i++){const a=rand(0,Math.PI*2),s=rand(3,9);parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3,g:.18,life:rand(55,95),c:pick(palette),z:rand(3,6),s:pick(['rect','dot','star']),rot:rand(0,6),vr:rand(-.25,.25)})}}
 function sparkle(x,y,n=16){for(let i=0;i<n;i++){const a=rand(0,Math.PI*2),s=rand(1,4);parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1,g:.02,life:rand(35,60),c:pick(['#fff','#ffe58a','#ffc6e8','#c9b8ff']),z:rand(3,7),s:'star',rot:0,vr:rand(-.1,.1)})}}
 function floatWord(x,y,text){const d=document.createElement('div');d.className='floatword';d.textContent=text;d.style.left=Math.max(110,Math.min(W-110,x))+'px';d.style.top=Math.max(40,y)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),2900)}
 function pop(i){const b=bubbles.splice(i,1)[0];for(let k=0;k<18;k++){const a=k/18*Math.PI*2,s=rand(1.5,4.5);parts.push({x:b.x+Math.cos(a)*b.r,y:b.y+Math.sin(a)*b.r,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:.06,life:rand(25,45),c:k%3?`hsl(${b.hue+k*20},100%,85%)`:'#fff',z:rand(1.5,3),s:'dot',rot:0,vr:0})}sparkle(b.x,b.y,b.text?24:6);
 floatWord(b.x,b.y,b.text?'✦ '+b.text:pick(affirmations));state.pops++;save();$('#popCount').textContent=state.pops;if(state.pops%25===0){confetti(b.x,b.y,90);toast(`${state.pops} bubbles popped. Pure joy 🫧`)}}
 let last=performance.now();
-function frame(t){const dt=Math.min(3,(t-last)/16.7);last=t;const light=document.body.classList.contains('night')||document.body.classList.contains('dusk');bx.clearRect(0,0,W,H);
+function frame(t){const dt=Math.min(3,(t-last)/16.7);last=t;const light=document.body.classList.contains('night')||document.body.classList.contains('dusk');bx.clearRect(0,0,W,H);if(isCalm())bubbles=bubbles.filter(b=>b.text);
 for(let i=bubbles.length-1;i>=0;i--){const b=bubbles[i];b.y-=b.vy*dt;b.x+=Math.sin(t/1100+b.ph)*b.amp*.5*dt;if(b.y<-b.r-10)bubbles.splice(i,1)}
 let plain=bubbles.filter(b=>!b.text).length;while(plain++<target())spawn();
 for(const b of bubbles)drawBubble(b,t,light);
@@ -516,7 +580,7 @@ requestAnimationFrame(frame);
 function makeClouds(){const sky=$('#clouds');sky.innerHTML='';const n=W<700?4:7;for(let i=0;i<n;i++){const dur=rand(80,160)*(calm?3:1),tr=document.createElement('div');tr.className='track';tr.style.top=rand(3,80)+'%';tr.style.animationDuration=dur+'s';tr.style.animationDelay=-rand(0,dur)+'s';tr.innerHTML=`<div style="transform:scale(${rand(.5,1.2).toFixed(2)})"><div class="cloud"></div></div>`;sky.appendChild(tr)}}
 makeClouds();
 (function(){const s=$('#stars');for(let i=0;i<90;i++){const d=document.createElement('i');d.className='skystar';d.style.left=rand(0,100)+'%';d.style.top=rand(0,75)+'%';d.style.animationDelay=-rand(0,3)+'s';d.style.animationDuration=rand(2,5)+'s';if(Math.random()<.15){d.style.width=d.style.height='3px'}s.appendChild(d)}})();
-setInterval(()=>{if(calm||document.hidden||!document.body.classList.contains('night'))return;const d=document.createElement('i');d.className='shoot';d.style.left=rand(10,70)+'vw';d.style.top=rand(2,35)+'vh';$('#sky').appendChild(d);setTimeout(()=>d.remove(),1400)},7000);
+setInterval(()=>{if(isCalm()||document.hidden||!document.body.classList.contains('night'))return;const d=document.createElement('i');d.className='shoot';d.style.left=rand(10,70)+'vw';d.style.top=rand(2,35)+'vh';$('#sky').appendChild(d);setTimeout(()=>d.remove(),1400)},7000);
 function poofCloud(cl,x,y){cl.classList.add('poof');floatWord(x,y,'☁ '+pick(sparks));for(let k=0;k<16;k++)parts.push({x:x+rand(-30,30),y:y+rand(-10,10),vx:rand(-2.5,2.5),vy:rand(-2,.5),g:-.01,life:rand(40,70),c:'rgba(255,255,255,.9)',z:rand(4,11),s:'dot',rot:0,vr:0});setTimeout(()=>cl.classList.remove('poof'),8000)}
 const phases=['dawn','day','dusk','night'];let phaseOverride=null;
 function autoPhase(){const h=londonHour();return h>=5&&h<8?'dawn':h>=8&&h<17?'day':h>=17&&h<20?'dusk':'night'}
@@ -531,10 +595,16 @@ addEventListener('pointerdown',e=>{if(e.target.closest(blockSel))return;const i=
 let hoverQueued=false;addEventListener('pointermove',e=>{if(hoverQueued)return;hoverQueued=true;requestAnimationFrame(()=>{hoverQueued=false;if(e.target.closest(blockSel)){document.body.style.cursor='';return}const s=hitBubble(e.clientX,e.clientY)>-1||(()=>{const k=skyAt(e.clientX,e.clientY);return k.sun||k.cloud})();document.body.style.cursor=s?'pointer':''})});
 
 /* ---------- Global wiring ---------- */
+$('#captureForm').onsubmit=e=>{e.preventDefault();const i=e.target.cap;if(!addInbox(i.value))return;i.value='';const [x,y]=center(i);sparkle(x,y,10);toast('In your inbox ✨ Sort it on My day whenever');if(view==='today')render()};
+$('#inboxCount').onclick=()=>{view='today';render();setTimeout(()=>document.getElementById('inboxPanel')?.scrollIntoView({behavior:'smooth',block:'center'}),50)};
+function applyCalm(on){document.body.classList.toggle('calm',on);const b=$('#calmBtn');b.setAttribute('aria-pressed',on);b.textContent=on?'🍃 Calm on':'🍃 Calm';b.classList.toggle('on',on)}
+try{applyCalm(localStorage.getItem('hs-calm')==='1')}catch{applyCalm(false)}
+$('#calmBtn').onclick=()=>{const on=!document.body.classList.contains('calm');try{localStorage.setItem('hs-calm',on?'1':'0')}catch{}applyCalm(on);toast(on?'Calm mode on. Everything’s gone still 🍃':'Calm mode off. Bubbles are back 🫧')};
+$('#askFab').onclick=()=>{view='ask';try{history.replaceState(null,'','#ask')}catch{}render();scrollTo({top:0})};
 $('#addTask').onclick=()=>openTask(null,view==='projects'||!projList().includes(project)?null:{project});
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;try{history.replaceState(null,'','#'+view)}catch{}render();scrollTo({top:0,behavior:'smooth'})});
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
-$('#taskForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),t={id:editing||uid(),title:f.get('title').trim(),project:f.get('project'),priority:+f.get('priority'),due:f.get('due'),minutes:+f.get('minutes'),time:f.get('time'),detail:f.get('detail'),focusDate:f.get('focus')?today():'',done:false};if(!t.title)return;if(t.time&&!t.due)return toast('Add a date for your start time');if(editing){let i=state.tasks.findIndex(t=>t.id===editing);t.done=state.tasks[i].done;state.tasks[i]=t}else{state.tasks.push(t);spawn({text:t.title.slice(0,40),x:rand(W*.3,W*.8),y:H+80});if(fromCard){const n=noteById(fromCard.note);if(n){if(fromCard.item){const it=n.items?.find(x=>x.id===fromCard.item);if(it)it.task=true}else n.task=true}toast('Sent to tasks 🫧')}}fromCard=null;save();$('#taskDialog').close();render()};
+$('#taskForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),t={id:editing||uid(),title:f.get('title').trim(),project:f.get('project'),priority:+f.get('priority'),due:f.get('due'),minutes:+f.get('minutes'),time:f.get('time'),detail:f.get('detail'),repeat:f.get('repeat')||'',focusDate:f.get('focus')?today():'',done:false};if(t.repeat&&!t.due)t.due=today();if(!t.title)return;if(t.time&&!t.due)return toast('Add a date for your start time');if(editing){let i=state.tasks.findIndex(t=>t.id===editing);state.tasks[i]={...state.tasks[i],...t,done:state.tasks[i].done}}else{state.tasks.push(t);spawn({text:t.title.slice(0,40),x:rand(W*.3,W*.8),y:H+80});if(fromCard){const n=noteById(fromCard.note);if(n){if(fromCard.item){const it=n.items?.find(x=>x.id===fromCard.item);if(it)it.task=true}else n.task=true}toast('Sent to tasks 🫧')}}fromCard=null;save();$('#taskDialog').close();render()};
 $('#taskDialog').addEventListener('close',()=>{fromCard=null});
 $('#habitForm').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target);if(!f.get('title').trim())return;state.habits.push({id:uid(),title:f.get('title').trim(),minutes:+f.get('minutes'),repeat:f.get('repeat'),days:[]});save();e.target.reset();$('#habitDialog').close();render();toast('A new habit is planted 🌱')};
 $('#projectForm').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target),name=f.get('name').trim();if(!name)return;if(projList().includes(name))return toast('You already have a project with that name');state.projects.push({id:uid(),name,emoji:f.get('emoji').trim()||'✨',blurb:f.get('blurb').trim(),color:f.get('color'),notes:''});save();$('#projectDialog').close();render();confetti(W/2,H/3,70);toast(`${name} has launched 🚀`)};
@@ -553,7 +623,7 @@ render();save();
    the app quietly stays in local mode. */
 (function () {
   const HS = (window.HS = { on: false, me: null, health: null, events: null, eventsAt: 0, status: 'local' });
-  const COLLS = ['tasks', 'notes', 'projects', 'habits'];
+  const COLLS = ['tasks', 'notes', 'projects', 'habits', 'inbox'];
   const METAS = ['scratch', 'pops', 'quoteFavourites', 'settings'];
   const SEP = '|';
   let synced = {}, syncSince = 0, syncTimer = null, syncing = false, again = false, pendingRender = false;
@@ -732,7 +802,7 @@ render();save();
           await sync();
         } else {
           // this device is new: take what's in the cloud
-          state = { tasks: [], notes: [], projects: [], habits: [], journal: {}, scratch: '', pops: 0 };
+          state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], journal: {}, scratch: '', pops: 0 };
           for (const ch of res.changes) applyChange(ch.collection, ch.id, ch.data);
           normalise();
           synced = snap();
@@ -753,6 +823,7 @@ render();save();
     render();
     loadHealth();
     loadEvents();
+    loadBackups();
     setInterval(sync, 30000);
     setInterval(() => { loadHealth(); loadEvents(); }, 10 * 60000);
     addEventListener('focus', () => { sync(); if (Date.now() - HS.eventsAt > 120000) { loadHealth(); loadEvents(); } });
@@ -944,6 +1015,7 @@ render();save();
       ${step(1, synced, 'Sync your devices', synced ? 'Connected' : on ? 'Reconnecting' : HS.locked ? 'Not connected' : 'Local only', sync)}
       ${step(2, !!lastH, 'Apple Health', lastH ? 'Connected' : 'Not yet', health)}
       ${step(3, !!g.connected, 'Google Calendar & Drive', g.connected ? 'Connected' : 'Optional', google)}
+      ${backupCard()}
       <div class="tips"><div class="panel"><b>🟪 Milanote</b><p class="hint">Milanote can’t sync with other apps, so pin your boards to the right project instead. They open in one tap.</p><button class="tiny" data-goview="projects">Go to Projects ↗</button></div>
       <div class="panel"><b>📱 Feels like an app</b><p class="hint">On iPhone, open Headspace in Safari → Share → Add to Home Screen. It opens full screen and stays linked.</p></div></div>
     </div>`;
@@ -952,8 +1024,174 @@ render();save();
   let qrP = null;
   const loadQR = () => qrP || (qrP = new Promise((res, rej) => { const s = document.createElement('script'); s.src = '/qrcode.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); }));
 
+
+  /* ---------- Ask: built-in assistant (Claude or ChatGPT) ---------- */
+  let chat = [];
+  try { chat = JSON.parse(localStorage.getItem('hs-chat') || '[]'); } catch {}
+  let askBusy = false;
+  const saveChat = () => { chat = chat.slice(-40); try { localStorage.setItem('hs-chat', JSON.stringify(chat)); } catch {} };
+  const aiAvail = () => HS.me?.ai || {};
+  const provider = () => {
+    let p = ''; try { p = localStorage.getItem('hs-ai') || ''; } catch {}
+    const a = aiAvail();
+    if (p === 'chatgpt' && a.chatgpt) return 'chatgpt';
+    if (p === 'claude' && a.claude) return 'claude';
+    return a.claude ? 'claude' : a.chatgpt ? 'chatgpt' : 'claude';
+  };
+  const STARTERS = ['Plan my day', 'What’s overdue?', 'Sort my inbox for me', 'Break a project into steps', 'Help me say no to something', 'What can I drop this week?'];
+
+  function askContext() {
+    const open = sorted(state.tasks.filter((t) => !t.done));
+    return {
+      today: today(),
+      weekday: new Date().toLocaleDateString('en-GB', { timeZone: TZ, weekday: 'long' }),
+      focus_today: state.tasks.filter((t) => t.focusDate === today()).map((t) => ({ id: t.id, title: t.title, done: !!t.done })),
+      open_tasks: open.slice(0, 40).map((t) => ({ id: t.id, title: t.title, project: t.project, due: t.due || null, priority: t.priority, minutes: t.minutes, repeat: t.repeat || undefined })),
+      open_task_count: open.length,
+      overdue_count: open.filter((t) => t.due && t.due < today()).length,
+      projects: state.projects.map((p) => ({ name: p.name, blurb: p.blurb || undefined, open: state.tasks.filter((t) => t.project === p.name && !t.done).length })),
+      other_task_projects: projList().filter((n) => !state.projects.some((p) => p.name === n)),
+      inbox: (state.inbox || []).slice(0, 20).map((i) => ({ id: i.id, text: i.text.slice(0, 300) })),
+      habits_today: activeHabits().map((h) => ({ title: h.title, done: h.days.includes(today()) })),
+      recent_notes: state.notes.filter((n) => n.title).slice(0, 10).map((n) => n.title),
+    };
+  }
+
+  function runAction(a) {
+    const proj = (name) => (name && projList().includes(name) ? name : 'Personal');
+    let msg = '';
+    switch (a.type) {
+      case 'add_task': {
+        const due = /^\d{4}-\d{2}-\d{2}$/.test(a.due || '') ? a.due : a.repeat ? today() : '';
+        state.tasks.push({ id: uid(), title: String(a.title || a.label).slice(0, 250), project: proj(a.project), priority: [1, 2, 3].includes(a.priority) ? a.priority : 2, due, minutes: Math.max(5, Math.min(480, +a.minutes || 25)), time: '', detail: '', repeat: ['daily', 'weekdays', 'weekly', 'monthly'].includes(a.repeat) ? a.repeat : '', focusDate: a.focus ? today() : '', done: false });
+        msg = 'Task added'; break;
+      }
+      case 'complete_task': {
+        const t = state.tasks.find((x) => x.id === a.id);
+        if (!t) return toast('Couldn’t find that task any more');
+        if (!t.done) completeTask(t);
+        confetti(W / 2, H / 3, 40); msg = 'Done ✓'; break;
+      }
+      case 'focus_tasks': {
+        const ids = (a.ids || []).filter((id) => state.tasks.some((t) => t.id === id && !t.done)).slice(0, 3);
+        if (!ids.length) return toast('Those tasks have changed. Ask again?');
+        state.tasks.forEach((t) => { if (t.focusDate === today() && !t.done) t.focusDate = ''; });
+        ids.forEach((id) => { state.tasks.find((t) => t.id === id).focusDate = today(); });
+        msg = 'Today’s focus is set ★'; break;
+      }
+      case 'add_note': state.notes.unshift({ id: uid(), type: 'note', title: String(a.title || '').slice(0, 80), body: String(a.body || ''), later: false, color: 'white', z: ++zTop }); msg = 'Pinned to your Notebook 📓'; break;
+      case 'add_idea': state.notes.unshift({ id: uid(), type: 'note', title: String(a.title || '').slice(0, 80), body: String(a.body || ''), later: true, color: 'white' }); msg = 'Saved to Ideas for later 🎈'; break;
+      case 'add_project': {
+        const name = String(a.name || '').trim().slice(0, 40);
+        if (!name) return;
+        if (projList().includes(name)) return toast(`You already have ${name}`);
+        state.projects.push({ id: uid(), name, emoji: a.emoji || '✨', blurb: String(a.blurb || '').slice(0, 120), color: pick(['lilac', 'pink', 'blue', 'peach', 'green']), notes: '' });
+        msg = `${name} added to Projects 🚀`; break;
+      }
+      case 'inbox_to_task': {
+        const it = (state.inbox || []).find((x) => x.id === a.inbox_id);
+        state.tasks.push({ id: uid(), title: String(a.title || it?.text || a.label).slice(0, 250), project: proj(a.project), priority: 2, due: /^\d{4}-\d{2}-\d{2}$/.test(a.due || '') ? a.due : '', minutes: 25, time: '', detail: it && it.text !== a.title ? it.text : '', repeat: '', focusDate: '', done: false });
+        if (it) state.inbox = state.inbox.filter((x) => x !== it);
+        msg = 'Inbox item is now a task'; break;
+      }
+      case 'clear_inbox_item': state.inbox = (state.inbox || []).filter((x) => x.id !== a.inbox_id); msg = 'Let go ☁️'; break;
+      case 'open': view = a.view || 'today'; render(); return;
+      default: return;
+    }
+    a.done = true;
+    saveChat();
+    save();
+    render();
+    toast(msg);
+  }
+
+  async function sendAsk(text) {
+    text = String(text || '').trim();
+    if (!text || askBusy) return;
+    chat.push({ role: 'user', content: text });
+    saveChat();
+    askBusy = true;
+    render();
+    try {
+      const r = await api('/api/ai', { method: 'POST', body: { provider: provider(), context: askContext(), messages: chat.filter((m) => !m.err).map((m) => ({ role: m.role, content: m.content })) } });
+      chat.push({ role: 'assistant', content: r.reply, actions: r.actions, chips: r.chips, provider: r.provider });
+    } catch (e) {
+      chat.push({ role: 'assistant', err: true, content: e.message === 'auth' ? 'This device isn’t linked, so Ask can’t reach your cloud. Connect it in Connections first.' : e.message === 'offline' || e.message === 'not-headspace' ? 'Ask needs your online Headspace (your workers.dev address) and an internet connection.' : e.message });
+    }
+    askBusy = false;
+    saveChat();
+    render();
+  }
+
+  HS.askHTML = () => {
+    const a = aiAvail(), p = provider(), ready = HS.on && (a.claude || a.chatgpt);
+    const last = chat[chat.length - 1];
+    const chips = !chat.length ? STARTERS : last && last.role === 'assistant' && last.chips ? last.chips : [];
+    const setup = !HS.on
+      ? `<div class="notice">Ask works on your online Headspace once this device is connected. <button class="tiny" data-goview="connections">Go to Connections ↗</button></div>`
+      : !ready
+      ? `<div class="notice"><strong>One-off setup:</strong> add an API key so Ask can think.<br>
+          • <b>Claude:</b> get a key at console.anthropic.com → API keys.<br>
+          • <b>ChatGPT:</b> get a key at platform.openai.com → API keys.<br>
+          Then in Cloudflare: headspaceworld → Settings → Variables and Secrets → Add → type <b>Secret</b>, named <code>ANTHROPIC_API_KEY</code> or <code>OPENAI_API_KEY</code> → Deploy. Add both to switch between them. These are pay-as-you-go (separate from a Claude or ChatGPT subscription), usually pennies a day.</div>`
+      : '';
+    const bubble = (m, i) => {
+      if (m.role === 'user') return `<div class="msg user">${esc(m.content)}</div>`;
+      return `<div class="msg assistant ${m.err ? 'err' : ''}">${esc(m.content)}${(m.actions || []).length ? `<div class="acts">${m.actions.map((x, j) => `<button class="act ${x.done ? 'done' : ''}" data-act="${i}|${j}" ${x.done ? 'disabled' : ''}>${x.done ? '✓ ' : ''}${esc(x.label)}</button>`).join('')}</div>` : ''}</div>`;
+    };
+    return head('YOUR SIDEKICK', 'Ask anything.', 'Plan, untangle, draft. Tap a suggestion and it happens in Headspace.') +
+      `<div class="askwrap"><div class="section-head"><div class="provider" role="group" aria-label="Choose assistant"><button data-ai="claude" class="${p === 'claude' ? 'on' : ''}" ${a.claude ? '' : 'disabled title="Add ANTHROPIC_API_KEY to use Claude"'}>Claude</button><button data-ai="chatgpt" class="${p === 'chatgpt' ? 'on' : ''}" ${a.chatgpt ? '' : 'disabled title="Add OPENAI_API_KEY to use ChatGPT"'}>ChatGPT</button></div>${chat.length ? '<button class="tiny" id="askClear" style="color:var(--skymuted)">Clear chat</button>' : ''}</div>
+      ${setup}
+      <section class="panel"><div class="chat" id="chatBox">${chat.length ? chat.map(bubble).join('') : '<div class="empty">Ask about your day, your projects or anything on your mind. It can see your tasks, projects and inbox, and offers buttons you can tap.</div>'}${askBusy ? '<div class="msg assistant typing" aria-label="Thinking"><span></span><span></span><span></span></div>' : ''}</div>
+      ${chips.length && !askBusy ? `<div class="chips2" style="margin-top:12px">${chips.map((c) => `<button class="chip2" data-chip="${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}
+      <form class="askbar" id="askForm"><textarea name="q" rows="2" placeholder="${ready ? 'Ask anything… (Enter to send, Shift+Enter for a new line)' : 'Set up Ask first (see above)'}" aria-label="Message" ${ready ? '' : 'disabled'}></textarea><button class="dark" ${ready && !askBusy ? '' : 'disabled'}>Send</button></form></section></div>`;
+  };
+
+  function bindAsk() {
+    if (view !== 'ask') return;
+    const box = $('#chatBox'); if (box) box.scrollTop = box.scrollHeight;
+    document.querySelectorAll('[data-ai]').forEach((b) => (b.onclick = () => { try { localStorage.setItem('hs-ai', b.dataset.ai); } catch {} render(); }));
+    document.querySelectorAll('[data-chip]').forEach((b) => (b.onclick = () => sendAsk(b.dataset.chip)));
+    document.querySelectorAll('[data-act]').forEach((b) => (b.onclick = () => { const [i, j] = b.dataset.act.split('|').map(Number); const a = chat[i]?.actions?.[j]; if (a && !a.done) { const [x, y] = center(b); sparkle(x, y, 12); runAction(a); } }));
+    if ($('#askClear')) $('#askClear').onclick = () => { chat = []; saveChat(); render(); };
+    const f = $('#askForm');
+    if (f) {
+      f.onsubmit = (e) => { e.preventDefault(); const v = f.q.value; f.q.value = ''; sendAsk(v); };
+      f.q.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); f.requestSubmit(); } };
+      if (!askBusy && !typing()) setTimeout(() => f.q.focus(), 30);
+    }
+  }
+
+  /* ---------- Backups ---------- */
+  HS.backups = null;
+  async function loadBackups() { try { HS.backups = (await api('/api/backups')).backups; if (view === 'connections') softRender(); } catch {} }
+  function backupCard() {
+    if (!HS.on) return '';
+    const list = HS.backups;
+    const fmt = (b) => `${new Date(b.created_at).toLocaleString('en-GB', { timeZone: TZ, weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} · ${b.kind === 'manual' ? 'manual' : 'weekly'} · ${b.items} items`;
+    return `<section class="panel stepcard ${list && list.length ? 'done' : ''}"><div class="num">${list && list.length ? '✓' : '🛟'}</div><div class="stepbody"><div class="stephead"><h2>Weekly backups</h2><span class="pill ${list && list.length ? 'ok' : ''}">${list ? (list.length ? 'On' : 'First one Monday') : 'Checking…'}</span></div>
+      <p class="hint">Every Monday at 3am your cloud saves a full snapshot of Headspace and keeps the last 12. Restore one if something goes missing.</p>
+      ${list && list.length ? list.slice(0, 6).map((b) => `<div class="ev"><time>🛟</time><div style="flex:1">${fmt(b)}</div><button class="tiny" data-restorebk="${b.id}">Restore</button></div>`).join('') : ''}
+      <div class="btns"><button class="tiny" id="backupNow">Back up now</button></div></div></section>`;
+  }
+  async function restoreBackup(id) {
+    if (!(await ask('Restore this backup? Anything you’ve added since then will be replaced.', 'Yes, restore'))) return;
+    try {
+      const snap = await api('/api/backups?id=' + id);
+      await api('/api/backups', { method: 'POST' }).catch(() => {}); // safety copy of the current state first
+      state = { tasks: [], notes: [], projects: [], habits: [], inbox: [], journal: {}, scratch: '', pops: state.pops || 0 };
+      for (const it of snap.items || []) applyChange(it.collection, it.id, it.data);
+      normalise(); save(); render(); confetti(W / 2, H / 3, 60);
+      toast('Backup restored ✨ (your previous state was saved as a backup too)');
+      loadBackups();
+    } catch (e) { toast('Couldn’t restore: ' + e.message); }
+  }
+
   /* ---------- event wiring after each render ---------- */
   HS.bindExtras = () => {
+    bindAsk();
+    if ($('#backupNow')) $('#backupNow').onclick = async (e) => { e.target.disabled = true; try { await api('/api/backups', { method: 'POST' }); toast('Backed up 🛟'); } catch (er) { toast('Backup failed: ' + er.message); } loadBackups(); };
+    document.querySelectorAll('[data-restorebk]').forEach((b) => (b.onclick = () => restoreBackup(b.dataset.restorebk)));
     document.querySelectorAll('[data-goview]').forEach((b) => (b.onclick = () => { view = b.dataset.goview; try { history.replaceState(null, '', '#' + view); } catch {} render(); scrollTo({ top: 0 }); }));
     document.querySelectorAll('[data-copy]').forEach((b) => (b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.copy); toast('Copied ✨'); } catch { toast('Press and hold to copy'); } }));
     if ($('#addPhone')) $('#addPhone').onclick = async () => {
